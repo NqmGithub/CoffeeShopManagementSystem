@@ -1,0 +1,11 @@
+D:\c#prn\CoffeeShopManagement\CoffeeShopManagement.Business\bin\Debug\net8.0\CoffeeShopManagement.Business.deps.json
+D:\c#prn\CoffeeShopManagement\CoffeeShopManagement.Business\bin\Debug\net8.0\CoffeeShopManagement.Business.dll
+D:\c#prn\CoffeeShopManagement\CoffeeShopManagement.Business\bin\Debug\net8.0\CoffeeShopManagement.Business.pdb
+D:\c#prn\CoffeeShopManagement\CoffeeShopManagement.Business\obj\Debug\net8.0\CoffeeShopManagement.Business.GeneratedMSBuildEditorConfig.editorconfig
+D:\c#prn\CoffeeShopManagement\CoffeeShopManagement.Business\obj\Debug\net8.0\CoffeeShopManagement.Business.AssemblyInfoInputs.cache
+D:\c#prn\CoffeeShopManagement\CoffeeShopManagement.Business\obj\Debug\net8.0\CoffeeShopManagement.Business.AssemblyInfo.cs
+D:\c#prn\CoffeeShopManagement\CoffeeShopManagement.Business\obj\Debug\net8.0\CoffeeShopManagement.Business.csproj.CoreCompileInputs.cache
+D:\c#prn\CoffeeShopManagement\CoffeeShopManagement.Business\obj\Debug\net8.0\CoffeeShopManagement.Business.dll
+D:\c#prn\CoffeeShopManagement\CoffeeShopManagement.Business\obj\Debug\net8.0\refint\CoffeeShopManagement.Business.dll
+D:\c#prn\CoffeeShopManagement\CoffeeShopManagement.Business\obj\Debug\net8.0\CoffeeShopManagement.Business.pdb
+D:\c#prn\CoffeeShopManagement\CoffeeShopManagement.Business\obj\Debug\net8.0\ref\CoffeeShopManagement.Business.dll
