@@ -1,0 +1,95 @@
+# ASP.NET Web API Specific
+.vscode/
+.vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Build directories
+bin/
+obj/
+publish/
+artifacts/
+
+# NuGet Packages
+*.nupkg
+*.snupkg
+
+# Logs
+*.log
+logs/
+
+# IIS Express
+iisexpress/
+
+# Environment Variables
+.env
+
+# User-specific files
+*.rsuser
+*.sln.docstates
+*.user
+
+# .NET Core generated files
+*.deps.json
+*.runtimeconfig.dev.json
+
+# IDEs
+.idea/
+*.DotSettings.user
+_ReSharper*/ 
+
+# Rider and WebStorm/PhpStorm local history
+.idea/
+
+# CSS/JS Bundle and minified files
+*.min.css
+*.min.js
+*.map
+
+# ASP.NET Scaffolding
+ScaffoldingReadMe.txt
+
+
+# Angular Specific
+# Angular build output
+dist/
+tmp/
+
+# Node modules
+node_modules/
+
+# Angular cache files
+.angular/
+.angular/cache
+
+# Compiled TypeScript
+*.ngfactory.ts
+*.ngstyle.ts
+*.tsbuildinfo
+
+# Logs and temporary files
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# IDE/Editor-specific
+*.suo
+*.ntvs*
+*.njsproj
+*.sln.docstates
+*.swp
+
+# MacOS
+.DS_Store
+
+# Windows
+Thumbs.db
+Desktop.ini
+
+# Coverage output
+coverage/
+
+# Environment variables
+*.env
