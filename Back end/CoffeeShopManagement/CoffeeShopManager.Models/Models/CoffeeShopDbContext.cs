@@ -1,19 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 
 namespace CoffeeShopManagement.Models.Models;
 
 public partial class CoffeeShopDbContext : DbContext
 {
+    private readonly IConfiguration _configuration;
+    public CoffeeShopDbContext(IConfiguration configuration)
+    {
+        _configuration = configuration;
+    }
     public CoffeeShopDbContext()
     {
     }
 
-    public CoffeeShopDbContext(DbContextOptions<CoffeeShopDbContext> options)
+/*    public CoffeeShopDbContext(DbContextOptions<CoffeeShopDbContext> options)
         : base(options)
     {
-    }
+    }*/
 
     public virtual DbSet<Category> Categories { get; set; }
 
@@ -26,9 +32,13 @@ public partial class CoffeeShopDbContext : DbContext
     public virtual DbSet<User> Users { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=CoffeeShopDB;Integrated Security=True;Connect Timeout=30;Encrypt=False;Trust Server Certificate=False;Application Intent=ReadWrite;Multi Subnet Failover=False");
-
+    {
+        if (!optionsBuilder.IsConfigured)
+        {
+            var connectionString = _configuration.GetConnectionString("DefaultConnection");
+            optionsBuilder.UseSqlServer(connectionString);
+        }
+    }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Category>(entity =>

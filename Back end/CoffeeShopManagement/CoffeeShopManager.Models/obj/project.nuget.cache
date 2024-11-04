@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "fMT9IE2DkcuCtQo56gHHKgNfd/Ens5GdPKedaJB7zSCsAKZScdExTval+r+bU5jN5gBIHMXmBZLQFqTl8/Jy9w==",
+  "dgSpecHash": "V21syfbaHPoutDhEr1UlDydHAcXFBuNJcWRUubieNoN9TEpGn1/Pha4SBK046ymY49JQs66rDRZw01abgQ7b5w==",
   "success": true,
-  "projectFilePath": "D:\\c#prn\\CoffeeShopManagement\\CoffeeShopManager.Models\\CoffeeShopManagement.Models.csproj",
+  "projectFilePath": "D:\\c#prn\\CoffeeShopManagementSystem\\Back end\\CoffeeShopManagement\\CoffeeShopManager.Models\\CoffeeShopManagement.Models.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Asus\\.nuget\\packages\\azure.core\\1.35.0\\azure.core.1.35.0.nupkg.sha512",
     "C:\\Users\\Asus\\.nuget\\packages\\azure.identity\\1.10.3\\azure.identity.1.10.3.nupkg.sha512",

@@ -4044,11 +4044,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\c#prn\\CoffeeShopManagement\\CoffeeShopManager.Models\\CoffeeShopManagement.Models.csproj",
+      "projectUniqueName": "D:\\c#prn\\CoffeeShopManagementSystem\\Back end\\CoffeeShopManagement\\CoffeeShopManager.Models\\CoffeeShopManagement.Models.csproj",
       "projectName": "CoffeeShopManagement.Models",
-      "projectPath": "D:\\c#prn\\CoffeeShopManagement\\CoffeeShopManager.Models\\CoffeeShopManagement.Models.csproj",
+      "projectPath": "D:\\c#prn\\CoffeeShopManagementSystem\\Back end\\CoffeeShopManagement\\CoffeeShopManager.Models\\CoffeeShopManagement.Models.csproj",
       "packagesPath": "C:\\Users\\Asus\\.nuget\\packages\\",
-      "outputPath": "D:\\c#prn\\CoffeeShopManagement\\CoffeeShopManager.Models\\obj\\",
+      "outputPath": "D:\\c#prn\\CoffeeShopManagementSystem\\Back end\\CoffeeShopManagement\\CoffeeShopManager.Models\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\Asus\\AppData\\Roaming\\NuGet\\NuGet.Config",

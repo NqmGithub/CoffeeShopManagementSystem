@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "k2r/M/vAou0UGY6NNyM6P6jA+KP2cGR5f1kbyEzhHGTRpW5RdDWI90lALjfMC3h/25ncFhMPzKznvi5HWbjOHg==",
+  "dgSpecHash": "+kCCKvPlMO9VVJ9kx5ZY8uzqcSA0aMdgHgL2HZryMNbCDmGwHdHn95SRXOuzjgcL7fauBBTNK9tBaJuNwS4c4w==",
   "success": true,
-  "projectFilePath": "D:\\c#prn\\CoffeeShopManagement\\CoffeeShopManagement.Business\\CoffeeShopManagement.Business.csproj",
+  "projectFilePath": "D:\\c#prn\\CoffeeShopManagementSystem\\Back end\\CoffeeShopManagement\\CoffeeShopManagement.Business\\CoffeeShopManagement.Business.csproj",
   "expectedPackageFiles": [],
   "logs": []
 }

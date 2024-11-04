@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "D:\\c#prn\\CoffeeShopManagement\\CoffeeShopManagemen.Data\\CoffeeShopManagement.Data.csproj": {}
+    "D:\\c#prn\\CoffeeShopManagementSystem\\Back end\\CoffeeShopManagement\\CoffeeShopManagemen.Data\\CoffeeShopManagement.Data.csproj": {}
   },
   "projects": {
-    "D:\\c#prn\\CoffeeShopManagement\\CoffeeShopManagemen.Data\\CoffeeShopManagement.Data.csproj": {
+    "D:\\c#prn\\CoffeeShopManagementSystem\\Back end\\CoffeeShopManagement\\CoffeeShopManagemen.Data\\CoffeeShopManagement.Data.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\c#prn\\CoffeeShopManagement\\CoffeeShopManagemen.Data\\CoffeeShopManagement.Data.csproj",
+        "projectUniqueName": "D:\\c#prn\\CoffeeShopManagementSystem\\Back end\\CoffeeShopManagement\\CoffeeShopManagemen.Data\\CoffeeShopManagement.Data.csproj",
         "projectName": "CoffeeShopManagement.Data",
-        "projectPath": "D:\\c#prn\\CoffeeShopManagement\\CoffeeShopManagemen.Data\\CoffeeShopManagement.Data.csproj",
+        "projectPath": "D:\\c#prn\\CoffeeShopManagementSystem\\Back end\\CoffeeShopManagement\\CoffeeShopManagemen.Data\\CoffeeShopManagement.Data.csproj",
         "packagesPath": "C:\\Users\\Asus\\.nuget\\packages\\",
-        "outputPath": "D:\\c#prn\\CoffeeShopManagement\\CoffeeShopManagemen.Data\\obj\\",
+        "outputPath": "D:\\c#prn\\CoffeeShopManagementSystem\\Back end\\CoffeeShopManagement\\CoffeeShopManagemen.Data\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\Asus\\AppData\\Roaming\\NuGet\\NuGet.Config",
