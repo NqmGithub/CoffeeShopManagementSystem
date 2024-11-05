@@ -29,15 +29,15 @@ namespace CoffeeShopManagement.Data.UnitOfWork
         }
         public CoffeeShopDbContext Context => _db;
 
-        public IGenericRepository<Category> CategoryRepository => _categoryRepository;
+        public ICategoryRepository CategoryRepository => _categoryRepository;
 
-        public IGenericRepository<Order> OrderRepository => _orderRepository;
+        public IOrderRepository OrderRepository => _orderRepository;
 
-        public IGenericRepository<OrderDetail> OrderDetailRepository => _orderDetailRepository;
+        public IOrderDetailRepository OrderDetailRepository => _orderDetailRepository;
 
-        public IGenericRepository<Product> ProductRepository => _productRepository;
+        public IProductRepository ProductRepository => _productRepository;
 
-        public IGenericRepository<User> UserRepository => _userRepository;
+        public IUserRepository UserRepository => _userRepository;
 
         public int SaveChanges()
         {

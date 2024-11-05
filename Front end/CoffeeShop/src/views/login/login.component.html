@@ -1,1 +1,14 @@
-<p>login works!</p>
+<h1>Log in</h1>
+<form  [formGroup]="loginForm" (submit)="login()">
+    <mat-form-field style="width: 100%;">
+        <mat-label>Email</mat-label>
+        <input matInput formControlName="email">
+    </mat-form-field>
+
+    <mat-form-field style="width: 100%;">
+        <mat-label>Password</mat-label>
+        <input type="password" matInput formControlName="password">
+    </mat-form-field>
+
+    <button style="width: 100%; margin-top: 10px; font-size: 20px" mat-flat-button type="submit">Login</button>
+</form>
