@@ -6,4 +6,9 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\CoffeeShopManagemen.Data\CoffeeShopManagement.Data.csproj" />
+    <ProjectReference Include="..\CoffeeShopManager.Models\CoffeeShopManagement.Models.csproj" />
+  </ItemGroup>
+
 </Project>

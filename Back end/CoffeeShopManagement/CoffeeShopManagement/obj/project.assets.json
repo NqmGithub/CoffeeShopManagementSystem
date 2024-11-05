@@ -1548,6 +1548,10 @@
       "CoffeeShopManagement.Business/1.0.0": {
         "type": "project",
         "framework": ".NETCoreApp,Version=v8.0",
+        "dependencies": {
+          "CoffeeShopManagement.Data": "1.0.0",
+          "CoffeeShopManagement.Models": "1.0.0"
+        },
         "compile": {
           "bin/placeholder/CoffeeShopManagement.Business.dll": {}
         },
@@ -1559,6 +1563,7 @@
         "type": "project",
         "framework": ".NETCoreApp,Version=v8.0",
         "dependencies": {
+          "CoffeeShopManagement.Models": "1.0.0",
           "Microsoft.EntityFrameworkCore.SqlServer": "8.0.10"
         },
         "compile": {
