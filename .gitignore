@@ -7,8 +7,14 @@
 *.sln.docstates
 
 # Build directories
-bin/
-obj/
+/Back end/CoffeeShopManagement/CoffeeShopManagemen.Data/bin/
+/Back end/CoffeeShopManagement/CoffeeShopManagemen.Data/obj/
+/Back end/CoffeeShopManagement/CoffeeShopManagement/bin/
+/Back end/CoffeeShopManagement/CoffeeShopManagement/obj/
+/Back end/CoffeeShopManagement/CoffeeShopManager.Models/bin/
+/Back end/CoffeeShopManagement/CoffeeShopManager.Models/obj/
+/Back end/CoffeeShopManagement/CoffeeShopManagement.Business/bin/
+/Back end/CoffeeShopManagement/CoffeeShopManagement.Business/obj/
 publish/
 artifacts/
 

@@ -1,3 +1,0 @@
-﻿<Project>
-  <Import Project="..\buildMultiTargeting\CoffeeShopManagement.WebAPI.props" />
-</Project>
