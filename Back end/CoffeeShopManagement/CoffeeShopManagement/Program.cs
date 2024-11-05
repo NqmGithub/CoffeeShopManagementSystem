@@ -1,4 +1,4 @@
-using CoffeeShopManagement.Models.Models;
+﻿using CoffeeShopManagement.Models.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
@@ -40,7 +40,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidateIssuer = true, // Validates that the token was issued by a trusted issuer
             ValidateAudience = true, // Validates that the token was created for a specific audience
             ValidateLifetime = true, // Ensures the token hasn't expired
-            ValidateIssuerSigningKey = true, // Verifies the token�s signature
+            ValidateIssuerSigningKey = true, // Verifies the token’s signature
             ValidIssuer = builder.Configuration["Jwt:Issuer"], // Replace with your issuer (who issued the token)
             ValidAudience = builder.Configuration["Jwt:Audience"], // Replace with your audience (who the token is intended for)
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:SecretKey"])), // The signing key for token validation
