@@ -8,6 +8,7 @@ using CoffeeShopManagement.Data.RepositoryContracts;
 using CoffeeShopManagement.Data.Repositories;
 using CoffeeShopManagement.Business.ServiceContracts;
 using CoffeeShopManagement.Business.Services;
+using CoffeeShopManagement.Data.UnitOfWork;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,6 +21,7 @@ builder.Services.AddScoped<IOrderRepository, OrderRepository>();
 builder.Services.AddScoped<IOrderDetailRepository, OrderDetailRepository>();
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IOrderService, OrderService>();
