@@ -99,3 +99,4 @@ coverage/
 
 # Environment variables
 *.env
+/Back end/CoffeeShopManagement/.vs
