@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CoffeeShopManagement.Data
+namespace CoffeeShopManagement.Business.ServiceContracts
 {
-    public interface IOrderRepository
+    public interface IProductService
     {
     }
 }

@@ -1,11 +1,13 @@
-using CoffeeShopManagement.Business;
-using CoffeeShopManagement.Data;
 using CoffeeShopManagement.Models.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.OpenApi.Models;
+using CoffeeShopManagement.Data.RepositoryContracts;
+using CoffeeShopManagement.Data.Repositories;
+using CoffeeShopManagement.Business.ServiceContracts;
+using CoffeeShopManagement.Business.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -28,7 +30,6 @@ builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 
-var key = "my16characterkeymy16characterkey";
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
@@ -38,9 +39,9 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidateAudience = true, // Validates that the token was created for a specific audience
             ValidateLifetime = true, // Ensures the token hasn't expired
             ValidateIssuerSigningKey = true, // Verifies the token’s signature
-            ValidIssuer = "Issuer", // Replace with your issuer (who issued the token)
-            ValidAudience = "Audience", // Replace with your audience (who the token is intended for)
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key)), // The signing key for token validation
+            ValidIssuer = builder.Configuration["Jwt:Issuer"], // Replace with your issuer (who issued the token)
+            ValidAudience = builder.Configuration["Jwt:Audience"], // Replace with your audience (who the token is intended for)
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:SecretKey"])), // The signing key for token validation
             ClockSkew = TimeSpan.FromSeconds(30)
         };
     });
@@ -69,10 +70,10 @@ builder.Services.AddSwaggerGen(c =>
                 Reference = new OpenApiReference
                 {
                     Type = ReferenceType.SecurityScheme,
-                    Id = "Bearer"                  // This must match the ID in AddSecurityDefinition
+                    Id = "Bearer"                  // This must match the ID inAddSecurityDefinition
                 }
             },
-            new string[] {}                        // Empty array means it's required for all actions
+            new string[] {} // Empty array means it's required for all actions
         }
     });
 });

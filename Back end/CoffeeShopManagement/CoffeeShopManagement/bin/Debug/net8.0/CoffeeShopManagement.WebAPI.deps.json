@@ -934,7 +934,10 @@
       },
       "CoffeeShopManagement.Business/1.0.0": {
         "runtime": {
-          "CoffeeShopManagement.Business.dll": {}
+          "CoffeeShopManagement.Business.dll": {
+            "assemblyVersion": "1.0.0",
+            "fileVersion": "1.0.0.0"
+          }
         }
       },
       "CoffeeShopManagement.Data/1.0.0": {
@@ -942,7 +945,10 @@
           "Microsoft.EntityFrameworkCore.SqlServer": "8.0.10"
         },
         "runtime": {
-          "CoffeeShopManagement.Data.dll": {}
+          "CoffeeShopManagement.Data.dll": {
+            "assemblyVersion": "1.0.0",
+            "fileVersion": "1.0.0.0"
+          }
         }
       },
       "CoffeeShopManagement.Models/1.0.0": {
@@ -950,7 +956,10 @@
           "Microsoft.EntityFrameworkCore.SqlServer": "8.0.10"
         },
         "runtime": {
-          "CoffeeShopManagement.Models.dll": {}
+          "CoffeeShopManagement.Models.dll": {
+            "assemblyVersion": "1.0.0",
+            "fileVersion": "1.0.0.0"
+          }
         }
       }
     }

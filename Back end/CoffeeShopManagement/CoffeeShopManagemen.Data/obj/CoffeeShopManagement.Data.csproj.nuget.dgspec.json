@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "D:\\c#prn\\CoffeeShopManagementSystem\\Back end\\CoffeeShopManagement\\CoffeeShopManagemen.Data\\CoffeeShopManagement.Data.csproj": {}
+    "E:\\ProjectFSA\\CoffeeShopManagementSystem\\Back end\\CoffeeShopManagement\\CoffeeShopManagemen.Data\\CoffeeShopManagement.Data.csproj": {}
   },
   "projects": {
-    "D:\\c#prn\\CoffeeShopManagementSystem\\Back end\\CoffeeShopManagement\\CoffeeShopManagemen.Data\\CoffeeShopManagement.Data.csproj": {
+    "E:\\ProjectFSA\\CoffeeShopManagementSystem\\Back end\\CoffeeShopManagement\\CoffeeShopManagemen.Data\\CoffeeShopManagement.Data.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\c#prn\\CoffeeShopManagementSystem\\Back end\\CoffeeShopManagement\\CoffeeShopManagemen.Data\\CoffeeShopManagement.Data.csproj",
+        "projectUniqueName": "E:\\ProjectFSA\\CoffeeShopManagementSystem\\Back end\\CoffeeShopManagement\\CoffeeShopManagemen.Data\\CoffeeShopManagement.Data.csproj",
         "projectName": "CoffeeShopManagement.Data",
-        "projectPath": "D:\\c#prn\\CoffeeShopManagementSystem\\Back end\\CoffeeShopManagement\\CoffeeShopManagemen.Data\\CoffeeShopManagement.Data.csproj",
-        "packagesPath": "C:\\Users\\Asus\\.nuget\\packages\\",
-        "outputPath": "D:\\c#prn\\CoffeeShopManagementSystem\\Back end\\CoffeeShopManagement\\CoffeeShopManagemen.Data\\obj\\",
+        "projectPath": "E:\\ProjectFSA\\CoffeeShopManagementSystem\\Back end\\CoffeeShopManagement\\CoffeeShopManagemen.Data\\CoffeeShopManagement.Data.csproj",
+        "packagesPath": "C:\\Users\\dell\\.nuget\\packages\\",
+        "outputPath": "E:\\ProjectFSA\\CoffeeShopManagementSystem\\Back end\\CoffeeShopManagement\\CoffeeShopManagemen.Data\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\Asus\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\dell\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -22,6 +22,7 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -34,6 +35,11 @@
           "warnAsError": [
             "NU1605"
           ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
         }
       },
       "frameworks": {
@@ -67,7 +73,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.100/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.400/PortableRuntimeIdentifierGraph.json"
         }
       }
     }
