@@ -1,1 +1,20 @@
-<p>navbar works!</p>
+<mat-toolbar class="navbar" style="display: flex; justify-content: space-between;">
+    <div class="nav-logo" style="display: flex;" >
+        <img src="/coffeshop.png" style="width: 100px; border-radius: 50%; z-index: 1000;" />
+      <span class="app-title">Coffee Shop</span>
+    </div>
+    <div style="display: flex; width: 60%; justify-content: center; align-items: center;" >
+    <button mat-button routerLink="/home" style="flex: 1;">HOME</button>
+    <span class="example-spacer"></span>
+    <button mat-button routerLink="/menu">MENU</button>
+    <span class="example-spacer"></span>
+    <button mat-button routerLink="/contact">CONTACT</button>
+    <span class="example-spacer"></span>
+    <button mat-button routerLink="/about">ABOUT</button>
+    <span class="example-spacer"></span>
+    <div class="nav-section">
+      <button mat-button (click)="loginNavigate()">Login</button>
+      <button mat-button routerLink="/signup">Sign Up</button>
+    </div> 
+</div>
+  </mat-toolbar>

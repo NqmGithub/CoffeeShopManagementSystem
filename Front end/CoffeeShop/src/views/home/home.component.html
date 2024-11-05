@@ -1,1 +1,44 @@
-<p>home works!</p>
+<app-navbar></app-navbar>
+<app-slider></app-slider>
+
+<div class="best-seller">
+    <div style="display: flex;justify-content: center; ">
+        <h1 class="title">Best Seller</h1>
+    </div>
+    <div class="coffee-container">
+        @for (coffee of coffeeBestsellers; track $index) {
+        <mat-card class="coffee-card">
+            <img mat-card-image [src]="coffee.image" alt="{{ coffee.title }}">
+            <mat-card-content>
+                <h2 class="coffee-title">{{ coffee.title }}</h2>
+                <p class="coffee-description">{{ coffee.description }}</p>
+            </mat-card-content>
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <p class="coffee-price" style="margin-left: 15px;">Price: <span style="color: red;">{{ coffee.price
+                        }}</span></p>
+                <mat-card-actions>
+                    <button mat-raised-button color="primary">Buy Now</button>
+                </mat-card-actions>
+            </div>
+        </mat-card>
+        }       
+    </div>
+    <div style="display: flex;justify-content: center; ">
+        <a style="color: rgb(60, 122, 231);" [routerLink]="['user']">View more >>></a>
+    </div>
+</div>
+
+<div class="about-container">
+    <div class="text-content">
+        <h1 class="title">WE ARE <span class="subtitle">Coffee Shop</span></h1>
+        <p class="hours">Monday to Saturday <strong>8:30am - 11:00pm</strong> | Hotline: <strong>19006750</strong></p>
+        <div class="divider"></div>
+        <p class="description">
+            We travel the world in search of exceptional coffee. Along the way, we discover rare and unique beans that
+            we simply can't wait to bring back.
+        </p>
+    </div>
+    <div class="image-content">
+        <img src="/coffee-cup.png" alt="Coffee cup" class="coffee-image" />
+    </div>
+</div>
