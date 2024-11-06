@@ -27,5 +27,13 @@ namespace CoffeeShopManagement.Business.Services
             }
             return user;
         }
+        public Task<User> GetById(Guid id)
+        {
+            var user = _unitOfWork.UserRepository.GetById(id);
+            if (user == null) { 
+                throw new ArgumentException("User not found"); 
+            }
+            return user;
+        }
     }
 }

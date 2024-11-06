@@ -10,5 +10,6 @@ namespace CoffeeShopManagement.Data.RepositoryContracts
     public interface IUserRepository : IGenericRepository<User>
     {
         Task<User> GetByEmail(string email);
+        Task<User> GetById(Guid id);
     }
 }

@@ -10,5 +10,6 @@ namespace CoffeeShopManagement.Business.ServiceContracts
     public interface IUserService
     {
         Task<User> GetByEmail(string email);
+        Task<User> GetById(Guid id);
     }
 }
