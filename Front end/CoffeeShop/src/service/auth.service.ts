@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ApiService } from '../Api/api.service';
 import { Router } from '@angular/router';
+import { User } from '../Interfaces/user';
 
 @Injectable({
   providedIn: 'root'
@@ -27,7 +28,7 @@ export class AuthService {
       this.apiService.login(payload).subscribe(
           response => {
               localStorage.setItem("token", response.token);
-              this.router.navigate(['home'])
+              this.router.navigate(['/home'])
           },
           error => {
               console.error('Error fetching data', error);
@@ -35,6 +36,25 @@ export class AuthService {
       );
   }
 
+  signup(user: User) {
+    let payload = {
+        "username": user.userName,
+        "password": user.password, 
+        "phoneNumber": user.phoneNumber,
+        "email": user.email,
+        "address": user.address
+    }
+    this.apiService.signup(payload).subscribe(
+        response => {
+            localStorage.setItem("token", response.token);
+            this.router.navigate(['/home'])
+        },
+        error => {
+            console.error('Error fetching data', error);
+        }
+    );
+}
+  
 
   logout() {
       localStorage.clear();
