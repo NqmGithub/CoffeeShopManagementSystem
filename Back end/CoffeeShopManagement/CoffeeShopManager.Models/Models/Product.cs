@@ -18,8 +18,9 @@ public partial class Product
     public string? Thumbnail { get; set; }
 
     public int Status { get; set; }
+    public string? Description { get; set; }
 
-    public virtual Category Categoty { get; set; } = null!;
+    public virtual Category Category { get; set; } = null!;
 
     public virtual ICollection<OrderDetail> OrderDetails { get; set; } = new List<OrderDetail>();
 }

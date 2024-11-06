@@ -97,7 +97,7 @@ public partial class CoffeeShopDbContext : DbContext
             entity.Property(e => e.ProductName).HasMaxLength(255);
             entity.Property(e => e.Thumbnail).HasMaxLength(255);
 
-            entity.HasOne(d => d.Categoty).WithMany(p => p.Products)
+            entity.HasOne(d => d.Category).WithMany(p => p.Products)
                 .HasForeignKey(d => d.CategotyId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK__Product__Categot__2C3393D0");
