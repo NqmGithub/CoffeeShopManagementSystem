@@ -15,9 +15,10 @@
     <div class="nav-section">
       @if(isLoggedIn){
         <button mat-button (click)="profileNavigate()">Profile</button>
+        <button mat-button (click)="logout()">Log out</button>
       }
       @else {
-        <button mat-button (click)="loginNavigate()">Login</button>
+        <button mat-button (click)="loginNavigate()">Log in</button>
         <button mat-button (click)="signupNavigate()">Sign Up</button>
       }
     </div> 

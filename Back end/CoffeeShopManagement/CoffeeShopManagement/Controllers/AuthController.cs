@@ -29,7 +29,7 @@ namespace CoffeeShopManagement.WebAPI.Controllers
         public async Task<IActionResult> Login([FromBody] LoginRequest loginRequest)
         {
             var user = (await _userService.GetByEmail(loginRequest.Email));
-            if (user != null)
+            if (user != null && user.Status == 1)
             {
                 var token = GenerateJwtToken(user.UserName, user.Role);
                 return Ok(new { token });
@@ -44,7 +44,7 @@ namespace CoffeeShopManagement.WebAPI.Controllers
             public string Password { get; set; }
             public string Email { get; set; }
             public string PhoneNumber { get; set; }
-            public string? Address { get; set; }
+            public string Address { get; set; }
         }
 
         [HttpPost("signup")]
@@ -78,9 +78,8 @@ namespace CoffeeShopManagement.WebAPI.Controllers
                 Status = 1
             };
 
-            await _userService.AddUserAsync(newUser);
+            await _userService.Add(newUser);
 
-            // Generate JWT token (optional)
             var token = GenerateJwtToken(newUser.UserName, newUser.Role);
 
             return Ok(new { token });
@@ -92,7 +91,7 @@ namespace CoffeeShopManagement.WebAPI.Controllers
             {
                 new Claim(JwtRegisteredClaimNames.Sub, username),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                new Claim("role", role.ToString())
+                new Claim("role", (role == 1 ? "customer" : "admin"))
             };
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("my16characterkeymy16characterkey"));

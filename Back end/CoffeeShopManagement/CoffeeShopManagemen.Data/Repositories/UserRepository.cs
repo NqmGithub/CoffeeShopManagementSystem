@@ -38,12 +38,12 @@ namespace CoffeeShopManagement.Data.Repositories
             }
         }
 
-        public async Task<IEnumerable<User>> GetAllAsync()
+        public async Task<IEnumerable<User>> GetAll()
         {
             return await _context.Users.ToListAsync();
         }
 
-        public async Task<User> GetByIdAsync(Guid id)
+        public async Task<User> GetById(Guid id)
         {
             return await _context.Users.FirstOrDefaultAsync(u => (u.Id == id));
         }
@@ -57,6 +57,11 @@ namespace CoffeeShopManagement.Data.Repositories
         {
             _context.Users.Update(user);
             await _context.SaveChangesAsync();
+        }
+
+        public async Task<int> GetUserCount()
+        {
+            return await _context.Users.CountAsync();
         }
     }
 }

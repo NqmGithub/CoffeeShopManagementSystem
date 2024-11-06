@@ -106,6 +106,8 @@ app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
+app.UseCors("AllowSpecificOrigin");
+
 app.MapControllers();
 
 app.Run();

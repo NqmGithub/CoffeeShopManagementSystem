@@ -24,10 +24,14 @@ export class NavbarComponent {
   }
 
   signupNavigate(){
-    this.route.navigate(['/login'])
+    this.route.navigate(['/register'])
   }
 
   profileNavigate(){
     
+  }
+
+  logout(){
+    this.auth.logout();
   }
 }
