@@ -11,7 +11,7 @@ using System.Net;
 using System.Net.Http;
 namespace CoffeeShopManagement.WebAPI.Controllers
 {
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "User")]
     [Route("api/controller")]
     [ApiController]
     public class UserProductController : ControllerBase
