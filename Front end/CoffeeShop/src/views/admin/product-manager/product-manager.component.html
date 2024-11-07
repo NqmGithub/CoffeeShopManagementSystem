@@ -1,0 +1,62 @@
+<h2>User List</h2>
+<button mat-raised-button color="primary" (click)="addProduct()">Add Product</button>
+<table mat-table [dataSource]="productsData" class="mat-elevation-z8 demo-table">
+
+  <!-- Name Column -->
+  <ng-container matColumnDef="productName">
+    <th mat-header-cell *matHeaderCellDef> ProductName </th>
+    <td mat-cell *matCellDef="let element"> {{element.productName}} </td>
+  </ng-container>
+
+  <!-- Email Column -->
+  <ng-container matColumnDef="categoryName">
+    <th mat-header-cell *matHeaderCellDef> Category </th>
+    <td mat-cell *matCellDef="let element"> {{element.categoryName}} </td>
+  </ng-container>
+
+  <!-- Age Column -->
+  <ng-container matColumnDef="price">
+    <th mat-header-cell *matHeaderCellDef> Price </th>
+    <td mat-cell *matCellDef="let element"> {{element.price}}$ </td>
+  </ng-container>
+
+  <!-- Phone Column -->
+  <ng-container matColumnDef="quantity">
+    <th mat-header-cell *matHeaderCellDef> Quantity </th>
+    <td mat-cell *matCellDef="let element"> {{element.quantity}} </td>
+  </ng-container>
+
+  <!-- Role Column -->
+  <ng-container matColumnDef="thumbnail">
+    <th mat-header-cell *matHeaderCellDef> Image </th>
+    <td mat-cell *matCellDef="let element"> {{element.thumbnail}} </td>
+  </ng-container>
+
+  <!-- Status Column -->
+  <ng-container matColumnDef="status">
+    <th mat-header-cell *matHeaderCellDef> Status </th>
+    <td mat-cell *matCellDef="let element"> {{element.status}} </td>
+  </ng-container>
+
+   <!-- Actions Column -->
+   <ng-container matColumnDef="actions">
+    <th mat-header-cell *matHeaderCellDef> Actions </th>
+    <td mat-cell *matCellDef="let element">
+      <div class="actions">
+        <button mat-icon-button class="view-button" (click)="viewDetail(element)">
+          <mat-icon >visibility</mat-icon>
+        </button>
+        <button mat-icon-button class="edit-button" (click)="updateProduct(element)">
+          <mat-icon>edit</mat-icon>
+        </button>
+        <button mat-icon-button color="warn" class="delete-button" (click)="deleteProduct(element)">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </div>          
+    </td>
+  </ng-container>
+
+  <!-- Header and Row Definition -->
+  <tr mat-header-row *matHeaderRowDef="['productName', 'categoryName', 'price', 'quantity', 'thumbnail', 'status','actions']"></tr>
+  <tr mat-row *matRowDef="let row; columns: ['productName', 'categoryName', 'price', 'quantity', 'thumbnail', 'status','actions']"></tr>
+</table>
