@@ -7,6 +7,7 @@ using CoffeeShopManagement.Business.DTO;
 using CoffeeShopManagement.Business.Helpers;
 using CoffeeShopManagement.Business.ServiceContracts;
 using CoffeeShopManagement.Data.UnitOfWork;
+using CoffeeShopManagement.Models.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace CoffeeShopManagement.Business.Services
@@ -112,6 +113,57 @@ namespace CoffeeShopManagement.Business.Services
                 throw new Exception("Category name does not exist");
             }
             return id;
+        }
+
+        public ProductListResponse GetProductWithCondition(string search = "", string filterCategory = "", string filterStatus = "", int page = 0, int pageSize = 5, string sortColumn = "ProductName", string sortDirection = "asc")
+        {
+            var query = _unitOfWork.ProductRepository.GetQuery().Include(x => x.Categoty).AsQueryable();
+
+            // Apply search
+            if (!string.IsNullOrEmpty(search))
+            {
+                query = query.Where(p => p.ProductName.Contains(search) || p.Categoty.CategoryName.Contains(search));
+            }
+
+            // Apply filter
+            if (!string.IsNullOrEmpty(filterCategory))
+            {
+                query = query.Where(p=>p.Categoty.CategoryName.Contains(search));
+            }
+
+            if (!string.IsNullOrEmpty(filterStatus))
+            {
+                query = query.Where(p=> p.Status== ProductHelper.ConvertToStatusInt(filterStatus));
+            }
+            // Apply sorting
+            if (sortDirection == "asc")
+            {
+                query = query.OrderBy(p => EF.Property<object>(p, sortColumn));
+            }
+            else
+            {
+                query = query.OrderByDescending(p => EF.Property<object>(p, sortColumn));
+            }
+
+            // Apply pagination
+            var totalProducts = query.Count();
+            var products = query.Skip(page * pageSize).Take(pageSize)
+                .Select(p => new ProductDTO()
+                {
+                    Id = p.Id,
+                    ProductName = p.ProductName,
+                    CategoryName = p.Categoty.CategoryName,
+                    Price = p.Price,
+                    Quantity = p.Quantity,
+                    Thumbnail = p.Thumbnail,
+                    Status = ProductHelper.ConvertToStatusString(p.Status),
+                }).ToList();
+
+            return new ProductListResponse()
+            {
+                List = products,
+                Total = totalProducts,
+            };
         }
     }
 }
