@@ -33,9 +33,9 @@ namespace CoffeeShopManagement.Business.Services
             return products.Select(p => p.ToProductDTO(_unitOfWork)); 
         }
 
-        public async Task<IEnumerable<ProductDTO>> GetProductsByFilter(string category, decimal? minPrice, decimal? maxPrice, double? minRating, int page, int pageSize)
+        public async Task<IEnumerable<ProductDTO>> GetProductsByFilter(string category, decimal? minPrice, decimal? maxPrice,, int page, int pageSize)
         {
-            var products = await _productRepository.FilterProductsAsync(category, minPrice, maxPrice, minRating, page, pageSize);
+            var products = await _productRepository.FilterProductsAsync(category, minPrice, maxPrice, page, pageSize);
             return products.Select(p => p.ToProductDTO(_unitOfWork)); 
         }
     }

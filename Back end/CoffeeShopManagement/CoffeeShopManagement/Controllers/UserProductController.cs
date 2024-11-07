@@ -50,11 +50,10 @@ namespace CoffeeShopManagement.WebAPI.Controllers
            [FromQuery] string category = "",
            [FromQuery] decimal? minPrice = null,
            [FromQuery] decimal? maxPrice = null,
-           [FromQuery] double? minRating = null,
            [FromQuery] int page = 1,
            [FromQuery] int pageSize = 10)
         {
-            var products = await productService.GetProductsByFilter(category, minPrice, maxPrice, minRating, page, pageSize);
+            var products = await productService.GetProductsByFilter(category, minPrice, maxPrice, page, pageSize);
             return Ok(products);
         }
     }

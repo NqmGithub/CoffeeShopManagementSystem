@@ -52,7 +52,7 @@ namespace CoffeeShopManagement.Data.Repositories
                 .ToListAsync();
         }
 
-        public async Task<IEnumerable<Product>> FilterProductsAsync(string category, decimal? minPrice, decimal? maxPrice, double? minRating, int page, int pageSize)
+        public async Task<IEnumerable<Product>> FilterProductsAsync(string category, decimal? minPrice, decimal? maxPrice, int page, int pageSize)
         {
             var query = _context.Products.AsQueryable();
 

@@ -11,6 +11,6 @@ namespace CoffeeShopManagement.Business.ServiceContracts
     {
         Task<IEnumerable<ProductDTO>> GetProductsbySearch(string searchTerm, int page, int pageSize);
         Task<IEnumerable<ProductDTO>> GetAllProducts(int page, int pageSize, string search, string category);
-        Task<IEnumerable<ProductDTO>> GetProductsByFilter(string category, decimal? minPrice, decimal? maxPrice, double? minRating, int page, int pageSize);
+        Task<IEnumerable<ProductDTO>> GetProductsByFilter(string category, decimal? minPrice, decimal? maxPrice, int page, int pageSize);
     }
 }
