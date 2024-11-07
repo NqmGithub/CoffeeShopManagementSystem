@@ -6,5 +6,6 @@ export interface User {
     role: number,
     avatar: string,
     address: string,
+    phoneNumber: string,
     status: number
 }

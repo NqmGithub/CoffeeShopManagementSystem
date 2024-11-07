@@ -82,6 +82,11 @@ namespace CoffeeShopManagement.Data.Repositories
             return await _dbSet.FindAsync(id);
         }
 
+        public async Task<IEnumerable<T>> GetPagination(int pageNumber, int pageSize)
+        {
+            return await _dbSet.Skip(pageSize * (pageNumber - 1)).Take(pageSize).ToListAsync();
+        }
+
         public IQueryable<T> GetQuery()
         {
             return _dbSet;

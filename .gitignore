@@ -100,3 +100,5 @@ coverage/
 # Environment variables
 *.env
 /Back end/CoffeeShopManagement/.vs
+/Back end/CoffeeShopManagement/.vs
+Back end/CoffeeShopManagement/CoffeeShopManagement/CoffeeShopManagement.WebAPI.csproj.user
