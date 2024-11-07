@@ -23,6 +23,8 @@ public partial class Contact
 
     public int Status { get; set; }
 
+    public string Response { get; set; }
+
     public virtual User Admin { get; set; }
 
     public virtual User Customer { get; set; }

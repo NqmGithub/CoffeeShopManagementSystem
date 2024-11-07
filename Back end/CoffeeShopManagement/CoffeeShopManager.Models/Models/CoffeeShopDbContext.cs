@@ -62,7 +62,8 @@ public partial class CoffeeShopDbContext : DbContext
             entity.Property(e => e.CustomerId).HasColumnName("CustomerID");
             entity.Property(e => e.Description)
                 .IsRequired()
-                .HasMaxLength(255);
+                .HasMaxLength(1000);
+            entity.Property(e => e.Response).HasMaxLength(1000);
             entity.Property(e => e.SendDate).HasColumnType("datetime");
             entity.Property(e => e.Subject)
                 .IsRequired()
