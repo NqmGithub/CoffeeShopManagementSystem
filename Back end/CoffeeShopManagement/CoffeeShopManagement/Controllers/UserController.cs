@@ -1,6 +1,8 @@
-﻿using CoffeeShopManagement.Business.ServiceContracts;
+﻿using CoffeeShopManagement.Business.DTO;
+using CoffeeShopManagement.Business.ServiceContracts;
 using CoffeeShopManagement.Models.Models;
 using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.DataAnnotations;
 
 namespace CoffeeShopManagement.WebAPI.Controllers
 {
@@ -74,5 +76,57 @@ namespace CoffeeShopManagement.WebAPI.Controllers
 
             return NoContent();
         }
+        [HttpPut("{id}/ChangePassword")]
+        public async Task<IActionResult> ChangePassword(Guid id, ChangePasswordDTO changePassword)
+        {
+            var user = await _userService.Get(id);
+            if (user == null)
+            {
+                return NotFound(new { message = "User not found." });
+            }
+            if (user.Password != changePassword.CurrentPassword)
+            {
+                return BadRequest(new { message = "Current password is incorrect." });
+            }
+            if (user.Password == changePassword.NewPassword)
+            {
+                return BadRequest(new { message = "The old password must be different from the new password." });
+            }
+            if (changePassword.NewPassword != changePassword.ConfirmNewPassword)
+            {
+                return BadRequest(new { message = "Confirm password does not match." });
+            }
+
+            user.Password = changePassword.NewPassword;
+            await _userService.Update(user);
+
+            return NoContent();
+        }
+        [HttpPut("{id}/UpdateProfile")]
+        public async Task<IActionResult> UpdateUser(Guid id, UpdateProfileDTO updateProfile)
+        {
+            var user = await _userService.Get(id);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            user.UserName = updateProfile.UserName;
+            user.PhoneNumber = updateProfile.PhoneNumber;
+            user.Address = updateProfile.Address;
+
+            if (!TryValidateModel(user))
+            {
+                return BadRequest(ModelState);
+            }
+
+            await _userService.Update(user);
+
+            return NoContent();
+        }
     }
+
+   
+  
+
 }

@@ -1,4 +1,5 @@
-﻿using CoffeeShopManagement.Models.Models;
+﻿using CoffeeShopManagement.Business.DTO;
+using CoffeeShopManagement.Models.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;

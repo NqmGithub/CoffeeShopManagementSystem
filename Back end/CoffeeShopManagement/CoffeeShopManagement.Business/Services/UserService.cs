@@ -96,5 +96,6 @@ namespace CoffeeShopManagement.Business.Services
         {
             return await _unitOfWork.UserRepository.GetUserCount();
         }
+
     }
 }

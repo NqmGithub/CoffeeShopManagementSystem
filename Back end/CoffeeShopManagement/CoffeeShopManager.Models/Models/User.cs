@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace CoffeeShopManagement.Models.Models;
 
@@ -15,6 +16,8 @@ public partial class User
 
     public int Role { get; set; }
 
+    [Required]
+    [RegularExpression(@"^\d{10}$", ErrorMessage = "Phone number must be 10 digits.")]
     public string PhoneNumber { get; set; } = null!;
 
     public string? Avatar { get; set; }
