@@ -21,7 +21,7 @@ namespace CoffeeShopManagement.Business.Services
         public async Task Add(User user)
         {
             User existId = await _unitOfWork.UserRepository.GetById(user.Id);
-            if(existId != null)
+            if (existId != null)
             {
                 throw new ArgumentException("Already exist user with this id with username: " + existId.UserName);
             }
@@ -38,8 +38,8 @@ namespace CoffeeShopManagement.Business.Services
 
         public async Task Delete(Guid id)
         {
-            var exist = _unitOfWork.UserRepository.GetById(id); 
-            if(exist == null)
+            var exist = _unitOfWork.UserRepository.GetById(id);
+            if (exist == null)
             {
                 throw new ArgumentException($"No user with this id: {id}");
             }
@@ -59,30 +59,21 @@ namespace CoffeeShopManagement.Business.Services
 
         public Task<User> GetByEmail(string email)
         {
-            var user =  _unitOfWork.UserRepository.GetByEmail(email);
-            if(user == null)
+            var user = _unitOfWork.UserRepository.GetByEmail(email);
+            if (user == null)
             {
                 throw new ArgumentException($"The email {email} is invalid");
             }
             return user;
         }
-<<<<<<< HEAD
-        public Task<User> GetById(Guid id)
-        {
-            var user = _unitOfWork.UserRepository.GetById(id);
-            if (user == null) { 
-                throw new ArgumentException("User not found"); 
-            }
-            return user;
-=======
 
         public async Task<IEnumerable<User>> GetPagination(int pageNumber, int pageSize)
         {
-            if(pageNumber < 1 || pageSize < 1)
+            if (pageNumber < 1 || pageSize < 1)
             {
                 throw new ArgumentException("Page number and size must be greater than 0");
             }
-            if(pageSize > 30)
+            if (pageSize > 30)
             {
                 throw new ArgumentException("Page size must not be too big (< 30)");
             }
@@ -104,7 +95,6 @@ namespace CoffeeShopManagement.Business.Services
         public async Task<int> GetUserCount()
         {
             return await _unitOfWork.UserRepository.GetUserCount();
->>>>>>> main
         }
     }
 }

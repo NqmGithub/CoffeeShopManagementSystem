@@ -1,8 +1,6 @@
 ﻿using CoffeeShopManagement.Business.ServiceContracts;
 using CoffeeShopManagement.Models.Models;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Threading.Tasks;
 
 namespace CoffeeShopManagement.WebAPI.Controllers
 {
@@ -17,12 +15,6 @@ namespace CoffeeShopManagement.WebAPI.Controllers
             _userService = userService;
         }
 
-<<<<<<< HEAD
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetUserProfile(Guid id)
-        {
-            var user = await _userService.GetById(id); // Giả sử bạn có phương thức GetById trong UserService
-=======
         [HttpGet("users")]
         public async Task<IActionResult> GetAll()
         {
@@ -34,15 +26,12 @@ namespace CoffeeShopManagement.WebAPI.Controllers
         public async Task<IActionResult> GetUserById(Guid id)
         {
             var user = await _userService.Get(id);
->>>>>>> main
             if (user == null)
             {
                 return NotFound();
             }
             return Ok(user);
         }
-<<<<<<< HEAD
-=======
 
         [HttpGet("byEmail/{email}")]
         public async Task<IActionResult> GetUserByEmail(string email)
@@ -85,6 +74,5 @@ namespace CoffeeShopManagement.WebAPI.Controllers
 
             return NoContent();
         }
->>>>>>> main
     }
 }

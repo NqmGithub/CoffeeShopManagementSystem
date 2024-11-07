@@ -21,13 +21,6 @@ namespace CoffeeShopManagement.Data.Repositories
         {
             return await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
         }
-<<<<<<< HEAD
-        public async Task<User> GetById(Guid id)
-        {
-            return await _context.Users.FirstOrDefaultAsync(u => u.Id == id);
-        }
-    }
-=======
 
         public async Task Add(User user)
         {
@@ -71,5 +64,4 @@ namespace CoffeeShopManagement.Data.Repositories
             return await _context.Users.CountAsync();
         }
     }
->>>>>>> main
 }

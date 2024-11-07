@@ -10,9 +10,6 @@ namespace CoffeeShopManagement.Data.RepositoryContracts
     public interface IUserRepository : IGenericRepository<User>
     {
         Task<User> GetByEmail(string email);
-<<<<<<< HEAD
-        Task<User> GetById(Guid id);
-=======
         Task Add(User user);
         Task Delete(Guid id);
         Task<IEnumerable<User>> GetAll();
@@ -21,6 +18,6 @@ namespace CoffeeShopManagement.Data.RepositoryContracts
         Task Update(User user);
 
         Task<int> GetUserCount();
->>>>>>> main
+
     }
 }

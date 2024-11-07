@@ -10,9 +10,6 @@ namespace CoffeeShopManagement.Business.ServiceContracts
     public interface IUserService
     {
         Task<User> GetByEmail(string email);
-<<<<<<< HEAD
-        Task<User> GetById(Guid id);
-=======
         Task<IEnumerable<User>> GetAll();
         Task<User> Get(Guid id);
         Task<IEnumerable<User>> GetPagination(int pageNumber, int pageSize);
@@ -21,6 +18,5 @@ namespace CoffeeShopManagement.Business.ServiceContracts
         Task Delete(Guid id);
 
         Task<int> GetUserCount();
->>>>>>> main
     }
 }
