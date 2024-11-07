@@ -21,5 +21,12 @@ namespace CoffeeShopManagement.Business.ServiceContracts
         Task<bool> UpdateProduct(ProductUpdateDTO productUpdateDTO);
 
         Task<bool> ChangeStatusProductById(Guid id,string choice);
+
+        ProductListResponse GetProductWithCondition
+            (string search = "",
+            string filterCategory = "",string filterStatus ="",
+            int page = 0, int pageSize = 6,
+            string sortColumn = "ProductName",
+             string sortDirection = "asc");
     }
 }

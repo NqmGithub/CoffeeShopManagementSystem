@@ -49,3 +49,21 @@
     .mat-column-actions{
       width: 120px;
     }
+    .example-form {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      align-items: flex-end;
+      margin-bottom: 16px;
+    }
+    
+    .example-full-width {
+      flex: 1;
+    }
+    
+    .addButton{
+    height: 55px;
+    border-radius: 5px;
+    background-color: #4caf50 !important;
+    color: #ffffff !important;
+    }

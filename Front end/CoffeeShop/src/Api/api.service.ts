@@ -19,8 +19,9 @@ export class ApiService {
     return this.http.post<any>(this.baseurl + '/User/login', data);
   }
 
-  getProducts(): Observable<Product[]> {
+  getProducts( search:string,filterCategory:string, filterStatus: string,page: number, pageSize: number,
+    sortColumn: string,sortDirection:string): Observable<{ list: Product[], total: number }> {
 
-    return this.http.get<Product[]>("https://localhost:44344/api/Product",this.headerCustom);
+    return this.http.get<{ list: Product[], total: number }>("https://localhost:44344/api/Product",this.headerCustom);
   }
 }

@@ -45,7 +45,7 @@ namespace CoffeeShopManagement.Data.Repositories
         {
             IQueryable<T> query = _dbSet;
             if (filter != null)
-            {
+            {   
                 query.Where(filter);
             }
             if (string.IsNullOrEmpty(includeProperties))
