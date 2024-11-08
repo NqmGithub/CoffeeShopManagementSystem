@@ -10,7 +10,7 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 import {FormsModule} from '@angular/forms';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSort, MatSortModule } from '@angular/material/sort';
-import { MatPaginator } from '@angular/material/paginator';
+import { MatPaginator, PageEvent } from '@angular/material/paginator';
 @Component({
   selector: 'app-product-manager',
   standalone: true,
@@ -23,7 +23,7 @@ import { MatPaginator } from '@angular/material/paginator';
     FormsModule,
     MatSelectModule,
     MatSortModule,
-    MatPaginator
+    MatPaginator,
   ],
   templateUrl: './product-manager.component.html',
   styleUrl: './product-manager.component.scss'
@@ -41,6 +41,8 @@ export class ProductManagerComponent implements OnInit {
   sortColumn: string="ProductName";
   sortDirection:string="asc";
 
+  listCategoryName: string[] = [];
+
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
@@ -52,6 +54,12 @@ export class ProductManagerComponent implements OnInit {
     this.productsData.sort = this.sort;
     this.productsData.paginator = this.paginator;
     this.loadProducts();
+    this.loadCategoryNames();
+  }
+
+  onChange(){
+    console.log(this.filterCategory)
+    this.loadProducts();
   }
 
   onSortChange(){
@@ -59,7 +67,8 @@ export class ProductManagerComponent implements OnInit {
     this.sortDirection = this.sort.direction;
     this.loadProducts();
   }
-  onPageChange(event:any):void{
+  onPageChange(event:PageEvent):void{
+    console.log(event.pageSize)
     this.page = event.pageIndex;
     this.pageSize = event.pageSize;
     this.loadProducts();
@@ -71,10 +80,20 @@ export class ProductManagerComponent implements OnInit {
     // load data
     this.apiService.getProducts(this.search,this.filterCategory,this.filterStatus,this.page,this.pageSize,this.sortColumn,this.sortDirection).subscribe(
       (response: { list: Product[], total: number }) => {
-        console.log(response.list);
         this.products = response.list;
         this.productsData.data = this.products;
         this.totalProducts = response.total;
+      },
+      (error) => {
+        console.error('Error fetching products:', error);
+      }
+    );
+  }
+
+  loadCategoryNames(){
+    this.apiService.getAllCateogryNames().subscribe(
+      (data : string[]) => {
+        this.listCategoryName = data;
       },
       (error) => {
         console.error('Error fetching products:', error);

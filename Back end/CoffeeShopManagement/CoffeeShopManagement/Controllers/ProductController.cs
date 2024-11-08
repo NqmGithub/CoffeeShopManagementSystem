@@ -28,17 +28,25 @@ namespace CoffeeShopManagement.WebAPI.Controllers
 
         [HttpGet]
         public async Task<IActionResult> GetListProducts(string search = "",
-            string filterCategory = "", string filterStatus = "",
-            int page = 0, int pageSize = 6,
-            string sortColumn = "ProductName",
-             string sortDirection = "asc")
+           string filterCategory = "",string filterStatus = "",
+             int page = 0, int pageSize = 6,
+           string sortColumn = "ProductName",
+            string sortDirection = "asc")
         {
             //result include: list products and totalProducts after filter,sort, pagination
-            var result =  _productService.GetProductWithCondition(search,filterCategory,filterStatus,page,pageSize,sortColumn,sortDirection);
+            var productQueryRequest = new ProductQueryRequest()
+            {
+                Search = search,
+                FilterCategory = filterCategory,
+                FilterStatus = filterStatus,
+                Page = page,
+                PageSize = pageSize,
+                SortColumn = sortColumn,
+                SortDirection = sortDirection
+            };
+            var result = await  _productService.GetProductWithCondition(productQueryRequest);
             return Ok(result);
         }
-
-
 
         [HttpPost]
         public async Task<IActionResult> CreateUser(ProductCreateDTO productCreateDTO)

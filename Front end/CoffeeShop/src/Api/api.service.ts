@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Product } from '../Interfaces/product';
@@ -7,21 +7,50 @@ import { Product } from '../Interfaces/product';
   providedIn: 'root'
 })
 export class ApiService {
-  private baseurl = "https://localhost:44322/api"
+  private baseurl = "https://localhost:44344/api"
   private headerCustom = {}
 
   constructor(private http: HttpClient) {
-    this.headerCustom = {headers: { "Authorization": "Bearer " + localStorage.getItem("token") }}
+    this.headerCustom = { headers: { "Authorization": "Bearer " + localStorage.getItem("token") } }
 
   }
 
-  login(data: any): Observable<any>{
-    return this.http.post<any>(this.baseurl + '/User/login', data);
+  login(data: any): Observable<any> {
+    return this.http.post<any>(this.baseurl + '/Auth/login', data);
   }
 
-  getProducts( search:string,filterCategory:string, filterStatus: string,page: number, pageSize: number,
-    sortColumn: string,sortDirection:string): Observable<{ list: Product[], total: number }> {
+  signup(data: any): Observable<any> {
+    return this.http.post<any>(this.baseurl + '/Auth/signup', data);
+  }
 
-    return this.http.get<{ list: Product[], total: number }>("https://localhost:44344/api/Product",this.headerCustom);
+  getProducts(search: string, filterCategory: string, filterStatus: string, page: number, pageSize: number,
+    sortColumn: string, sortDirection: string): Observable<{ list: Product[], total: number }> {
+
+    let params = new HttpParams()
+      .set('page', page.toString())
+      .set('pageSize', pageSize.toString())
+      .set('sortColumn', sortColumn)
+      .set('sortDirection', sortDirection);
+
+    if (search) {
+      params = params.set('search', search);
+    }
+
+    if (filterCategory) {
+      params = params.set('filterCategory', filterCategory);
+    }
+
+    if (filterStatus) {
+      params = params.set('filterStatus', filterStatus);
+    }
+
+    return this.http.get<{ list: Product[], total: number }>(`${this.baseurl}/Product`, {
+      ...this.headerCustom,
+      params: params
+    });
+  }
+
+  getAllCateogryNames(): Observable<string[]> {
+    return this.http.get<string[]>(this.baseurl + '/Category/name',this.headerCustom);
   }
 }
