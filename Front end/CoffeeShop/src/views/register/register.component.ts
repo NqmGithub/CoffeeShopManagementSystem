@@ -18,6 +18,7 @@ export class RegisterComponent {
   signupForm = new FormGroup({
     email: new FormControl(''),
     password: new FormControl(''),
+    rePassword: new FormControl(''),
     address: new FormControl(''),
     phoneNumber: new FormControl(''),
     userName: new FormControl('')
@@ -28,9 +29,14 @@ export class RegisterComponent {
   signup(){
     const email = this.signupForm.value.email ?? '';
     const password = this.signupForm.value.password ?? '';
+    const rePassword = this.signupForm.value.rePassword ?? '';
     const userName = this.signupForm.value.userName ?? '';
     const address = this.signupForm.value.address ?? '';
     const phoneNumber = this.signupForm.value.phoneNumber ?? '';
+    if(rePassword != password){
+      alert("Password does not match");
+      return;
+    }
     const user: User = {
       id: "",
       address: address,

@@ -1,4 +1,5 @@
-﻿using CoffeeShopManagement.Business.ServiceContracts;
+﻿using CoffeeShopManagement.Business.Helpers;
+using CoffeeShopManagement.Business.ServiceContracts;
 using CoffeeShopManagement.Models.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -70,7 +71,16 @@ namespace CoffeeShopManagement.WebAPI.Controllers
                 return BadRequest();
             }
 
+            user.Password = PasswordHelper.HashPassword(user.Password);
             await _userService.Update(user);
+
+            return NoContent();
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteUser(Guid id)
+        {
+            await _userService.Delete(id);
 
             return NoContent();
         }

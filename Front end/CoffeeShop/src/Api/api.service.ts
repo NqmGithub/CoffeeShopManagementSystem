@@ -16,4 +16,8 @@ export class ApiService {
   signup(data: any): Observable<any>{
     return this.http.post<any>(this.baseurl + '/Auth/signup', data);
   }
+
+  getUserById(id: any): Observable<any>{
+    return this.http.get<any>(this.baseurl + `/User/byId/${id}`);
+  }
 }

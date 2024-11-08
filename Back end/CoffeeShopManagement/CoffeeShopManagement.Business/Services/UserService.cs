@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CoffeeShopManagement.Business.Helpers;
 using CoffeeShopManagement.Business.ServiceContracts;
 using CoffeeShopManagement.Data.UnitOfWork;
 using CoffeeShopManagement.Models.Models;
@@ -33,6 +34,7 @@ namespace CoffeeShopManagement.Business.Services
             }
 
             user.Id = Guid.NewGuid();
+            user.Password = PasswordHelper.HashPassword(user.Password);
             await _unitOfWork.UserRepository.Add(user);
         }
 
@@ -89,6 +91,7 @@ namespace CoffeeShopManagement.Business.Services
 
         public async Task Update(User user)
         {
+            user.Password = PasswordHelper.HashPassword(user.Password);
             await _unitOfWork.UserRepository.Update(user);
         }
 

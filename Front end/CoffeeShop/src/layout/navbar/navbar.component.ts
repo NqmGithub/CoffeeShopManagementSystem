@@ -19,6 +19,8 @@ export class NavbarComponent {
   auth: AuthService = inject(AuthService)
   isLoggedIn = this.auth.isLoggedIn();
   
+  constructor(){this.isLoggedIn = this.auth.isLoggedIn()}
+
   loginNavigate(){
     this.route.navigate(['/login'])
   }
@@ -28,7 +30,7 @@ export class NavbarComponent {
   }
 
   profileNavigate(){
-    
+    this.route.navigate(['/profile'])
   }
 
   logout(){
