@@ -13,9 +13,10 @@ namespace CoffeeShopManagement.Business.DTO
 {
     public class ProductDTO
     {
+        public Guid Id { get; set; }
         public string ProductName { get; set; } = null!;
 
-        public string CategotyName { get; set; }
+        public string CategoryName { get; set; }
 
         public decimal Price { get; set; }
 
@@ -33,8 +34,9 @@ namespace CoffeeShopManagement.Business.DTO
             var categoryName = unitOfWork.ProductRepository.GetQuery().Include(x => x.Categoty).Where(x => product.CategotyId == x.Categoty.Id).Select(x => x.Categoty.CategoryName).FirstOrDefault();
             return new ProductDTO()
             {
+                Id = product.Id,
                 ProductName = product.ProductName,
-                CategotyName = categoryName,
+                CategoryName = categoryName,
                 Price = product.Price,
                 Quantity = product.Quantity,
                 Thumbnail = product.Thumbnail,
