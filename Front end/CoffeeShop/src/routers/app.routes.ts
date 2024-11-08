@@ -4,6 +4,7 @@ import { HomeComponent } from '../views/home/home.component';
 import { UnauthorizedComponent } from '../views/unauthorized/unauthorized.component';
 import { AdminComponent } from '../views/admin/admin.component';
 import { ProductManagerComponent } from '../views/admin/product-manager/product-manager.component';
+import { RegisterComponent } from '../views/register/register.component';
 
 export const routes: Routes = [
     {
@@ -25,7 +26,7 @@ export const routes: Routes = [
             }
           ]          
     },
-    
+    {path:'register', component:RegisterComponent},
     {path:'login', component:LoginComponent},
     {path:'unauthorized', component:UnauthorizedComponent}
 ];

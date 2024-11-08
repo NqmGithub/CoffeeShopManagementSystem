@@ -13,8 +13,14 @@
     <button mat-button routerLink="/about">ABOUT</button>
     <span class="example-spacer"></span>
     <div class="nav-section">
-      <button mat-button (click)="loginNavigate()">Login</button>
-      <button mat-button routerLink="/signup">Sign Up</button>
+      @if(isLoggedIn){
+        <button mat-button (click)="profileNavigate()">Profile</button>
+        <button mat-button (click)="logout()">Log out</button>
+      }
+      @else {
+        <button mat-button (click)="loginNavigate()">Log in</button>
+        <button mat-button (click)="signupNavigate()">Sign Up</button>
+      }
     </div> 
 </div>
   </mat-toolbar>

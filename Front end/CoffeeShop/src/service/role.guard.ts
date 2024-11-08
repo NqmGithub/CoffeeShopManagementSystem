@@ -10,7 +10,7 @@ export class RoleGuardService implements CanActivate {
   constructor( private auth: AuthService, private router: Router ) {}
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
     const role: string = this.auth.getRoles();
-    if(role === '1'){
+    if(role === 'admin'){
       return true;
     }else{
       this.router.navigate(['unauthorized']);

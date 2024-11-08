@@ -15,11 +15,11 @@ export class ApiService {
 
   }
 
-  login(data: any): Observable<any> {
+  login(data: any): Observable<any>{
     return this.http.post<any>(this.baseurl + '/Auth/login', data);
   }
 
-  signup(data: any): Observable<any> {
+  signup(data: any): Observable<any>{
     return this.http.post<any>(this.baseurl + '/Auth/signup', data);
   }
 
