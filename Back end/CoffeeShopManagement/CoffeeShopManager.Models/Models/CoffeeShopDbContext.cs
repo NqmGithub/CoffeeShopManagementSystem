@@ -92,13 +92,13 @@ public partial class CoffeeShopDbContext : DbContext
             entity.ToTable("Product");
 
             entity.Property(e => e.Id).ValueGeneratedNever();
-            entity.Property(e => e.CategotyId).HasColumnName("CategotyID");
+            entity.Property(e => e.CategoryId).HasColumnName("CategotyID");
             entity.Property(e => e.Price).HasColumnType("decimal(18, 0)");
             entity.Property(e => e.ProductName).HasMaxLength(255);
             entity.Property(e => e.Thumbnail).HasMaxLength(255);
 
             entity.HasOne(d => d.Category).WithMany(p => p.Products)
-                .HasForeignKey(d => d.CategotyId)
+                .HasForeignKey(d => d.CategoryId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK__Product__Categot__2C3393D0");
         });

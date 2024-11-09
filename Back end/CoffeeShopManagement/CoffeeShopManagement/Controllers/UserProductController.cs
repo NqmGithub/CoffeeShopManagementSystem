@@ -1,61 +1,67 @@
 ﻿using CoffeeShopManagement.Business.ServiceContracts;
-using CoffeeShopManagement.Business.Services;
-using CoffeeShopManagement.Data.RepositoryContracts;
-using CoffeeShopManagement.Data.UnitOfWork;
-using Microsoft.AspNetCore.Authorization;
+using CoffeeShopManagement.Models.Enums;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
+using System.Threading.Tasks;
+
 namespace CoffeeShopManagement.WebAPI.Controllers
 {
-    [Authorize(Roles = "User")]
-    [Route("api/controller")]
+    [Route("api/[controller]")]
     [ApiController]
     public class UserProductController : ControllerBase
     {
-        private readonly IProductRepository productRepository;
-        private readonly IUnitOfWork unitOfWork;
         private readonly IProductService productService;
-        public UserProductController(IProductRepository productRepository, IUnitOfWork unitOfWork, IProductService productService)
+        private readonly ICategoryService categoryService;
+
+        public UserProductController(IProductService productService, ICategoryService categoryService)
         {
-            this.productRepository = productRepository;
-            this.unitOfWork = unitOfWork;
             this.productService = productService;
+            this.categoryService = categoryService;
         }
-        [HttpGet("search")]
-        public async Task<IActionResult> GetProductBySearch(
-               [FromQuery] string searchTerm,
-               [FromQuery] int page = 1,
-               [FromQuery] int pageSize = 10)
+
+        private void ValidateProductParameters(
+            ref string search,
+            ref string category,
+            ref decimal? minPrice,
+            ref decimal? maxPrice,
+            ref SortBy sortBy,
+            ref bool isDescending,
+            ref int page,
+            ref int pageSize)
         {
-            var products = await productService.GetProductsbySearch(searchTerm, page, pageSize);
-            return Ok(products);
+            search = search ?? string.Empty;
+            category = category ?? string.Empty;
+            minPrice = minPrice ?? 0;
+            maxPrice = maxPrice ?? 1000000;
+            page = page <= 0 ? 1 : page;
+            pageSize = (pageSize <= 0 || pageSize > 100) ? 10 : pageSize;
+        }
+
+        [HttpGet("categories")]
+        public async Task<IActionResult> GetAllCategories()
+        {
+            var categories = await categoryService.GetAllCategories();
+            if (categories == null || !categories.Any())
+            {
+                return NoContent();
+            }
+            return Ok(categories);
         }
 
         [HttpGet]
         public async Task<IActionResult> GetAllProducts(
+            [FromQuery] string search = "",
+            [FromQuery] string category = "",
+            [FromQuery] decimal? minPrice = null,
+            [FromQuery] decimal? maxPrice = null,
             [FromQuery] int page = 1,
             [FromQuery] int pageSize = 10,
-            [FromQuery] string search = "",
-            [FromQuery] string category = "")
+            [FromQuery] SortBy sortBy = SortBy.Id,
+            [FromQuery] bool isDescending = false)
         {
-            var products = await productService.GetAllProducts(page, pageSize, search, category);
-            return Ok(products);
-        }
-        [HttpGet("filter")]
-        public async Task<IActionResult> GetProductByFilter(
-           [FromQuery] string category = "",
-           [FromQuery] decimal? minPrice = null,
-           [FromQuery] decimal? maxPrice = null,
-           [FromQuery] int page = 1,
-           [FromQuery] int pageSize = 10)
-        {
-            var products = await productService.GetProductsByFilter(category, minPrice, maxPrice, page, pageSize);
+            ValidateProductParameters(ref search, ref category, ref minPrice, ref maxPrice, ref sortBy, ref isDescending, ref page, ref pageSize);
+
+            var products = await productService.GetAllProductsAsync(search, category, minPrice, maxPrice, page, pageSize, sortBy, isDescending);
             return Ok(products);
         }
     }
 }
-

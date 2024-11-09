@@ -15,7 +15,7 @@ namespace CoffeeShopManagement.Business.DTO
     {
         public string ProductName { get; set; } = null!;
 
-        public string CategotyName { get; set; }
+        public string CategoryName { get; set; } = null!;
 
         public decimal Price { get; set; }
 
@@ -23,23 +23,30 @@ namespace CoffeeShopManagement.Business.DTO
 
         public string? Thumbnail { get; set; }
 
-        public string Status { get; set; }
+        public int Status { get; set; }
         public string? Description { get; set; }
+        public Guid Id { get; set; }
     }
 
     public static class ProductExtensions
     {
         public static ProductDTO ToProductDTO(this Product product, IUnitOfWork unitOfWork)
         {
-            var categoryName = unitOfWork.ProductRepository.GetQuery().Include(x => x.Category).Where(x => product.CategotyId == x.Category.Id).Select(x => x.Category.CategoryName).FirstOrDefault();
+            var categoryName = unitOfWork.ProductRepository
+                .GetQuery()
+                .Include(x => x.Category)
+                .Where(x => product.CategoryId == x.Category.Id)
+                .Select(x => x.Category.CategoryName)
+                .FirstOrDefault();
             return new ProductDTO()
             {
+                Id = product.Id,
                 ProductName = product.ProductName,
-                CategotyName = categoryName,
+                CategoryName = categoryName,
                 Price = product.Price,
                 Quantity = product.Quantity,
                 Thumbnail = product.Thumbnail,
-                Status = ProductHelper.ConvertToStatusString(product.Status),
+                Status = product.Status,
                 Description = product.Description,
             };
         }

@@ -67,7 +67,7 @@ namespace CoffeeShopManagement.Data.Repositories
             return _dbSet.ToList();
         }
 
-        public async Task<IEnumerable<T>> GetAllAsync()
+        public async Task<IEnumerable<T>> GetAllCategoryAsync()
         {
             return await _dbSet.ToListAsync();
         }
@@ -80,6 +80,11 @@ namespace CoffeeShopManagement.Data.Repositories
         public async Task<T?> GetByIdAsync(Guid id)
         {
             return await _dbSet.FindAsync(id);
+        }
+
+        public async Task<IEnumerable<T>> GetPagination(int pageNumber, int pageSize)
+        {
+            return await _dbSet.Skip(pageSize * (pageNumber - 1)).Take(pageSize).ToListAsync();
         }
 
         public IQueryable<T> GetQuery()

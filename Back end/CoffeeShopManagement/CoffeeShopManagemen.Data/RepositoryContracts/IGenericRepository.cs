@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CoffeeShopManagement.Models.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -10,9 +11,10 @@ namespace CoffeeShopManagement.Data.RepositoryContracts
     public interface IGenericRepository<T> where T : class
     {
         IEnumerable<T> GetAll();
-        Task<IEnumerable<T>> GetAllAsync();
+        Task<IEnumerable<T>> GetAllCategoryAsync();
         T? GetById(Guid id);
         Task<T?> GetByIdAsync(Guid id);
+        Task<IEnumerable<T>> GetPagination(int pageNumber, int pageSize);
         void AddRangeAsync(List<T> list);
         void Add(T entity);
         void Update(T entity);

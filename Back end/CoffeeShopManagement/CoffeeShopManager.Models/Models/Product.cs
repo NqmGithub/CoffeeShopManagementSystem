@@ -9,7 +9,7 @@ public partial class Product
 
     public string ProductName { get; set; } = null!;
 
-    public Guid CategotyId { get; set; }
+    public Guid CategoryId { get; set; }
 
     public decimal Price { get; set; }
 

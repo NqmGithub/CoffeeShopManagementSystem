@@ -1,0 +1,12 @@
+<mat-card class="slider-container">
+    <img [src]="images[currentIndex]" alt="Image Slider" class="slider-image" />
+    <div class="slider-controls">
+      <button mat-icon-button (click)="previousImage()">
+        <mat-icon>chevron_left</mat-icon>
+      </button>
+      <button mat-icon-button (click)="nextImage()">
+        <mat-icon>chevron_right</mat-icon>
+      </button>
+    </div>
+  </mat-card>
+  

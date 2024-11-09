@@ -22,13 +22,12 @@ namespace CoffeeShopManagement.Business.Helpers
             return "Unknown";
         }
 
-        internal static int ConvertToStatusInt(string status)
+        internal static int ConvertToStatusInt(string status) 
         {
             if (status.Equals("Active"))
             {
                 return 1;
-            }
-            else if (status.Equals("InActive"))
+            }else if (status.Equals("InActive"))
             {
                 return 0;
             }
