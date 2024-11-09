@@ -1,30 +1,79 @@
 <mat-card appearance="outlined" style="margin: 10%;padding: 30px;">
     <h1>Sign up</h1>
     <form  [formGroup]="signupForm" (submit)="signup()">
+        @if((signupForm.get('email')?.dirty || signupForm.get('email')?.touched) && signupForm.get('email')?.invalid){
+            @if(signupForm.get('email')?.errors?.['required']){
+                <small>Email is required.</small>
+            }
+            @if(signupForm.get('email')?.errors?.['email']){
+                <small>Email is invalid.</small>
+            }
+        }
+
         <mat-form-field style="width: 100%;">
             <mat-label>Email</mat-label>
             <input matInput formControlName="email">
         </mat-form-field>
+
+        @if((signupForm.get('userName')?.dirty || signupForm.get('userName')?.touched) && signupForm.get('userName')?.invalid){
+            @if(signupForm.get('userName')?.errors?.['required']){
+                <small>Username is required.</small>
+            }
+            @else{
+                <small>User must be longer than 3 characters and smaller than 20.</small>
+            }
+        }
 
         <mat-form-field style="width: 100%;">
             <mat-label>Username</mat-label>
             <input matInput formControlName="userName">
         </mat-form-field>
 
+        @if((signupForm.get('password')?.dirty || signupForm.get('password')?.touched) && signupForm.get('password')?.invalid){
+            @if(signupForm.get('password')?.errors?.['required']){
+                <small>Password is required.</small>
+            }
+            @else{
+                <small>Password must be longer than 5 characters and smaller than 20.</small>
+            }
+        }
+
         <mat-form-field style="width: 100%;">
             <mat-label>Password</mat-label>
             <input type="password" matInput formControlName="password">
         </mat-form-field>
+
+        @if((signupForm.get('rePassword')?.dirty || signupForm.get('rePassword')?.touched) && signupForm.hasError('passwordMismatch')){
+            <small>Password does not match</small>
+        }
 
         <mat-form-field style="width: 100%;">
             <mat-label>Re-Enter Password</mat-label>
             <input type="password" matInput formControlName="rePassword">
         </mat-form-field>
 
+        @if((signupForm.get('address')?.dirty || signupForm.get('address')?.touched) && signupForm.get('address')?.invalid){
+            @if(signupForm.get('address')?.errors?.['required']){
+                <small>Address is required.</small>
+            }
+            @else{
+                <small>Address must be longer than 2 characters and smaller than 30.</small>
+            }
+        }
+
         <mat-form-field style="width: 100%;">
             <mat-label>Address</mat-label>
             <input type="text" matInput formControlName="address">
         </mat-form-field>
+
+        @if((signupForm.get('phoneNumber')?.dirty || signupForm.get('phoneNumber')?.touched) && signupForm.get('phoneNumber')?.invalid){
+            @if(signupForm.get('phoneNumber')?.errors?.['required']){
+                <small>Phone Number is required.</small>
+            }
+            @else{
+                <small>Phone Number must be 10 numbers.</small>
+            }
+        }
         
         <mat-form-field style="width: 100%;">
             <mat-label>Phone Number</mat-label>

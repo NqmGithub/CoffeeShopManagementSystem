@@ -1,5 +1,5 @@
 import { Component, inject } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButton } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -15,7 +15,7 @@ import { Router, RouterModule } from '@angular/router';
 })
 export class LoginComponent {
   loginForm = new FormGroup({
-    email: new FormControl(''),
+    email: new FormControl('', [Validators.required, Validators.email]),
     password: new FormControl('')
   })
 

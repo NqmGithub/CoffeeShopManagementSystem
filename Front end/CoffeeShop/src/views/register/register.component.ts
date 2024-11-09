@@ -1,5 +1,5 @@
 import { Component, inject } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { AbstractControl, FormControl, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { MatButton } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -15,14 +15,18 @@ import { User } from '../../Interfaces/user';
   styleUrl: './register.component.scss'
 })
 export class RegisterComponent {
-  signupForm = new FormGroup({
-    email: new FormControl(''),
-    password: new FormControl(''),
-    rePassword: new FormControl(''),
-    address: new FormControl(''),
-    phoneNumber: new FormControl(''),
-    userName: new FormControl('')
-  })
+  signupForm: FormGroup;
+  constructor(){
+    this.signupForm = new FormGroup({
+      email: new FormControl('', [Validators.required, Validators.email]),
+      password: new FormControl('', [Validators.required, Validators.minLength(5), Validators.maxLength(20)]),
+      rePassword: new FormControl('', [Validators.required, Validators.minLength(5), Validators.maxLength(20)]),
+      address: new FormControl('', [Validators.required, Validators.minLength(2), Validators.maxLength(30)]),
+      phoneNumber: new FormControl('', [Validators.required, Validators.minLength(10), Validators.maxLength(10)]),
+      userName: new FormControl('', [Validators.required, Validators.minLength(3), Validators.maxLength(20)])
+    }, { validators: passwordMatchValidator });
+  }
+
 
   auth: AuthService = inject(AuthService);
   router: Router = inject(Router)
@@ -50,4 +54,14 @@ export class RegisterComponent {
     }
     this.auth.signup(user)
   }
+}
+
+function passwordMatchValidator(control: AbstractControl): ValidationErrors | null {
+  const password = control.get('password')?.value;
+  const rePassword = control.get('rePassword')?.value;
+
+  if (password !== rePassword) {
+    return { passwordMismatch: true };
+  }
+  return null;
 }

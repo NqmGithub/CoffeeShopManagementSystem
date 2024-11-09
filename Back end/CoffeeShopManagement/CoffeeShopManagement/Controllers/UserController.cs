@@ -2,6 +2,7 @@
 using CoffeeShopManagement.Business.ServiceContracts;
 using CoffeeShopManagement.Models.Models;
 using Microsoft.AspNetCore.Mvc;
+using System.Text.RegularExpressions;
 
 namespace CoffeeShopManagement.WebAPI.Controllers
 {
@@ -37,6 +38,15 @@ namespace CoffeeShopManagement.WebAPI.Controllers
         [HttpGet("byEmail/{email}")]
         public async Task<IActionResult> GetUserByEmail(string email)
         {
+            if (string.IsNullOrWhiteSpace(email))
+                return BadRequest("Invalid email");
+
+            var emailRegex = new Regex(@"^[^@\s]+@[^@\s]+\.[^@\s]+$", RegexOptions.IgnoreCase);
+
+            if (!emailRegex.IsMatch(email)){
+                return BadRequest("Invalid email");
+            }
+
             var user = await _userService.GetByEmail(email);
             if (user == null)
             {
@@ -57,20 +67,28 @@ namespace CoffeeShopManagement.WebAPI.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddUser(User user)
+        public async Task<IActionResult> AddUser([FromBody] User user)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
             await _userService.Add(user);
             return CreatedAtAction(nameof(GetUserById), new { id = user.Id }, user); ;
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateUser(Guid id, User user)
+        public async Task<IActionResult> UpdateUser(Guid id, [FromBody] User user)
         {
             if (id != user.Id)
             {
                 return BadRequest();
             }
 
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
             user.Password = PasswordHelper.HashPassword(user.Password);
             await _userService.Update(user);
 

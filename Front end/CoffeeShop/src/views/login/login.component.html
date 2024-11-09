@@ -1,6 +1,15 @@
 <mat-card appearance="outlined" style="margin: 10%;padding: 30px;">
     <h1>Log in</h1>
     <form  [formGroup]="loginForm" (submit)="login()">
+        @if((loginForm.get('email')?.dirty || loginForm.get('email')?.touched) && loginForm.get('email')?.invalid){
+            @if(loginForm.get('email')?.errors?.['required']){
+                <small>Email is required.</small>
+            }
+            @if(loginForm.get('email')?.errors?.['email']){
+                <small>Email is invalid.</small>
+            }
+        }
+
         <mat-form-field style="width: 100%;">
             <mat-label>Email</mat-label>
             <input matInput formControlName="email">
