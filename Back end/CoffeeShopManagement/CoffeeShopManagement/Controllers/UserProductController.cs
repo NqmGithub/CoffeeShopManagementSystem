@@ -1,5 +1,6 @@
 ﻿using CoffeeShopManagement.Business.ServiceContracts;
 using CoffeeShopManagement.Models.Enums;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
@@ -7,6 +8,7 @@ namespace CoffeeShopManagement.WebAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    //[Authorize(Roles = "Customer")]
     public class UserProductController : ControllerBase
     {
         private readonly IProductService productService;

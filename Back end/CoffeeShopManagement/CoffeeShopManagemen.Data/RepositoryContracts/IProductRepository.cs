@@ -17,6 +17,8 @@ namespace CoffeeShopManagement.Data.RepositoryContracts
            int pageSize,
            SortBy sortBy,
            bool isDescending);
+        Task<IEnumerable<Product>> GetProductsByCategoryId(Guid categoryId);
+        Task<IEnumerable<Product>> GetTopBestsellersAsync(int top);
     }
 }
 

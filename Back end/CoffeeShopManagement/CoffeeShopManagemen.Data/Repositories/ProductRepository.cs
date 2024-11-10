@@ -31,7 +31,7 @@ namespace CoffeeShopManagement.Data.Repositories
       bool isDescending)
         {
             var query = _context.Products
-                                .Include(p => p.Category) 
+                                .Include(p => p.Category)
                                 .AsQueryable();
 
             if (!string.IsNullOrEmpty(search))
@@ -64,6 +64,23 @@ namespace CoffeeShopManagement.Data.Repositories
             return await query.Skip((page - 1) * pageSize)
                                .Take(pageSize)
                                .ToListAsync();
+        }
+
+        public async Task<IEnumerable<Product>> GetProductsByCategoryId(Guid categoryId)
+        {
+            return await _context.Products
+                .Include(p => p.Category)
+                .Where(p => p.CategoryId == categoryId)
+                .ToListAsync();
+        }
+
+        public async Task<IEnumerable<Product>> GetTopBestsellersAsync(int top)
+        {
+            return await _context.Products
+                .Include(p => p.Category)
+                .OrderByDescending(p => p.OrderDetails.Sum(od => od.Quantity))
+                .Take(top)
+                .ToListAsync();
         }
     }
 }

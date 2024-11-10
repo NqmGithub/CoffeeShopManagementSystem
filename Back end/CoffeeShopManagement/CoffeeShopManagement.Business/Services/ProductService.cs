@@ -146,5 +146,36 @@ namespace CoffeeShopManagement.Business.Services
                 CategoryName = p.Category?.CategoryName ?? "Unknown"
             });
         }
+        public async Task<IEnumerable<ProductDTO>> GetProductsByCategoryAsync(Guid categoryId)
+        {
+            var products = await _unitOfWork.ProductRepository.GetProductsByCategoryId(categoryId);
+
+            return products.Select(p => new ProductDTO
+            {
+                Id = p.Id,
+                ProductName = p.ProductName,
+                Price = p.Price,
+                CategoryName = p.Category?.CategoryName ?? "Unknown",
+                Thumbnail = p.Thumbnail,
+                Status = p.Status,
+                Description = p.Description
+            });
+        }
+
+        public async Task<IEnumerable<ProductDTO>> GetTopBestsellerProductsAsync(int top)
+        {
+            var products = await _unitOfWork.ProductRepository.GetTopBestsellersAsync(top);
+
+            return products.Select(p => new ProductDTO
+            {
+                Id = p.Id,
+                ProductName = p.ProductName,
+                Price = p.Price,
+                CategoryName = p.Category?.CategoryName ?? "Unknown",
+                Thumbnail = p.Thumbnail,
+                Status = p.Status,
+                Description = p.Description
+            });
+        }
     }
 }

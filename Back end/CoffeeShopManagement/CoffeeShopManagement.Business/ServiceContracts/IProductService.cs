@@ -32,6 +32,8 @@ namespace CoffeeShopManagement.Business.ServiceContracts
              int pageSize,
              SortBy sortBy,
              bool isDescending);
+        Task<IEnumerable<ProductDTO>> GetProductsByCategoryAsync(Guid categoryId);
+        Task<IEnumerable<ProductDTO>> GetTopBestsellerProductsAsync(int top);
     }
    
 }
