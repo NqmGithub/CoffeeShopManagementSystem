@@ -1,16 +1,31 @@
 import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
-import { ProfileComponent } from '../views/profile/profile.component';
+import { NavigationStart, Router, RouterOutlet } from '@angular/router';
+import { HomeComponent } from '../views/home/home.component';
+import { AdminComponent } from '../views/admin/admin.component';
+import { filter } from 'rxjs';
 @Component({
   selector: 'app-root',
   standalone: true,
   imports: [
     RouterOutlet,
-    ProfileComponent
+    HomeComponent,
+    AdminComponent
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
 export class AppComponent {
-  title = 'CoffeeShop';
+  constructor( private router: Router) {
+    this.router.events
+      .pipe(
+        filter(event => event instanceof NavigationStart) 
+      )
+      .subscribe((event: NavigationStart) => {
+        const currentUrl = event.url; 
+
+        if (currentUrl === '/' || currentUrl === '') {
+          this.router.navigate(['home'])
+        }
+      });
+  }
 }

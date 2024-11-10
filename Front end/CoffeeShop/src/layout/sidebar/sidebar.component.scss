@@ -1,0 +1,37 @@
+.sidenav-container {
+    height: 100vh;
+  }
+  
+  .sidenav {
+    width: 250px;
+    background-color: rgb(246, 239, 229);
+    padding: 10px;
+  }
+  
+  .mat-icon {
+    margin-right: 8px;
+  }
+  
+  mat-divider {
+    margin: 10px 0;
+  }
+  
+  mat-list-item {
+    cursor: pointer;
+    padding: 10px 0;
+    margin-bottom: 10px;
+  }
+  
+  mat-list-item  span {
+    font-size: larger;
+    font-weight: 500;
+  }
+
+  .content {
+    display: flex; 
+    justify-content: center;
+  }
+  .main-content {
+    margin: 2%;
+    width: 100%;
+  }

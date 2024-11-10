@@ -1,0 +1,86 @@
+<h2>User List</h2>
+<div style="display: flex; justify-content: space-between;">
+  <form class="example-form">
+    <mat-form-field class="example-full-width" appearance="outline">
+      <input matInput placeholder="Search">
+      <mat-icon matSuffix>search</mat-icon>
+    </mat-form-field>
+
+    <mat-form-field class="example-full-width" appearance="outline">
+      <mat-label>Category</mat-label>
+    <mat-select>
+      <mat-option value="1">Mục 1</mat-option>
+      <mat-option value="2">Mục 2</mat-option>
+      <mat-option value="3">Mục 3</mat-option>
+    </mat-select>
+    </mat-form-field>
+  
+    <mat-form-field class="example-full-width" appearance="outline">
+      <mat-label>Status</mat-label>
+    <mat-select>
+      <mat-option value="1">All</mat-option>
+      <mat-option value="2">Active</mat-option>
+      <mat-option value="3">InActive</mat-option>
+    </mat-select>
+    </mat-form-field>
+  </form>
+  <button class="addButton" mat-raised-button (click)="addProduct()">Add Product</button>
+</div>
+
+<table mat-table [dataSource]="productsData" matSort (matSortChange)="onSortChange()" class="mat-elevation-z8 demo-table">
+
+  <!-- Name Column -->
+  <ng-container matColumnDef="productName">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header> ProductName </th>
+    <td mat-cell *matCellDef="let element"> {{element.productName}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="categoryName">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header> Category </th>
+    <td mat-cell *matCellDef="let element"> {{element.categoryName}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="price">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header> Price </th>
+    <td mat-cell *matCellDef="let element"> {{element.price}}$ </td>
+  </ng-container>
+
+  <ng-container matColumnDef="quantity">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header> Quantity </th>
+    <td mat-cell *matCellDef="let element"> {{element.quantity}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="thumbnail">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header> Image </th>
+    <td mat-cell *matCellDef="let element"> {{element.thumbnail}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="status">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header> Status </th>
+    <td mat-cell *matCellDef="let element"> {{element.status}} </td>
+  </ng-container>
+
+   <ng-container matColumnDef="actions">
+    <th mat-header-cell *matHeaderCellDef > Actions </th>
+    <td mat-cell *matCellDef="let element">
+      <div class="actions">
+        <button mat-icon-button class="view-button" (click)="viewDetail(element)">
+          <mat-icon >visibility</mat-icon>
+        </button>
+        <button mat-icon-button class="edit-button" (click)="updateProduct(element)">
+          <mat-icon>edit</mat-icon>
+        </button>
+        <button mat-icon-button color="warn" class="delete-button" (click)="deleteProduct(element)">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </div>          
+    </td>
+  </ng-container>
+
+  <!-- Header and Row Definition -->
+  <tr mat-header-row *matHeaderRowDef="['productName', 'categoryName', 'price', 'quantity', 'thumbnail', 'status','actions']"></tr>
+  <tr mat-row *matRowDef="let row; columns: ['productName', 'categoryName', 'price', 'quantity', 'thumbnail', 'status','actions']"></tr>
+</table>
+<!-- pagination -->
+<mat-paginator [length]="totalProducts" [pageSize]="pageSize" (page)="onPageChange($event)">
+</mat-paginator>

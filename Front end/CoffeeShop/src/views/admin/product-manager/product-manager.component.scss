@@ -1,0 +1,69 @@
+:host {
+    display: block;
+    width: 100%;
+  }
+  .demo-table {
+      width: 100%;
+    }
+    
+    .actions {
+      display: flex;
+      gap: 3px;
+      button {
+        width: 36px;
+        height: 36px;
+        line-height: 36px;
+        padding: 0;
+        border-radius: 50%;
+        border: 0px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    
+        &:hover {
+          cursor: pointer;
+        }
+    
+        &.view-button {
+          background-color: #c5daee;
+          color: #1976d2; 
+        }
+        
+        &.edit-button {
+          background-color: #d7f3d9;
+          color: #2e7d32; 
+        }
+        
+        &.delete-button {
+          background-color: #fad1d1;
+          color: #d32f2f; 
+          &:hover {
+            background-color: #ef9a9a;
+          }
+        }
+        mat-icon{
+          margin: 0;
+        }
+      }
+    }
+    .mat-column-actions{
+      width: 120px;
+    }
+    .example-form {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      align-items: flex-end;
+      margin-bottom: 16px;
+    }
+    
+    .example-full-width {
+      flex: 1;
+    }
+    
+    .addButton{
+    height: 55px;
+    border-radius: 5px;
+    background-color: #4caf50 !important;
+    color: #ffffff !important;
+    }

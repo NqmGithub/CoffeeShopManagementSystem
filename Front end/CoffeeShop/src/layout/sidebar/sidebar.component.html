@@ -1,0 +1,42 @@
+<mat-sidenav-container class="sidenav-container">
+    <mat-sidenav #sidenav mode="side" [(opened)]="isSidebarOpen" class="sidenav">
+  
+      <!-- Group 1: Dashboard -->
+      <mat-nav-list>
+        <h3 mat-subheader>Dashboard</h3>
+        <mat-list-item>
+          <mat-icon>dashboard</mat-icon>
+          <span>Overview</span>
+        </mat-list-item>
+      </mat-nav-list>
+  
+      <mat-divider></mat-divider>
+  
+      <!-- Group 2: Management -->
+      <mat-nav-list>
+        <h3 mat-subheader>Management</h3>
+        <mat-list-item>
+          <mat-icon>group</mat-icon>
+          <span>Users</span>
+        </mat-list-item>
+        <mat-list-item>
+          <mat-icon>fastfood</mat-icon>
+          <span><a [routerLink]="['/admin',{ outlets: { mainContent: ['products'] } }]">Product</a></span>
+        </mat-list-item>
+        <mat-list-item>
+          <mat-icon>category</mat-icon>
+          <span>Category</span>
+        </mat-list-item>
+        <mat-list-item>
+          <mat-icon>contact_mail</mat-icon>
+          <span>Contact</span>
+        </mat-list-item>
+      </mat-nav-list>
+      </mat-sidenav>
+  
+    <mat-sidenav-content class="content" >
+      <div class="main-content">
+        <router-outlet name='mainContent' ></router-outlet>
+      </div>   
+    </mat-sidenav-content>
+  </mat-sidenav-container>
