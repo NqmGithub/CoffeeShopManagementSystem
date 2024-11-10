@@ -98,6 +98,7 @@ namespace CoffeeShopManagement.Business.Services
             product.CategotyId = ConvertToCategoryId(productUpdateDTO.CategoryName);
             product.Price = productUpdateDTO.Price;
             product.Quantity = productUpdateDTO.Quantity;
+            product.Description = productUpdateDTO.Description;
             product.Thumbnail = productUpdateDTO.Thumbnail;
             product.Status = ProductHelper.ConvertToStatusInt(productUpdateDTO.Status);
 
@@ -107,7 +108,7 @@ namespace CoffeeShopManagement.Business.Services
 
         private Guid ConvertToCategoryId(string categoryName)
         {
-            var id = _unitOfWork.ProductRepository.GetQuery().Include(x => x.Categoty).Where(x => x.Categoty.CategoryName.Equals(categoryName)).Select(x => x.Id).FirstOrDefault();
+            var id = _unitOfWork.CategoryRepository.GetQuery().Where(x => x.CategoryName.Equals(categoryName)).Select(x => x.Id).FirstOrDefault();
             if (id == Guid.Empty)
             {
                 throw new Exception("Category name does not exist");
@@ -162,6 +163,7 @@ namespace CoffeeShopManagement.Business.Services
                     Price = p.Price,
                     Quantity = p.Quantity,
                     Thumbnail = p.Thumbnail,
+                    Description = p.Description,
                     Status = ProductHelper.ConvertToStatusString(p.Status),
                 }).ToListAsync();
 
@@ -170,6 +172,16 @@ namespace CoffeeShopManagement.Business.Services
                 List = await products,
                 Total = totalProducts,
             };
+        }
+
+        public async Task<bool> CheckProductNameExist(string productName)
+        {
+            var temp = await _unitOfWork.ProductRepository.GetQuery().FirstOrDefaultAsync(x => x.ProductName.Equals(productName));
+            if (temp != null) 
+            {
+                return true;
+            }
+            return false;
         }
     }
 }

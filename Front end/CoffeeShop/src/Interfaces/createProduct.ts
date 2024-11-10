@@ -1,5 +1,4 @@
-export interface Product {
-    id: string,
+export interface CreateProduct {
     productName: string,
     categoryName: string,
     price: number,

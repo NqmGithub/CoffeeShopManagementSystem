@@ -22,6 +22,7 @@ namespace CoffeeShopManagement.Business.DTO
 
         public int Quantity { get; set; }
 
+        public string Description { get; set; }
         public string? Thumbnail { get; set; }
 
         public string Status { get; set; }
@@ -40,6 +41,7 @@ namespace CoffeeShopManagement.Business.DTO
                 Price = product.Price,
                 Quantity = product.Quantity,
                 Thumbnail = product.Thumbnail,
+                Description = product.Description,
                 Status = ProductHelper.ConvertToStatusString (product.Status),
             };
         }

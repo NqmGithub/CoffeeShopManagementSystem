@@ -11,6 +11,8 @@ import {FormsModule} from '@angular/forms';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
+import { AddProductDialogComponent } from './add-product-dialog/add-product-dialog.component';
+import { CreateProduct } from '../../../Interfaces/createProduct';
 @Component({
   selector: 'app-product-manager',
   standalone: true,
@@ -90,6 +92,10 @@ export class ProductManagerComponent implements OnInit {
     );
   }
 
+  getImage(name: string){
+    return `https://localhost:44344/Resources/Images/${name}`;
+  }
+
   loadCategoryNames(){
     this.apiService.getAllCateogryNames().subscribe(
       (data : string[]) => {
@@ -102,12 +108,44 @@ export class ProductManagerComponent implements OnInit {
   }
 
   addProduct() {
+    const dialogRef = this.dialog.open(AddProductDialogComponent);
+
+    dialogRef.afterClosed().subscribe((result: CreateProduct) => {
+      if (result) {
+        this.apiService.postProduct(result).subscribe(
+          async response => {
+            this.submitted = response,
+            this.loadProducts();
+        },
+        error => {
+            console.error('Error fetching data', error);
+        }
+        )
+      }
+    });
   }
 
   viewDetail(product: Product) {
   }
 
   updateProduct(product: Product) {
+    const dialogRef = this.dialog.open(AddProductDialogComponent, {
+      data: product
+    });
+
+    dialogRef.afterClosed().subscribe((result: Product) => {
+      if (result) {
+        this.apiService.putProduct(product.id,result).subscribe(
+          async response => {
+            this.submitted = response,
+            this.loadProducts();
+        },
+        error => {
+            console.error('Error fetching data', error);
+        }
+        )
+      }
+    });
   }
 
   deleteProduct(product: Product) {

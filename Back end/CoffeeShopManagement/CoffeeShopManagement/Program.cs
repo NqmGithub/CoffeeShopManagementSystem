@@ -9,6 +9,8 @@ using CoffeeShopManagement.Data.Repositories;
 using CoffeeShopManagement.Business.ServiceContracts;
 using CoffeeShopManagement.Business.Services;
 using CoffeeShopManagement.Data.UnitOfWork;
+using Microsoft.AspNetCore.Http.Features;
+using Microsoft.Extensions.FileProviders;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -93,6 +95,13 @@ builder.Services.AddCors(options =>
         });
 });
 
+builder.Services.Configure<FormOptions>(o =>
+{
+    o.ValueLengthLimit = int.MaxValue;
+    o.MultipartBodyLengthLimit = int.MaxValue;
+    o.MemoryBufferThreshold = int.MaxValue;
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -105,6 +114,14 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseCors("AllowSpecificOrigin");
+
+app.UseStaticFiles();
+app.UseStaticFiles(new StaticFileOptions()
+{
+    FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), @"Resources")),
+    RequestPath = new PathString("/Resources")
+});
+
 app.UseAuthentication();
 app.UseAuthorization();
 

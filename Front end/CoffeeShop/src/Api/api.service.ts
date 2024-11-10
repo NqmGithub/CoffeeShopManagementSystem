@@ -1,7 +1,8 @@
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpEvent, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Product } from '../Interfaces/product';
+import { CreateProduct } from '../Interfaces/createProduct';
 
 @Injectable({
   providedIn: 'root'
@@ -23,6 +24,8 @@ export class ApiService {
     return this.http.post<any>(this.baseurl + '/Auth/signup', data);
   }
 
+
+  //Product
   getProducts(search: string, filterCategory: string, filterStatus: string, page: number, pageSize: number,
     sortColumn: string, sortDirection: string): Observable<{ list: Product[], total: number }> {
 
@@ -52,5 +55,27 @@ export class ApiService {
 
   getAllCateogryNames(): Observable<string[]> {
     return this.http.get<string[]>(this.baseurl + '/Category/name',this.headerCustom);
+  }
+
+  uploadImage(name:string,formData: FormData): Observable<HttpEvent<any>>{
+    let params = new HttpParams();
+    if(name){
+      params = params.set('name',name);
+    }
+    return this.http.post<any>(`${this.baseurl}/Product/upload`,formData,{
+      params:params
+    });
+  }
+
+  checkProductNameExist(productName:string):Observable<boolean>{
+    return this.http.get<boolean>(`${this.baseurl}/Product/checkName?productName=${productName}`,this.headerCustom);
+  }
+
+  postProduct(createProduct: CreateProduct): Observable<boolean>{
+    return this.http.post<boolean>(`${this.baseurl}/Product`,createProduct,this.headerCustom);
+  }
+
+  putProduct(id:string, updateProduct:Product):Observable<boolean>{
+    return this.http.put<boolean>(`${this.baseurl}/Product/update/`+id,updateProduct,this.headerCustom);
   }
 }

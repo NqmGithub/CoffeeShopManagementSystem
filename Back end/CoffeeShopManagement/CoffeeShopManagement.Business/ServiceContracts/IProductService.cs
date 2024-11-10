@@ -24,5 +24,7 @@ namespace CoffeeShopManagement.Business.ServiceContracts
 
         Task<ProductListResponse> GetProductWithCondition
             (ProductQueryRequest productQueryRequest);
+
+        Task<bool> CheckProductNameExist(string productName);
     }
 }
