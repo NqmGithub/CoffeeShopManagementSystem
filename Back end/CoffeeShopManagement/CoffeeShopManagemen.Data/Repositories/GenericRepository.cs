@@ -101,5 +101,6 @@ namespace CoffeeShopManagement.Data.Repositories
         {
             _dbSet.Update(entity);
         }
+       
     }
 }

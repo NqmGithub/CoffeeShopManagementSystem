@@ -20,8 +20,14 @@ namespace CoffeeShopManagement.Data.RepositoryContracts
         void Update(T entity);
         void Delete(T entity);
         void Delete(Guid id);
+      
+
+
+
+
         IQueryable<T> GetQuery();
         IQueryable<T> GetQuery(Expression<Func<T, bool>> predicate);
         IQueryable<T> Get(Expression<Func<T, bool>>? filter = null, Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null, string includeProperties = "");
+        
     }
 }

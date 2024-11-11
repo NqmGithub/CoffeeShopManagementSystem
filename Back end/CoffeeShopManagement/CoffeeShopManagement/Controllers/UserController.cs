@@ -1,4 +1,5 @@
-﻿using CoffeeShopManagement.Business.DTO;
+﻿using Azure.Core;
+using CoffeeShopManagement.Business.DTO;
 using CoffeeShopManagement.Business.ServiceContracts;
 using CoffeeShopManagement.Models.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -105,28 +106,43 @@ namespace CoffeeShopManagement.WebAPI.Controllers
         [HttpPut("{id}/UpdateProfile")]
         public async Task<IActionResult> UpdateUser(Guid id, UpdateProfileDTO updateProfile)
         {
-            var user = await _userService.Get(id);
-            if (user == null)
-            {
-                return NotFound();
+                var user = await _userService.Get(id);
+                if (user == null)
+                {
+                    return NotFound();
+                }
+
+                user.UserName = updateProfile.UserName;
+                user.PhoneNumber = updateProfile.PhoneNumber;
+                user.Address = updateProfile.Address;
+
+                if (updateProfile.Avatar != null)
+                {
+                    // Kiểm tra và tạo thư mục nếu chưa tồn tại
+                    var avatarDirectory = Path.Combine("wwwroot", "images");
+                    if (!Directory.Exists(avatarDirectory))
+                    {
+                        Directory.CreateDirectory(avatarDirectory);
+                    }
+
+                    // Lưu ảnh avatar
+                    var avatarFileName = $"{Guid.NewGuid()}_{updateProfile.Avatar.FileName}";
+                    var avatarPath = Path.Combine(avatarDirectory, avatarFileName);
+                    using (var stream = new FileStream(avatarPath, FileMode.Create))
+                    {
+                        await updateProfile.Avatar.CopyToAsync(stream);
+                    }
+                    user.Avatar = avatarFileName;
+                }
+
+                await _userService.Update(user);
+
+                return NoContent();
             }
 
-            user.UserName = updateProfile.UserName;
-            user.PhoneNumber = updateProfile.PhoneNumber;
-            user.Address = updateProfile.Address;
-
-            if (!TryValidateModel(user))
-            {
-                return BadRequest(ModelState);
-            }
-
-            await _userService.Update(user);
-
-            return NoContent();
         }
+
+
+
+
     }
-
-   
-  
-
-}

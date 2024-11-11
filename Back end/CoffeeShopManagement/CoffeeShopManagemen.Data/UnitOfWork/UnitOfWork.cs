@@ -47,6 +47,8 @@ namespace CoffeeShopManagement.Data.UnitOfWork
         public async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
             return await _db.SaveChangesAsync(cancellationToken);
-        }
+        }      
+        
+
     }
 }

@@ -69,14 +69,14 @@ public partial class CoffeeShopDbContext : DbContext
                 .IsRequired()
                 .HasMaxLength(255);
 
-            entity.HasOne(d => d.Admin).WithMany(p => p.ContactAdmins)
-                .HasForeignKey(d => d.AdminId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Contact__AdminID__5165187F");
+            //entity.HasOne(d => d.Admin).WithMany(p => p.ContactAdmins)
+             //   .HasForeignKey(d => d.AdminId)
+               // .OnDelete(DeleteBehavior.ClientSetNull)
+//.HasConstraintName("FK__Contact__AdminID__5165187F");
 
-            entity.HasOne(d => d.Customer).WithMany(p => p.ContactCustomers)
-                .HasForeignKey(d => d.CustomerId)
-                .HasConstraintName("FK__Contact__Custome__4BAC3F29");
+           // entity.HasOne(d => d.Customer).WithMany(p => p.ContactCustomers)
+             //   .HasForeignKey(d => d.CustomerId)
+             //   .HasConstraintName("FK__Contact__Custome__4BAC3F29");
 
             entity.HasOne(d => d.Problem).WithMany(p => p.Contacts)
                 .HasForeignKey(d => d.ProblemId)
