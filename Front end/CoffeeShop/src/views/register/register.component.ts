@@ -7,10 +7,11 @@ import { AuthService } from '../../service/auth.service';
 import { MatCardModule } from '@angular/material/card';
 import { Router, RouterModule } from '@angular/router';
 import { User } from '../../Interfaces/user';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [MatFormFieldModule, MatInputModule, MatButton, ReactiveFormsModule, MatCardModule, RouterModule],
+  imports: [MatProgressSpinnerModule, MatFormFieldModule, MatInputModule, MatButton, ReactiveFormsModule, MatCardModule, RouterModule],
   templateUrl: './register.component.html',
   styleUrl: './register.component.scss'
 })
@@ -27,10 +28,13 @@ export class RegisterComponent {
     }, { validators: passwordMatchValidator });
   }
 
+  msg: string = '';
+  isLoading = false;
 
   auth: AuthService = inject(AuthService);
   router: Router = inject(Router)
   signup(){
+    this.isLoading = true;
     const email = this.signupForm.value.email ?? '';
     const password = this.signupForm.value.password ?? '';
     const rePassword = this.signupForm.value.rePassword ?? '';
@@ -52,7 +56,12 @@ export class RegisterComponent {
       status: 1,
       role: 1
     }
-    this.auth.signup(user)
+    this.auth.signup(user).subscribe({
+      error: e =>{
+        this.msg = e;
+      }
+    });
+    this.isLoading = false;
   }
 }
 

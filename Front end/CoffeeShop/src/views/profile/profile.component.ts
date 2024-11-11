@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { NavbarComponent } from '../../layout/navbar/navbar.component';
 import { MatCardModule } from '@angular/material/card';
 
@@ -11,11 +11,13 @@ import { AuthService } from '../../service/auth.service';
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.scss'
 })
-export class ProfileComponent {
-  auth: AuthService = inject(AuthService)
-  currentUser!: User | null;
+export class ProfileComponent implements OnInit{
 
-  constructor(){
+  constructor(private auth: AuthService){}
+  currentUser: User | null = null;
+  
+  ngOnInit(): void {
     this.auth.currentUser$.subscribe(user => this.currentUser = user);
+    // this.currentUser = this.auth.getCurrentUser();
   }
 }

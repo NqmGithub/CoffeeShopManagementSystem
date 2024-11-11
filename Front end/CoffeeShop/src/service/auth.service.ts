@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { ApiService } from '../Api/api.service';
 import { Router } from '@angular/router';
 import { User } from '../Interfaces/user';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, catchError, Observable, tap, throwError } from 'rxjs';
 
 @Injectable({
     providedIn: 'root',
@@ -20,14 +20,17 @@ export class AuthService {
         const token = localStorage.getItem('token');
         if (token) {
             const userId = this.getId();
-            this.apiService.getUserById(userId).subscribe((user) => {
+            this.apiService.getUserById(userId).pipe(catchError(e => {
+                console.error(e.message);
+                return throwError(() => new Error('An error occurred while fetching data.'));
+            })).subscribe((user) => {
                 this.currentUser.next(user);
             });
         }
     }
 
     getCurrentUser(){
-        return this.currentUser;
+        return this.currentUser.getValue();
     }
 
     isLoggedIn(): boolean {
@@ -44,20 +47,21 @@ export class AuthService {
         return false;       
     }
 
-    login(email: string, password: string) {
+    login(email: string, password: string): Observable<void>{
         let payload = { email: email, password: password };
-        this.apiService.login(payload).subscribe(
-            (response) => {
-                localStorage.setItem('token', response.token);
+        return this.apiService.login(payload).pipe(
+            tap(response => {
+                localStorage.setItem("token", response.token);
                 this.router.navigate(['/home']);
-            },
-            (error) => {
-                console.error('Error fetching data', error);
-            }
+              }),
+              catchError(error => {
+                console.error("Error:", error);
+                return throwError(() => error.error || `Error`);
+              })
         );
     }
 
-    signup(user: User) {
+    signup(user: User): Observable<void>{
         let payload = {
             username: user.userName,
             password: user.password,
@@ -65,14 +69,15 @@ export class AuthService {
             email: user.email,
             address: user.address,
         };
-        this.apiService.signup(payload).subscribe(
-            (response) => {
+        return this.apiService.signup(payload).pipe(
+            tap(response => {
                 localStorage.setItem('token', response.token);
                 this.router.navigate(['/home']);
-            },
-            (error) => {
-                console.error('Error fetching data', error);
-            }
+            }),
+            catchError(error => {
+                console.error("Error:", error);
+                return throwError(() => error.error || `Error`);
+            })
         );
     }
 

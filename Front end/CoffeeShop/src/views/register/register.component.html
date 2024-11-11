@@ -80,7 +80,15 @@
             <input type="text" matInput formControlName="phoneNumber">
         </mat-form-field>
 
+        @if(msg != ''){
+            <h4 style="color: red;">{{msg}}</h4>
+        }
+        @if(isLoading){
+            <mat-spinner></mat-spinner>
+        }
+        @else {
         <button style="width: 100%; margin-top: 10px; font-size: 20px" mat-flat-button type="submit">Sign up</button>
+        }
     </form>
     <a style="margin-left: 5px; margin-top: 10px;" [routerLink]="'/login'">Already have an account? Log in</a>
 </mat-card>

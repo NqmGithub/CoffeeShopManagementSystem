@@ -27,9 +27,6 @@ export class NavbarComponent implements OnInit {
     });
   }
 
-  
-  constructor(){this.isLoggedIn = this.auth.isLoggedIn()}
-
   loginNavigate(){
     this.router.navigate(['/login'])
   }
@@ -39,7 +36,7 @@ export class NavbarComponent implements OnInit {
   }
 
   profileNavigate(){
-    this.route.navigate(['/profile'])
+    this.router.navigate(['/profile'])
   }
 
   logout(){

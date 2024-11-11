@@ -15,12 +15,25 @@
             <input matInput formControlName="email">
         </mat-form-field>
 
+        @if((loginForm.get('password')?.dirty || loginForm.get('password')?.touched) && loginForm.get('password')?.invalid){
+            <small>Password is required.</small>
+        }
+        
         <mat-form-field style="width: 100%;">
             <mat-label>Password</mat-label>
             <input type="password" matInput formControlName="password">
         </mat-form-field>
-
-        <button style="width: 100%; margin-top: 10px; font-size: 20px" mat-flat-button type="submit">Login</button>
+        @if(msg != ''){
+            <h4 style="color: red;">{{msg}}</h4>
+        }
+        @if(isLoading){
+            <mat-spinner></mat-spinner>
+        }
+        @else {
+        <button style="width: 100%; margin-top: 10px; font-size: 20px" mat-flat-button type="submit">
+            Login   
+        </button>
+        }
     </form>
     <a style="margin-left: 5px; margin-top: 10px;" [routerLink]="'/register'">No account? Sign up</a>
 </mat-card>

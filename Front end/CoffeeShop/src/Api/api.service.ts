@@ -1,6 +1,6 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { catchError, Observable, throwError } from 'rxjs';
 import { Product } from '../Interfaces/product';
 
 @Injectable({
@@ -12,7 +12,6 @@ export class ApiService {
 
   constructor(private http: HttpClient) {
     this.headerCustom = {headers: { "Authorization": "Bearer " + localStorage.getItem("token") }}
-
   }
 
   login(data: any): Observable<any>{
@@ -32,4 +31,5 @@ export class ApiService {
 
     return this.http.get<{ list: Product[], total: number }>("https://localhost:44344/api/Product",this.headerCustom);
   }
+
 }
