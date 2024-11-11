@@ -59,7 +59,14 @@
 
   <ng-container matColumnDef="Status">
     <th mat-header-cell *matHeaderCellDef mat-sort-header> Status </th>
-    <td mat-cell *matCellDef="let element"> {{element.status}} </td>
+    <td mat-cell *matCellDef="let element">
+      @if (element.status == 'Active') {
+        <span style="color: green; font-weight: 500;">{{element.status}}</span>
+      }@else {
+        <span style="color: red;font-weight: 500;">{{element.status}}</span>
+      }
+      
+    </td>
   </ng-container>
 
    <ng-container matColumnDef="Actions">
@@ -72,9 +79,12 @@
         <button mat-icon-button class="edit-button" (click)="updateProduct(element)">
           <mat-icon>edit</mat-icon>
         </button>
-        <button mat-icon-button color="warn" class="delete-button" (click)="deleteProduct(element)">
-          <mat-icon>delete</mat-icon>
-        </button>
+        @if(element.status == 'Active'){
+          <button mat-button (click)="changeStatus(element)" style="background-color: #fad1d1; color: red;border-radius: 10%;">DeActive </button>
+        } @else {
+          <button mat-button (click)="changeStatus(element)" style=" background-color: #d7f3d9; color: #2e7d32; ;border-radius: 10%;" >Active</button>
+        }
+        
       </div>          
     </td>
   </ng-container>

@@ -11,8 +11,9 @@ import {FormsModule} from '@angular/forms';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
-import { AddProductDialogComponent } from './add-product-dialog/add-product-dialog.component';
+import { ProductDialogComponent } from './product-dialog/product-dialog.component';
 import { CreateProduct } from '../../../Interfaces/createProduct';
+import { ChangeStatusDialogComponent } from './change-status-dialog/change-status-dialog.component';
 @Component({
   selector: 'app-product-manager',
   standalone: true,
@@ -108,7 +109,7 @@ export class ProductManagerComponent implements OnInit {
   }
 
   addProduct() {
-    const dialogRef = this.dialog.open(AddProductDialogComponent);
+    const dialogRef = this.dialog.open(ProductDialogComponent);
 
     dialogRef.afterClosed().subscribe((result: CreateProduct) => {
       if (result) {
@@ -129,7 +130,7 @@ export class ProductManagerComponent implements OnInit {
   }
 
   updateProduct(product: Product) {
-    const dialogRef = this.dialog.open(AddProductDialogComponent, {
+    const dialogRef = this.dialog.open(ProductDialogComponent, {
       data: product
     });
 
@@ -148,6 +149,23 @@ export class ProductManagerComponent implements OnInit {
     });
   }
 
-  deleteProduct(product: Product) {
+  changeStatus(product: Product) {
+    const dialogRef = this.dialog.open(ChangeStatusDialogComponent, {
+      data: product
+    });
+
+    dialogRef.afterClosed().subscribe((result: string) => {
+      if (result) {
+        this.apiService.changeStatus(product.id,result).subscribe(
+          async response => {
+            this.submitted = response,
+            this.loadProducts();
+        },
+        error => {
+            console.error('Error fetching data', error);
+        }
+        )
+      }
+    });
   }
 }

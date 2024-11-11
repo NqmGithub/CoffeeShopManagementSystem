@@ -78,4 +78,8 @@ export class ApiService {
   putProduct(id:string, updateProduct:Product):Observable<boolean>{
     return this.http.put<boolean>(`${this.baseurl}/Product/update/`+id,updateProduct,this.headerCustom);
   }
+
+  changeStatus(id:string, status:string):Observable<boolean>{
+    return this.http.put<boolean>(`${this.baseurl}/Product/`+id+'?status='+status,this.headerCustom);
+  }
 }

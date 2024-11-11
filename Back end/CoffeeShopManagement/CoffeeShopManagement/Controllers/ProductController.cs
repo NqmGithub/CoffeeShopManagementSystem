@@ -65,7 +65,7 @@ namespace CoffeeShopManagement.WebAPI.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> DeactiveUser(Guid id, [FromQuery] string status)
+        public async Task<IActionResult> ChangStatus(Guid id, [FromQuery] string status)
         {
             var result = await _productService.ChangeStatusProductById(id,status);
             return Ok(result);

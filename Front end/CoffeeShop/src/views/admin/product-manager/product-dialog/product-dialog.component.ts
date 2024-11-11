@@ -27,10 +27,10 @@ import { Product } from '../../../../Interfaces/product';
     ReactiveFormsModule,
     MatIconModule
   ],
-  templateUrl: './add-product-dialog.component.html',
-  styleUrl: './add-product-dialog.component.scss'
+  templateUrl: './product-dialog.component.html',
+  styleUrl: './product-dialog.component.scss'
 })
-export class AddProductDialogComponent implements OnInit {  
+export class ProductDialogComponent implements OnInit {  
   header:string = "Add Product";
   fileToUpload: File| null = null;
   imageUrl: any;
@@ -48,7 +48,7 @@ export class AddProductDialogComponent implements OnInit {
 
   createProduct: CreateProduct;
   
-  constructor(@Inject(MAT_DIALOG_DATA) public data: Product, private dialogRef: MatDialogRef<AddProductDialogComponent>, private apiService: ApiService) {
+  constructor(@Inject(MAT_DIALOG_DATA) public data: Product, private dialogRef: MatDialogRef<ProductDialogComponent>, private apiService: ApiService) {
     if (data) {
       this.header = "Update Product";
       const product = { ...data };
