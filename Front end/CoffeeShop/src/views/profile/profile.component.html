@@ -1,0 +1,20 @@
+<app-navbar></app-navbar>
+<mat-card appearance="outlined" style="margin: 5%;padding: 30px;">
+    <mat-card-header style="display: flex; flex-direction: column;align-items: center;">
+        <img style="margin: auto; min-width: 150px; min-height: 150px;" mat-card-avatar src="../../avatar.jpg">
+        <mat-card-title>{{currentUser!.userName}}</mat-card-title>
+    </mat-card-header>
+    <mat-card appearance="outlined" style="padding: 15px; display: flex; align-items: center; flex-direction:row; justify-content: space-between;">
+        <mat-card-title>Email</mat-card-title>
+        <mat-card-title>{{currentUser!.email}}</mat-card-title>
+    </mat-card>
+    <mat-card appearance="outlined" style="padding: 15px; display: flex; align-items: center; flex-direction:row; justify-content: space-between;">
+        <mat-card-title>Phone Number</mat-card-title>
+        <mat-card-title>{{currentUser!.phoneNumber}}</mat-card-title>
+    </mat-card>
+    <mat-card appearance="outlined" style="padding: 15px; display: flex; align-items: center; flex-direction:row; justify-content: space-between;">
+        <mat-card-title>Address</mat-card-title>
+        <mat-card-title>{{currentUser!.address}}</mat-card-title>
+    </mat-card>
+
+</mat-card>

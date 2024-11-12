@@ -40,7 +40,7 @@ export class NavbarComponent implements OnInit {
   }
 
   profileNavigate(){
-    
+    this.router.navigate(['/profile'])
   }
 
   logout(){

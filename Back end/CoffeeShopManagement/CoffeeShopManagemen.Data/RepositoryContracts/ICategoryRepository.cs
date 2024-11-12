@@ -9,5 +9,6 @@ namespace CoffeeShopManagement.Data.RepositoryContracts
 {
     public interface ICategoryRepository : IGenericRepository<Category>
     {
+        Task<IEnumerable<Category>> GetAllAsync();
     }
 }

@@ -30,7 +30,7 @@ namespace CoffeeShopManagement.WebAPI.Controllers
 
         [HttpGet]
         public async Task<IActionResult> GetListProducts(string search = "",
-           string filterCategory = "",string filterStatus = "",
+           string filterCategory = "", string filterStatus = "",
              int page = 0, int pageSize = 6,
            string sortColumn = "ProductName",
             string sortDirection = "asc")
@@ -46,7 +46,7 @@ namespace CoffeeShopManagement.WebAPI.Controllers
                 SortColumn = sortColumn,
                 SortDirection = sortDirection
             };
-            var result = await  _productService.GetProductWithCondition(productQueryRequest);
+            var result = await _productService.GetProductWithCondition(productQueryRequest);
             return Ok(result);
         }
 

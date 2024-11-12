@@ -1,7 +1,8 @@
-﻿using System;
+﻿using CoffeeShopManagement.Business.ServiceContracts;
+using CoffeeShopManagement.Data.RepositoryContracts;
+using CoffeeShopManagement.Business.DTO;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using CoffeeShopManagement.Business.ServiceContracts;
 using CoffeeShopManagement.Data.UnitOfWork;

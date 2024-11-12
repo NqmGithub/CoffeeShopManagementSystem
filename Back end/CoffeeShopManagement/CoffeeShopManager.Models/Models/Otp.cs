@@ -5,11 +5,15 @@ using System.Collections.Generic;
 
 namespace CoffeeShopManagement.Models.Models;
 
-public partial class ProblemType
+public partial class Otp
 {
     public Guid Id { get; set; }
 
-    public string ProblemName { get; set; }
+    public string Email { get; set; }
 
-    public virtual ICollection<Feedback> Feedbacks { get; set; } = new List<Feedback>();
+    public string Otp1 { get; set; }
+
+    public DateTime? ExpirationTime { get; set; }
+
+    public int? Status { get; set; }
 }

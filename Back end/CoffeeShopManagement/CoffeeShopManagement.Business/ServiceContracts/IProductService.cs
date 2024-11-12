@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CoffeeShopManagement.Models.Enums;
 
 namespace CoffeeShopManagement.Business.ServiceContracts
 {
@@ -20,11 +21,24 @@ namespace CoffeeShopManagement.Business.ServiceContracts
 
         Task<bool> UpdateProduct(ProductUpdateDTO productUpdateDTO);
 
-        Task<bool> ChangeStatusProductById(Guid id,string choice);
+        Task<bool> ChangeStatusProductById(Guid id, string choice);
 
+        Task<IEnumerable<ProductDTO>> GetAllProductsAsync(
+             string search,
+             string category,
+             decimal? minPrice,
+             decimal? maxPrice,
+             int page,
+             int pageSize,
+             SortBy sortBy,
+             bool isDescending);
+        Task<IEnumerable<ProductDTO>> GetProductsByCategoryAsync(Guid categoryId);
+        Task<IEnumerable<ProductDTO>> GetTopBestsellerProductsAsync(int top);
         Task<ProductListResponse> GetProductWithCondition
             (ProductQueryRequest productQueryRequest);
 
         Task<bool> CheckProductNameExist(string productName);
     }
+   
 }
+
