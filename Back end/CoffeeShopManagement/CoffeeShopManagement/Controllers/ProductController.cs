@@ -28,9 +28,9 @@ namespace CoffeeShopManagement.WebAPI.Controllers
             return Ok(product);
         }
 
-       /* [HttpGet]
+        [HttpGet]
         public async Task<IActionResult> GetListProducts(string search = "",
-           string filterCategory = "",string filterStatus = "",
+           string filterCategory = "", string filterStatus = "",
              int page = 0, int pageSize = 6,
            string sortColumn = "ProductName",
             string sortDirection = "asc")
@@ -46,9 +46,9 @@ namespace CoffeeShopManagement.WebAPI.Controllers
                 SortColumn = sortColumn,
                 SortDirection = sortDirection
             };
-            var result = await  _productService.GetProductWithCondition(productQueryRequest);
+            var result = await _productService.GetProductWithCondition(productQueryRequest);
             return Ok(result);
-        }*/
+        }
 
         [HttpPost]
         public async Task<IActionResult> CreateUser(ProductCreateDTO productCreateDTO)

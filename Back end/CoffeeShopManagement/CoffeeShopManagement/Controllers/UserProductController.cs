@@ -41,7 +41,7 @@ namespace CoffeeShopManagement.WebAPI.Controllers
         [HttpGet("categories")]
         public async Task<IActionResult> GetAllCategories()
         {
-            var categories = await categoryService.GetAllCategories();
+            var categories = await categoryService.GetAllCategory();
             if (categories == null || !categories.Any())
             {
                 return NoContent();
