@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CoffeeShopManagement.Models.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,7 +10,6 @@ namespace CoffeeShopManagement.Business.ServiceContracts
 {
     public interface ICategoryService
     {
-        Task<IEnumerable<CategoryDTO>> GetAllCategories();
-
+        Task<IEnumerable<Category>> GetAllCategory();
     }
 }

@@ -106,6 +106,7 @@ namespace CoffeeShopManagement.Business.Services
             product.CategotyId = ConvertToCategoryId(productUpdateDTO.CategoryName);
             product.Price = productUpdateDTO.Price;
             product.Quantity = productUpdateDTO.Quantity;
+            product.Description = productUpdateDTO.Description;
             product.Thumbnail = productUpdateDTO.Thumbnail;
             product.Status = ProductHelper.ConvertToStatusInt(productUpdateDTO.Status);
 
@@ -115,7 +116,7 @@ namespace CoffeeShopManagement.Business.Services
 
         private Guid ConvertToCategoryId(string categoryName)
         {
-            var id = _unitOfWork.ProductRepository.GetQuery().Include(x => x.Categoty).Where(x => x.Categoty.CategoryName.Equals(categoryName)).Select(x => x.Id).FirstOrDefault();
+            var id = _unitOfWork.CategoryRepository.GetQuery().Where(x => x.CategoryName.Equals(categoryName)).Select(x => x.Id).FirstOrDefault();
             if (id == Guid.Empty)
             {
                 throw new Exception("Category name does not exist");
@@ -123,39 +124,45 @@ namespace CoffeeShopManagement.Business.Services
             return id;
         }
 
-        public ProductListResponse GetProductWithCondition(string search = "", string filterCategory = "", string filterStatus = "", int page = 0, int pageSize = 5, string sortColumn = "ProductName", string sortDirection = "asc")
+        public async Task<ProductListResponse> GetProductWithCondition(ProductQueryRequest productQueryRequest)
         {
             var query = _unitOfWork.ProductRepository.GetQuery().Include(x => x.Categoty).AsQueryable();
 
             // Apply search
-            if (!string.IsNullOrEmpty(search))
+            if (!string.IsNullOrEmpty(productQueryRequest.Search))
             {
-                query = query.Where(p => p.ProductName.Contains(search) || p.Categoty.CategoryName.Contains(search));
+                query = query.Where(p => p.ProductName.Contains(productQueryRequest.Search) || p.Categoty.CategoryName.Contains(productQueryRequest.Search));
             }
 
             // Apply filter
-            if (!string.IsNullOrEmpty(filterCategory))
+            if (!string.IsNullOrEmpty(productQueryRequest.FilterCategory))
             {
-                query = query.Where(p => p.Categoty.CategoryName.Contains(search));
+                query = query.Where(p=>p.Categoty.CategoryName.Contains(productQueryRequest.FilterCategory));
             }
 
-            if (!string.IsNullOrEmpty(filterStatus))
+            if (!string.IsNullOrEmpty(productQueryRequest.FilterStatus))
             {
-                query = query.Where(p => p.Status == ProductHelper.ConvertToStatusInt(filterStatus));
+                query = query.Where(p=> p.Status== ProductHelper.ConvertToStatusInt(productQueryRequest.FilterStatus));
             }
             // Apply sorting
-            if (sortDirection == "asc")
+            if (productQueryRequest.SortColumn.Equals("CategoryName"))
             {
-                query = query.OrderBy(p => EF.Property<object>(p, sortColumn));
+                // Sort by CategoryName using the navigation property
+                query = productQueryRequest.SortDirection.Equals("asc", StringComparison.OrdinalIgnoreCase)
+                    ? query.OrderBy(p => p.Categoty.CategoryName)
+                    : query.OrderByDescending(p => p.Categoty.CategoryName);
             }
             else
             {
-                query = query.OrderByDescending(p => EF.Property<object>(p, sortColumn));
+                // Sort by the property in Product
+                query = productQueryRequest.SortDirection.Equals("asc", StringComparison.OrdinalIgnoreCase)
+                    ? query.OrderBy(p => EF.Property<object>(p, productQueryRequest.SortColumn))
+                    : query.OrderByDescending(p => EF.Property<object>(p, productQueryRequest.SortColumn));
             }
 
             // Apply pagination
             var totalProducts = query.Count();
-            var products = query.Skip(page * pageSize).Take(pageSize)
+            var products = query.Skip(productQueryRequest.Page * productQueryRequest.PageSize).Take(productQueryRequest.PageSize)
                 .Select(p => new ProductDTO()
                 {
                     Id = p.Id,
@@ -164,12 +171,13 @@ namespace CoffeeShopManagement.Business.Services
                     Price = p.Price,
                     Quantity = p.Quantity,
                     Thumbnail = p.Thumbnail,
+                    Description = p.Description,
                     Status = ProductHelper.ConvertToStatusString(p.Status),
-                }).ToList();
+                }).ToListAsync();
 
             return new ProductListResponse()
             {
-                List = products,
+                List = await products,
                 Total = totalProducts,
             };
         }
@@ -228,6 +236,15 @@ namespace CoffeeShopManagement.Business.Services
                 Status = ProductHelper.ConvertToStatusString(p.Status),
                 Description = p.Description
             });
+        }
+        public async Task<bool> CheckProductNameExist(string productName)
+        {
+            var temp = await _unitOfWork.ProductRepository.GetQuery().FirstOrDefaultAsync(x => x.ProductName.Equals(productName));
+            if (temp != null) 
+            {
+                return true;
+            }
+            return false;
         }
     }
 }
