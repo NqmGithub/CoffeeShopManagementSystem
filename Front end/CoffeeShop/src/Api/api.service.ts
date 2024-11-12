@@ -1,6 +1,6 @@
-import { HttpClient, HttpEvent, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpEvent, HttpParams, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { catchError, Observable, throwError } from 'rxjs';
 import { Product } from '../Interfaces/product';
 import { CreateProduct } from '../Interfaces/createProduct';
 
@@ -24,7 +24,10 @@ export class ApiService {
     return this.http.post<any>(this.baseurl + '/Auth/signup', data);
   }
 
-
+  getUserById(id: any): Observable<any>{
+    return this.http.get<any>(this.baseurl + `/User/byId/${id}`);
+  }
+  
   //Product
   getProducts(search: string, filterCategory: string, filterStatus: string, page: number, pageSize: number,
     sortColumn: string, sortDirection: string): Observable<{ list: Product[], total: number }> {
@@ -82,4 +85,5 @@ export class ApiService {
   changeStatus(id:string, status:string):Observable<boolean>{
     return this.http.put<boolean>(`${this.baseurl}/Product/`+id+'?status='+status,this.headerCustom);
   }
+
 }

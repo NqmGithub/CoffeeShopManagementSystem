@@ -5,6 +5,8 @@ import { UnauthorizedComponent } from '../views/unauthorized/unauthorized.compon
 import { AdminComponent } from '../views/admin/admin.component';
 import { ProductManagerComponent } from '../views/admin/product-manager/product-manager.component';
 import { RegisterComponent } from '../views/register/register.component';
+import { ProfileComponent } from '../views/profile/profile.component';
+import { AuthGuard } from '../service/auth.guard';
 
 export const routes: Routes = [
     {
@@ -28,6 +30,7 @@ export const routes: Routes = [
     },
     {path:'register', component:RegisterComponent},
     {path:'login', component:LoginComponent},
+    {path:'profile', component:ProfileComponent, canActivate: [AuthGuard]},
     {path:'unauthorized', component:UnauthorizedComponent}
 ];
 
