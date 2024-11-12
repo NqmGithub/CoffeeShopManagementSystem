@@ -29,6 +29,8 @@ namespace CoffeeShopManagement.Business.DTO
         [Range(1, int.MaxValue, ErrorMessage = "Quantity must be greater than 0.")]
         public int Quantity { get; set; }
 
+        public string Description { get; set; }
+
         [Required(ErrorMessage = "Thumbnail is required")]
         public string? Thumbnail { get; set; }
 
@@ -43,6 +45,7 @@ namespace CoffeeShopManagement.Business.DTO
                 Price = Price,
                 Quantity = Quantity,
                 Thumbnail = Thumbnail,
+                Description = Description,
                 Status = ProductHelper.ConvertToStatusInt(Status),
             };
         }       

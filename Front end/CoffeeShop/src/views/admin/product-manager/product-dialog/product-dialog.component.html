@@ -1,0 +1,81 @@
+<div style="display: flex; justify-content: space-between; height: 50px;">
+  <h2 mat-dialog-title style="color: #6b4f34; font-weight: bold;">{{header}}</h2>
+  <mat-icon class="closeButton" (click)="onCancel()">close</mat-icon>
+</div>
+<mat-dialog-content>
+  <form #productForm="ngForm" style="display: flex;">
+    <div>
+      <!-- upload image  -->
+      <input #file type="file" (change)="handleFileInput($event)" style="display:none;" />
+      @if(imageUrl){
+      <img width="100%" height="165px" [src]="imageUrl" class="image" (click)="file.click()">
+      }@else if(createProduct.thumbnail) {
+      <img width="100%" height="165px" [src]="getImage(createProduct.thumbnail)" class="image" (click)="file.click()">
+      }@else {
+      <img width="100%" height="165px" src="/defaultProduct.jpg" class="image" (click)="file.click()">
+      }
+      <!-- description -->
+      <mat-form-field appearance="outline">
+        <mat-label>Description</mat-label>
+        <textarea [formControl]="descriptionFormControl" style="min-height: 100px;" matInput placeholder="..."></textarea>
+      </mat-form-field>
+    </div>
+    <div style="margin-left: 10px;">
+      <!-- product name -->
+      <mat-form-field style="width: 263px;" appearance="outline">
+        <mat-label>ProductName</mat-label>
+        <input matInput [formControl]="productNameFormControl" name="productName" required />
+          @if (productNameFormControl.hasError('required')) {
+          <mat-error>Product name is <strong>required</strong></mat-error>
+          }@else if (isProductNameExist) {
+            <mat-error>Product name already <strong>exists</strong></mat-error>
+          }
+      </mat-form-field>
+      <!-- category name  -->
+      <mat-form-field style="width: 263px;" appearance="outline">
+        <mat-label>CategoryName</mat-label>
+        <mat-select [formControl]="categoryNameFormControl" name="categoryName">
+          @for (name of listCategoryName; track $index) {
+            <mat-option value="{{name}}">{{name}}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+      <!-- price -->
+      <mat-form-field style="width: 45%;" appearance="outline">
+        <mat-label>Price</mat-label>
+        <input matInput [formControl]="priceFormControl" type="number" step="0.01" name="price" required />
+        @if (priceFormControl.hasError('min(0)')) {
+          <mat-error>Price is <strong>posive</strong> number</mat-error>
+          }
+      </mat-form-field>
+      <!-- quantity  -->
+      <mat-form-field style="width: 45%;" appearance="outline">
+        <mat-label>Quantity</mat-label>
+        <input matInput [formControl]="quantityFormControl" type="number" name="quantity" required />
+        @if (quantityFormControl.hasError('min(0)')) {
+          <mat-error>Quantity is <strong>posive</strong> number</mat-error>
+          }
+      </mat-form-field>
+
+      <!-- <mat-radio-group name="status" [(ngModel)]="selectedStatus" >
+          @for (item of status; track $index) {
+            <mat-radio-button [value]="item" [checked]="selectedStatus ==item ">{{item}}</mat-radio-button>
+          }          
+        </mat-radio-group> -->
+      <div>
+        <p style="font-size: 16px;">Status: </p>
+          <input type="radio" value="Active" [formControl]="selectedStatusFormControl " name="status" >Active
+          <input type="radio" value="InActive" [formControl]="selectedStatusFormControl " name="status">InActive
+      </div>
+    </div>
+
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions>
+  @if (header == 'Add Product') {
+    <button mat-button cdkFocusInitial (click)="OnAdd()">Add</button>
+  } @else {
+    <button mat-button cdkFocusInitial (click)="OnUpdate()">Update</button>
+  }
+  
+</mat-dialog-actions>

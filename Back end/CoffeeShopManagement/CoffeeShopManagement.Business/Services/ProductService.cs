@@ -1,28 +1,36 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using CoffeeShopManagement.Business.DTO;
 using CoffeeShopManagement.Business.Helpers;
 using CoffeeShopManagement.Business.ServiceContracts;
+using CoffeeShopManagement.Data.Repositories;
+using CoffeeShopManagement.Data.RepositoryContracts;
 using CoffeeShopManagement.Data.UnitOfWork;
 using CoffeeShopManagement.Models.Models;
 using Microsoft.EntityFrameworkCore;
+using CoffeeShopManagement.Models.Enums;
+using static CoffeeShopManagement.Models.Models.Product;
+
+
 
 namespace CoffeeShopManagement.Business.Services
 {
     public class ProductService : IProductService
     {
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IProductRepository _productRepository;
 
-        public ProductService(IUnitOfWork unitOfWork)
+        public ProductService(IUnitOfWork unitOfWork, IProductRepository productRepository)
         {
+            _productRepository = productRepository;
             _unitOfWork = unitOfWork;
         }
         public async Task<bool> CreateProduct(ProductCreateDTO productCreateDTO)
         {
-            if(productCreateDTO == null)
+            if (productCreateDTO == null)
             {
                 throw new ArgumentNullException(nameof(productCreateDTO));
             }
@@ -33,17 +41,17 @@ namespace CoffeeShopManagement.Business.Services
             _unitOfWork.ProductRepository.Add(product);
 
             int result = await _unitOfWork.SaveChangesAsync();
-            return result>0;
+            return result > 0;
         }
 
         public async Task<bool> ChangeStatusProductById(Guid id, string choice)
         {
             var product = _unitOfWork.ProductRepository.GetById(id);
-            if (product == null) 
+            if (product == null)
             {
                 throw new ArgumentException(nameof(product));
             }
-            product.Status = choice.Equals("Active",StringComparison.OrdinalIgnoreCase)?1:0;
+            product.Status = choice.Equals("Active", StringComparison.OrdinalIgnoreCase) ? 1 : 0;
             int result = await _unitOfWork.SaveChangesAsync();
             return result > 0;
         }
@@ -65,7 +73,7 @@ namespace CoffeeShopManagement.Business.Services
                     y => y.Id,
                     (x, y) => y
                 )
-                .Select(x => x.ToProductDTO(_unitOfWork)).ToList();  
+                .Select(x => x.ToProductDTO(_unitOfWork)).ToList();
             return topProducts;
         }
 
@@ -77,7 +85,7 @@ namespace CoffeeShopManagement.Business.Services
         public async Task<ProductDTO> GetProductById(Guid id)
         {
             var product = await _unitOfWork.ProductRepository.GetByIdAsync(id);
-            if(product == null)
+            if (product == null)
             {
                 throw new ArgumentNullException(nameof(product));
             }
@@ -88,7 +96,7 @@ namespace CoffeeShopManagement.Business.Services
         {
             var product = await _unitOfWork.ProductRepository.GetByIdAsync(productUpdateDTO.Id);
 
-            if (product == null) 
+            if (product == null)
             {
                 throw new ArgumentNullException(nameof(product));
             }
@@ -98,6 +106,7 @@ namespace CoffeeShopManagement.Business.Services
             product.CategotyId = ConvertToCategoryId(productUpdateDTO.CategoryName);
             product.Price = productUpdateDTO.Price;
             product.Quantity = productUpdateDTO.Quantity;
+            product.Description = productUpdateDTO.Description;
             product.Thumbnail = productUpdateDTO.Thumbnail;
             product.Status = ProductHelper.ConvertToStatusInt(productUpdateDTO.Status);
 
@@ -107,7 +116,7 @@ namespace CoffeeShopManagement.Business.Services
 
         private Guid ConvertToCategoryId(string categoryName)
         {
-            var id = _unitOfWork.ProductRepository.GetQuery().Include(x => x.Categoty).Where(x => x.Categoty.CategoryName.Equals(categoryName)).Select(x => x.Id).FirstOrDefault();
+            var id = _unitOfWork.CategoryRepository.GetQuery().Where(x => x.CategoryName.Equals(categoryName)).Select(x => x.Id).FirstOrDefault();
             if (id == Guid.Empty)
             {
                 throw new Exception("Category name does not exist");
@@ -115,39 +124,45 @@ namespace CoffeeShopManagement.Business.Services
             return id;
         }
 
-        public ProductListResponse GetProductWithCondition(string search = "", string filterCategory = "", string filterStatus = "", int page = 0, int pageSize = 5, string sortColumn = "ProductName", string sortDirection = "asc")
+        public async Task<ProductListResponse> GetProductWithCondition(ProductQueryRequest productQueryRequest)
         {
             var query = _unitOfWork.ProductRepository.GetQuery().Include(x => x.Categoty).AsQueryable();
 
             // Apply search
-            if (!string.IsNullOrEmpty(search))
+            if (!string.IsNullOrEmpty(productQueryRequest.Search))
             {
-                query = query.Where(p => p.ProductName.Contains(search) || p.Categoty.CategoryName.Contains(search));
+                query = query.Where(p => p.ProductName.Contains(productQueryRequest.Search) || p.Categoty.CategoryName.Contains(productQueryRequest.Search));
             }
 
             // Apply filter
-            if (!string.IsNullOrEmpty(filterCategory))
+            if (!string.IsNullOrEmpty(productQueryRequest.FilterCategory))
             {
-                query = query.Where(p=>p.Categoty.CategoryName.Contains(search));
+                query = query.Where(p=>p.Categoty.CategoryName.Contains(productQueryRequest.FilterCategory));
             }
 
-            if (!string.IsNullOrEmpty(filterStatus))
+            if (!string.IsNullOrEmpty(productQueryRequest.FilterStatus))
             {
-                query = query.Where(p=> p.Status== ProductHelper.ConvertToStatusInt(filterStatus));
+                query = query.Where(p=> p.Status== ProductHelper.ConvertToStatusInt(productQueryRequest.FilterStatus));
             }
             // Apply sorting
-            if (sortDirection == "asc")
+            if (productQueryRequest.SortColumn.Equals("CategoryName"))
             {
-                query = query.OrderBy(p => EF.Property<object>(p, sortColumn));
+                // Sort by CategoryName using the navigation property
+                query = productQueryRequest.SortDirection.Equals("asc", StringComparison.OrdinalIgnoreCase)
+                    ? query.OrderBy(p => p.Categoty.CategoryName)
+                    : query.OrderByDescending(p => p.Categoty.CategoryName);
             }
             else
             {
-                query = query.OrderByDescending(p => EF.Property<object>(p, sortColumn));
+                // Sort by the property in Product
+                query = productQueryRequest.SortDirection.Equals("asc", StringComparison.OrdinalIgnoreCase)
+                    ? query.OrderBy(p => EF.Property<object>(p, productQueryRequest.SortColumn))
+                    : query.OrderByDescending(p => EF.Property<object>(p, productQueryRequest.SortColumn));
             }
 
             // Apply pagination
             var totalProducts = query.Count();
-            var products = query.Skip(page * pageSize).Take(pageSize)
+            var products = query.Skip(productQueryRequest.Page * productQueryRequest.PageSize).Take(productQueryRequest.PageSize)
                 .Select(p => new ProductDTO()
                 {
                     Id = p.Id,
@@ -156,14 +171,80 @@ namespace CoffeeShopManagement.Business.Services
                     Price = p.Price,
                     Quantity = p.Quantity,
                     Thumbnail = p.Thumbnail,
+                    Description = p.Description,
                     Status = ProductHelper.ConvertToStatusString(p.Status),
-                }).ToList();
+                }).ToListAsync();
 
             return new ProductListResponse()
             {
-                List = products,
+                List = await products,
                 Total = totalProducts,
             };
+        }
+        public async Task<IEnumerable<ProductDTO>> GetAllProductsAsync(
+           string search,
+           string category,
+           decimal? minPrice,
+           decimal? maxPrice,
+           int page,
+           int pageSize,
+           SortBy sortBy,
+           bool isDescending)
+        {
+            var products = await _unitOfWork.ProductRepository.GetAllProductsAsync(
+                search, category, minPrice, maxPrice, page, pageSize, sortBy, isDescending);
+
+            return products.Select(p => new ProductDTO
+            {
+                Id = p.Id,
+                ProductName = p.ProductName,
+                Price = p.Price,
+                Quantity = p.Quantity,
+                Thumbnail = p.Thumbnail,
+                Status = ProductHelper.ConvertToStatusString(p.Status),
+                Description = p.Description,
+                CategoryName = p.Categoty?.CategoryName ?? "Unknown"
+            });
+        }
+        public async Task<IEnumerable<ProductDTO>> GetProductsByCategoryAsync(Guid categoryId)
+        {
+            var products = await _unitOfWork.ProductRepository.GetProductsByCategoryId(categoryId);
+
+            return products.Select(p => new ProductDTO
+            {
+                Id = p.Id,
+                ProductName = p.ProductName,
+                Price = p.Price,
+                CategoryName = p.Categoty?.CategoryName ?? "Unknown",
+                Thumbnail = p.Thumbnail,
+                Status = ProductHelper.ConvertToStatusString(p.Status),
+                Description = p.Description
+            });
+        }
+
+        public async Task<IEnumerable<ProductDTO>> GetTopBestsellerProductsAsync(int top)
+        {
+            var products = await _unitOfWork.ProductRepository.GetTopBestsellersAsync(top);
+
+            return products.Select(p => new ProductDTO
+            {
+                Id = p.Id,
+                ProductName = p.ProductName,
+                Price = p.Price,
+                CategoryName = p.Categoty?.CategoryName ?? "Unknown",
+                Thumbnail = p.Thumbnail,
+                Status = ProductHelper.ConvertToStatusString(p.Status),
+                Description = p.Description
+            });
+        }
+        public async Task<bool> CheckProductNameExist(string productName)
+        {
+            var temp = await _unitOfWork.ProductRepository.GetQuery().FirstOrDefaultAsync(x => x.ProductName.Equals(productName));
+            if (temp != null) 
+            {
+                return true;
+            }
+            return false;
         }
     }
 }
