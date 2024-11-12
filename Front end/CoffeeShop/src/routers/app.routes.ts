@@ -5,6 +5,9 @@ import { UnauthorizedComponent } from '../views/unauthorized/unauthorized.compon
 import { AdminComponent } from '../views/admin/admin.component';
 import { ProductManagerComponent } from '../views/admin/product-manager/product-manager.component';
 import { RegisterComponent } from '../views/register/register.component';
+// import { ProfileComponent } from '../views/profile/profile.component';
+import { AuthGuard } from '../service/auth.guard';
+import { FeedbackComponent } from '../views/feedback/feedback.component';
 
 export const routes: Routes = [
     {
@@ -26,6 +29,7 @@ export const routes: Routes = [
             }
           ]          
     },
+    {path:'feedback', component:FeedbackComponent},
     {path:'register', component:RegisterComponent},
     {path:'login', component:LoginComponent},
     {path:'unauthorized', component:UnauthorizedComponent}
