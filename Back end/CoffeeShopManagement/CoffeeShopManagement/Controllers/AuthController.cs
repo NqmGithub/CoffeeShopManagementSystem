@@ -67,9 +67,9 @@ namespace CoffeeShopManagement.WebAPI.Controllers
 
             var newUser = new User
             {
-                Id = Guid.NewGuid(), 
+                Id = Guid.NewGuid(),
                 UserName = signupRequest.Username,
-                Password = signupRequest.Password, 
+                Password = signupRequest.Password,
                 Email = signupRequest.Email,
                 Role = 1,
                 PhoneNumber = signupRequest.PhoneNumber,
@@ -107,7 +107,7 @@ namespace CoffeeShopManagement.WebAPI.Controllers
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
-        public string GenerateOtp()
+        private string GenerateOtp()
         {
             var random = new Random();
             return random.Next(100000, 999999).ToString();
