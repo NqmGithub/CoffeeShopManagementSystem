@@ -28,6 +28,9 @@ builder.Services.AddScoped<IOrderService, OrderService>();
 builder.Services.AddScoped<IOrderDetailService, OrderDetailService>();
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<CartCookieService>();
+
 
 
 builder.Services.AddControllers();
