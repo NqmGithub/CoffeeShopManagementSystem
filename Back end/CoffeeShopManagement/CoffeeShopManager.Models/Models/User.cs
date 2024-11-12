@@ -25,9 +25,9 @@ public partial class User
 
     public int Status { get; set; }
 
-    public virtual ICollection<Contact> ContactAdmins { get; set; } = new List<Contact>();
+    public virtual ICollection<Feedback> FeedbackAdmins { get; set; } = new List<Feedback>();
 
-    public virtual ICollection<Contact> ContactCustomers { get; set; } = new List<Contact>();
+    public virtual ICollection<Feedback> FeedbackCustomers { get; set; } = new List<Feedback>();
 
     public virtual ICollection<Order> Orders { get; set; } = new List<Order>();
 }
