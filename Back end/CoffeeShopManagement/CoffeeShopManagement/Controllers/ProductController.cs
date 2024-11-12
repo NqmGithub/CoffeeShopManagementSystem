@@ -26,7 +26,7 @@ namespace CoffeeShopManagement.WebAPI.Controllers
             return Ok(product);
         }
 
-        [HttpGet]
+       /* [HttpGet]
         public async Task<IActionResult> GetListProducts(string search = "",
             string filterCategory = "", string filterStatus = "",
             int page = 0, int pageSize = 6,
@@ -36,7 +36,7 @@ namespace CoffeeShopManagement.WebAPI.Controllers
             //result include: list products and totalProducts after filter,sort, pagination
             var result =  _productService.GetProductWithCondition(search,filterCategory,filterStatus,page,pageSize,sortColumn,sortDirection);
             return Ok(result);
-        }
+        }*/
 
 
 
