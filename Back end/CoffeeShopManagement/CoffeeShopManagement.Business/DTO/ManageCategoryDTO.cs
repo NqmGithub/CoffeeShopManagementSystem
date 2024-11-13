@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace CoffeeShopManagement.Business.DTO
 {
-    public class CategoryDTO
+    public class ManageCategoryDTO
     {
 
         [Required(ErrorMessage = "CategoryName is required")]

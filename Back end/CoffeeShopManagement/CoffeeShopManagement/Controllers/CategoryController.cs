@@ -34,14 +34,14 @@ namespace CoffeeShopManagement.WebAPI.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddCategory(CategoryDTO categoryAddDTO)
+        public async Task<IActionResult> AddCategory(ManageCategoryDTO categoryAddDTO)
         {
             var result = await _categoryService.AddCategory(categoryAddDTO);
             return Ok(result);
         }
 
         [HttpPut("update/{id}")]
-        public async Task<IActionResult> UpdateCategory(Guid id,CategoryDTO categoryUpdateDTO)
+        public async Task<IActionResult> UpdateCategory(Guid id,ManageCategoryDTO categoryUpdateDTO)
         {
             
             var result = await _categoryService.UpdateCategory(id,categoryUpdateDTO);
