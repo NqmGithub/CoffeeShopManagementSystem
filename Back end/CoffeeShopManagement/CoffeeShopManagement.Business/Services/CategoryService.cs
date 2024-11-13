@@ -28,7 +28,7 @@ namespace CoffeeShopManagement.Business.Services
                 CategoryName = c.CategoryName
             }).ToList();
         }
-        public async Task<bool> AddCategory(CategoryDTO categoryAddDTO)
+        public async Task<bool> AddCategory(ManageCategoryDTO categoryAddDTO)
         {
             if (categoryAddDTO == null)
             {
@@ -42,7 +42,7 @@ namespace CoffeeShopManagement.Business.Services
             int result = await _unitOfWork.SaveChangesAsync();
             return result > 0;
         }
-        public async Task<bool> UpdateCategory(Guid id, CategoryDTO categoryUpdateDTO)
+        public async Task<bool> UpdateCategory(Guid id, ManageCategoryDTO categoryUpdateDTO)
         {
             var category = await _unitOfWork.CategoryRepository.GetCategoryById(id);
 

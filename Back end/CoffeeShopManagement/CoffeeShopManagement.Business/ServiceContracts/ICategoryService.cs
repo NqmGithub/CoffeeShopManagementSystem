@@ -12,8 +12,8 @@ namespace CoffeeShopManagement.Business.ServiceContracts
     {
         Task<IEnumerable<Category>>GetListCategory();
         Task<Category> GetCategory(Guid id);
-        Task<bool> AddCategory(CategoryDTO categoryAddDTO);
-        Task<bool> UpdateCategory(Guid id, CategoryDTO categoryUpdateDTO);
+        Task<bool> AddCategory(ManageCategoryDTO categoryAddDTO);
+        Task<bool> UpdateCategory(Guid id, ManageCategoryDTO categoryUpdateDTO);
         Task DeleteCategory(Guid id);
 
     }
