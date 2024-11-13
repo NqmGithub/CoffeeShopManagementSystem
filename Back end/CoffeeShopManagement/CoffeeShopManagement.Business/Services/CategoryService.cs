@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -71,5 +71,10 @@ namespace CoffeeShopManagement.Business.Services
 
             return await _unitOfWork.CategoryRepository.GetCategoryById(id);
         }
+        public async Task<IEnumerable<Category>> GetAllCategory()
+        {
+            return await _unitOfWork.CategoryRepository.GetAllAsync();
+        }
     }
 }
+

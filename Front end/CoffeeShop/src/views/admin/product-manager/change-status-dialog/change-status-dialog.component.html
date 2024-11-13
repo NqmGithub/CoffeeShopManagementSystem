@@ -1,0 +1,14 @@
+<div style="display: flex; justify-content: space-between; height: 50px;">
+    <h2 mat-dialog-title style="color: #6b4f34; font-weight: bold;">Confirm Status</h2>
+    <mat-icon class="closeButton" (click)="onCancel()">close</mat-icon>
+  </div>
+<mat-dialog-content>
+    <p>Are you sure to 
+        <span [ngStyle]="{'color': product.status === 'Active' ? 'red' : 'green'}" style="font-weight: 500;">
+            {{ product.status === 'Active' ? 'deactive' : 'active' }}
+          </span>
+        this product: <span style="color: red;">{{product.productName}}</span> ?</p>
+</mat-dialog-content>
+<mat-dialog-actions>
+    <button mat-button color="warn" (click)="onConfirm()">Update</button>
+</mat-dialog-actions>

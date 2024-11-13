@@ -1,3 +1,4 @@
+
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -44,6 +45,12 @@ namespace CoffeeShopManagement.Data.Repositories
         {
             _context.Categories.Update(category);
             await _context.SaveChangesAsync();
+        }    
+        public async Task<IEnumerable<Category>> GetAllAsync()
+        {
+            return await _context.Categories.ToListAsync();
         }
     }
 }
+
+

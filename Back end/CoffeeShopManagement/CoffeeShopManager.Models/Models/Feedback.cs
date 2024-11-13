@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace CoffeeShopManagement.Models.Models;
 
-public partial class Contact
+public partial class Feedback
 {
     public Guid Id { get; set; }
 
@@ -19,11 +19,11 @@ public partial class Contact
 
     public string Description { get; set; }
 
+    public string Img { get; set; }
+
     public Guid ProblemId { get; set; }
 
     public int Status { get; set; }
-
-    public string Response { get; set; }
 
     public virtual User Admin { get; set; }
 

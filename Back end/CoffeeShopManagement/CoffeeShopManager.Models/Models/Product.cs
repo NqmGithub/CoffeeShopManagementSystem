@@ -11,19 +11,23 @@ public partial class Product
 
     public string ProductName { get; set; }
 
+    public string Description { get; set; }
+
     public Guid CategotyId { get; set; }
 
     public decimal Price { get; set; }
 
     public int Quantity { get; set; }
 
+    public Guid? DiscountId { get; set; }
+
     public string Thumbnail { get; set; }
 
     public int Status { get; set; }
 
-    public string Description { get; set; }
-
     public virtual Category Categoty { get; set; }
+
+    public virtual Discount Discount { get; set; }
 
     public virtual ICollection<OrderDetail> OrderDetails { get; set; } = new List<OrderDetail>();
 }

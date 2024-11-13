@@ -5,5 +5,6 @@ export interface Product {
     price: number,
     quantity: number,
     thumbnail: string,
-    status: number
+    description:string,
+    status: string
 }

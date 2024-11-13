@@ -19,7 +19,11 @@
          "ObjectType": 0
       },
       {
-         "Name": "[dbo].[Contact]",
+         "Name": "[dbo].[Discount]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Feedback]",
          "ObjectType": 0
       },
       {
@@ -28,6 +32,10 @@
       },
       {
          "Name": "[dbo].[OrderDetail]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Otp]",
          "ObjectType": 0
       },
       {

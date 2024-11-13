@@ -14,5 +14,7 @@ namespace CoffeeShopManagement.Data.RepositoryContracts
         Task<IEnumerable<Category>> GetListCategory();
         Task<Category> GetCategoryById(Guid id);       
         Task UpdateCategory(Category category);
+        Task<IEnumerable<Category>> GetAllAsync();
+
     }
 }

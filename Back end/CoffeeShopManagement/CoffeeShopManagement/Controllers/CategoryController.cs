@@ -1,3 +1,4 @@
+
 ﻿using CoffeeShopManagement.Business.DTO;
 using CoffeeShopManagement.Business.ServiceContracts;
 using CoffeeShopManagement.Business.Services;
@@ -57,6 +58,12 @@ namespace CoffeeShopManagement.WebAPI.Controllers
             return NoContent();
         }
 
-
+        [HttpGet("name")]
+        public async Task<IActionResult> GetAllCategoryNames()
+        {
+            var categories = await _categoryService.GetAllCategory();
+            return Ok(categories.Select(x=> x.CategoryName).Distinct());
+        }
     }
 }
+

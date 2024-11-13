@@ -1,4 +1,4 @@
-﻿using CoffeeShopManagement.Data.RepositoryContracts;
+using CoffeeShopManagement.Data.RepositoryContracts;
 using CoffeeShopManagement.Models.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -67,7 +67,7 @@ namespace CoffeeShopManagement.Data.Repositories
             return _dbSet.ToList();
         }
 
-        public async Task<IEnumerable<T>> GetAllAsync()
+        public async Task<IEnumerable<T>> GetAllCategoryAsync()
         {
             return await _dbSet.ToListAsync();
         }
@@ -101,6 +101,6 @@ namespace CoffeeShopManagement.Data.Repositories
         {
             _dbSet.Update(entity);
         }
-       
     }
 }
+

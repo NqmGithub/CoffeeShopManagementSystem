@@ -1,4 +1,5 @@
-﻿using CoffeeShopManagement.Business.ServiceContracts;
+﻿using CoffeeShopManagement.Business.Helpers;
+using CoffeeShopManagement.Business.ServiceContracts;
 using CoffeeShopManagement.Models.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
@@ -29,13 +30,12 @@ namespace CoffeeShopManagement.WebAPI.Controllers
         public async Task<IActionResult> Login([FromBody] LoginRequest loginRequest)
         {
             var user = (await _userService.GetByEmail(loginRequest.Email));
-            if (user != null && user.Status == 1)
+            if (user == null || user.Status != 1 || !PasswordHelper.VerifyPassword(loginRequest.Password, user.Password))
             {
-                var token = GenerateJwtToken(user.Id, user.Role);
-                return Ok(new { token });
+                return Unauthorized("Invalid email or password");
             }
-
-            return Unauthorized();
+            var token = GenerateJwtToken(user.Id, user.Role);
+            return Ok(new { token });
         }
 
         public class SignupRequest
@@ -67,14 +67,14 @@ namespace CoffeeShopManagement.WebAPI.Controllers
 
             var newUser = new User
             {
-                Id = Guid.NewGuid(), 
+                Id = Guid.NewGuid(),
                 UserName = signupRequest.Username,
-                Password = signupRequest.Password, 
+                Password = signupRequest.Password,
                 Email = signupRequest.Email,
                 Role = 1,
                 PhoneNumber = signupRequest.PhoneNumber,
                 Address = signupRequest.Address,
-                Avatar = "/avatar.jpg",
+                Avatar = @"..\..\avatar.jpg",
                 Status = 1
             };
 
@@ -105,6 +105,12 @@ namespace CoffeeShopManagement.WebAPI.Controllers
                 signingCredentials: creds);
 
             return new JwtSecurityTokenHandler().WriteToken(token);
+        }
+
+        private string GenerateOtp()
+        {
+            var random = new Random();
+            return random.Next(100000, 999999).ToString();
         }
     }
 }
