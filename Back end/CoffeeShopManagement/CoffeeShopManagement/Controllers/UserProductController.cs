@@ -63,7 +63,18 @@ namespace CoffeeShopManagement.WebAPI.Controllers
             ValidateProductParameters(ref search, ref category, ref minPrice, ref maxPrice, ref sortBy, ref isDescending, ref page, ref pageSize);
 
             var products = await productService.GetAllProductsAsync(search, category, minPrice, maxPrice, page, pageSize, sortBy, isDescending);
-            return Ok(products);
+            var totalRecords = await productService.GetTotalRecords(search, category, minPrice, maxPrice);
+
+            var totalPages = (int)Math.Ceiling((double)totalRecords / pageSize);
+
+            return Ok(new
+            {
+                TotalRecords = totalRecords,
+                TotalPages = totalPages,
+                CurrentPage = page,
+                PageSize = pageSize,
+                Data = products
+            });
         }
     }
 }

@@ -237,6 +237,10 @@ namespace CoffeeShopManagement.Business.Services
                 Description = p.Description
             });
         }
+        public async Task<int> GetTotalRecords(string search, string category, decimal? minPrice, decimal? maxPrice)
+        {
+            return await _unitOfWork.ProductRepository.GetTotalRecords(search,category,minPrice,maxPrice);
+        }
         public async Task<bool> CheckProductNameExist(string productName)
         {
             var temp = await _unitOfWork.ProductRepository.GetQuery().FirstOrDefaultAsync(x => x.ProductName.Equals(productName));

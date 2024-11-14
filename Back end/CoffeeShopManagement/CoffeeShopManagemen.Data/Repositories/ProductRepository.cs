@@ -83,6 +83,31 @@ namespace CoffeeShopManagement.Data.Repositories
                 .Take(top)
                 .ToListAsync();
         }
+        public async Task<int> GetTotalRecords(string search, string category, decimal? minPrice, decimal? maxPrice)
+        {
+            var query = _context.Products.AsQueryable();
+
+            if (!string.IsNullOrEmpty(search))
+            {
+                query = query.Where(p => p.ProductName.Contains(search));
+            }
+
+            if (!string.IsNullOrEmpty(category))
+            {
+                query = query.Where(p => p.Categoty.CategoryName == category);
+            }
+
+            if (minPrice.HasValue)
+            {
+                query = query.Where(p => p.Price >= minPrice.Value);
+            }
+            if (maxPrice.HasValue)
+            {
+                query = query.Where(p => p.Price <= maxPrice.Value);
+            }
+
+            return await query.CountAsync();
+        }
     }
 }
 
