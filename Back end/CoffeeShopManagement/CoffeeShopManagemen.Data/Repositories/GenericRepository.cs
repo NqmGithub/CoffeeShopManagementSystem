@@ -1,4 +1,4 @@
-﻿using CoffeeShopManagement.Data.RepositoryContracts;
+using CoffeeShopManagement.Data.RepositoryContracts;
 using CoffeeShopManagement.Models.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -103,3 +103,4 @@ namespace CoffeeShopManagement.Data.Repositories
         }
     }
 }
+

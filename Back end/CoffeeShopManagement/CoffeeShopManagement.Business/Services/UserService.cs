@@ -99,5 +99,24 @@ namespace CoffeeShopManagement.Business.Services
         {
             return await _unitOfWork.UserRepository.GetUserCount();
         }
+
+        public async Task<IEnumerable<User>> SearchUser(string keyword, string Status, int pageNumber, int pageSize)
+        {
+            if (pageNumber < 1 || pageSize < 1)
+            {
+                throw new ArgumentException("Page number and size must be greater than 0");
+            }
+            if (pageSize > 30)
+            {
+                throw new ArgumentException("Page size must not be too big (< 30)");
+            }
+            int totalCount = await _unitOfWork.UserRepository.GetUserCount();
+            int maxPageNumber = (int)Math.Ceiling((double)totalCount / pageSize);
+            if (pageNumber > maxPageNumber)
+            {
+                throw new ArgumentException("Page number is out of range.");
+            }
+            return await _unitOfWork.UserRepository.SearchUser(keyword, Status, pageNumber, pageSize);
+        }
     }
 }

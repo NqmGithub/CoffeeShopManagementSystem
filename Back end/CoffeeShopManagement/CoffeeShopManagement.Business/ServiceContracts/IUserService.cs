@@ -1,4 +1,5 @@
-﻿using CoffeeShopManagement.Models.Models;
+﻿using CoffeeShopManagement.Business.DTO;
+using CoffeeShopManagement.Models.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,11 +13,10 @@ namespace CoffeeShopManagement.Business.ServiceContracts
         Task<User> GetByEmail(string email);
         Task<IEnumerable<User>> GetAll();
         Task<User> Get(Guid id);
-        Task<IEnumerable<User>> GetPagination(int pageNumber, int pageSize);
         Task Add(User user);
         Task Update(User user);
         Task Delete(Guid id);
-
         Task<int> GetUserCount();
+        Task<IEnumerable<User>> SearchUser(string keyword, string status, int pageNumber, int pageSize);
     }
 }

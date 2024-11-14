@@ -72,15 +72,13 @@ namespace CoffeeShopManagement.WebAPI.Controllers
         }
 
         [HttpPost("upload"), DisableRequestSizeLimit]
-        public async Task<IActionResult> Upload(string name)
+        public async Task<IActionResult> Upload(string name,IFormFile file)
         {
             try
             {
-                var formCollection = await Request.ReadFormAsync();
-                var file = formCollection.Files.First();
                 var folderName = Path.Combine("Resources", "Images");
                 var pathToSave = Path.Combine(Directory.GetCurrentDirectory(), folderName);
-                if (file.Length > 0)
+                if (file != null && file.Length > 0)
                 {
                     var fileName = name;
                     var fullPath = Path.Combine(pathToSave, fileName);
@@ -96,7 +94,7 @@ namespace CoffeeShopManagement.WebAPI.Controllers
                     {
                         file.CopyTo(stream);
                     }
-                    return Ok(new { dbPath });
+                    return Ok();
                 }
                 else
                 {
@@ -107,7 +105,7 @@ namespace CoffeeShopManagement.WebAPI.Controllers
             {
                 return StatusCode(500, $"Internal server error: {ex}");
             }
-        }
+        }        
 
         [HttpGet("checkName")]
         public async Task<IActionResult> CheckProductNameExists(string productName)

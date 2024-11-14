@@ -30,10 +30,17 @@ export class LoginComponent {
     const email = this.loginForm.value.email ?? '';
     const password = this.loginForm.value.password ?? '';
     this.auth.login(email, password).subscribe({
+      next:() => {
+        this.isLoading = false
+      },    
       error:(e) => {
         this.msg = e;
       }
     }); 
-    this.isLoading = false;
+    
+  }
+
+  toHome(){
+    this.router.navigate(['home']);
   }
 }

@@ -17,7 +17,7 @@
         <h3 mat-subheader>Management</h3>
         <mat-list-item>
           <mat-icon>group</mat-icon>
-          <span>Users</span>
+          <span><a [routerLink]="['/admin',{ outlets: { mainContent: ['users'] } }]">Users</a></span>
         </mat-list-item>
         <mat-list-item>
           <mat-icon>fastfood</mat-icon>

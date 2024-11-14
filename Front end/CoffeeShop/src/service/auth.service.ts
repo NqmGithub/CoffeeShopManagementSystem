@@ -22,15 +22,20 @@ export class AuthService {
             const userId = this.getId();
             this.apiService.getUserById(userId).pipe(catchError(e => {
                 console.error(e.message);
+                this.currentUser.next(null);
                 return throwError(() => new Error('An error occurred while fetching data.'));
             })).subscribe((user) => {
                 this.currentUser.next(user);
+                error: () => this.router.navigate(['/login'])
             });
         }
     }
 
     getCurrentUser(){
-        return this.currentUser.getValue();
+        if (!this.currentUser.getValue()) {
+            this.loadUser();
+        }
+        return this.currentUser$;
     }
 
     isLoggedIn(): boolean {
@@ -52,6 +57,7 @@ export class AuthService {
         return this.apiService.login(payload).pipe(
             tap(response => {
                 localStorage.setItem("token", response.token);
+                localStorage.setItem("email",email);
                 this.router.navigate(['/home']);
               }),
               catchError(error => {

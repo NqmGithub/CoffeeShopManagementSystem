@@ -5,13 +5,13 @@ using System.Collections.Generic;
 
 namespace CoffeeShopManagement.Models.Models;
 
-public partial class Feedback
+public partial class Contact
 {
     public Guid Id { get; set; }
 
     public Guid CustomerId { get; set; }
 
-    public Guid AdminId { get; set; }
+    public Guid? AdminId { get; set; }
 
     public DateTime SendDate { get; set; }
 
@@ -19,11 +19,11 @@ public partial class Feedback
 
     public string Description { get; set; }
 
-    public string Img { get; set; }
-
     public Guid ProblemId { get; set; }
 
     public int Status { get; set; }
+
+    public string Response { get; set; }
 
     public virtual User Admin { get; set; }
 

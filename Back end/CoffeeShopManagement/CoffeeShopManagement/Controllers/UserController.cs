@@ -1,4 +1,5 @@
-﻿using CoffeeShopManagement.Business.Helpers;
+﻿using CoffeeShopManagement.Business.DTO;
+using CoffeeShopManagement.Business.Helpers;
 using CoffeeShopManagement.Business.ServiceContracts;
 using CoffeeShopManagement.Models.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -55,7 +56,7 @@ namespace CoffeeShopManagement.WebAPI.Controllers
             return Ok(user);
         }
 
-        [HttpGet("{pageNumber}/{pageSize}")]
+/*        [HttpGet("{pageNumber}/{pageSize}")]
         public async Task<IActionResult> GetPatientPgaination(int pageNumber, int pageSize)
         {
             var users = await _userService.GetPagination(pageNumber, pageSize);
@@ -63,6 +64,20 @@ namespace CoffeeShopManagement.WebAPI.Controllers
             {
                 return NotFound();
             }
+            return Ok(users);
+        }*/
+
+        [HttpGet("count")]
+        public async Task<IActionResult> GetCount()
+        {
+            var users = await _userService.GetUserCount();
+            return Ok(users);
+        }
+
+        [HttpGet("search")]
+        public async Task<IActionResult> SearchUser([FromQuery] string keyword="", [FromQuery] string status = "all", int pageNumber = 1, int pageSize = 5)
+        {
+            var users = await _userService.SearchUser(keyword, status, pageNumber, pageSize);
             return Ok(users);
         }
 
@@ -101,6 +116,82 @@ namespace CoffeeShopManagement.WebAPI.Controllers
             await _userService.Delete(id);
 
             return NoContent();
+        }
+
+        [HttpPatch("{id}")]
+        public async Task<IActionResult> PatchDelete(Guid id)
+        {
+            var user = await _userService.Get(id);
+            if (user == null)
+            {
+                return NotFound("User not found.");
+            }
+            user.Status = 2;
+            await _userService.Update(user);
+
+            return NoContent();
+        }
+
+        [HttpPut("{id}/ChangePassword")]
+        public async Task<IActionResult> ChangePassword(Guid id, ChangePasswordDTO changePassword)
+        {
+            var user = await _userService.Get(id);
+            if (user == null)
+            {
+                return NotFound(new { message = "User not found." });
+            }
+            if (user.Password != changePassword.CurrentPassword)
+            {
+                return BadRequest(new { message = "Current password is incorrect." });
+            }
+            if (user.Password == changePassword.NewPassword)
+            {
+                return BadRequest(new { message = "The old password must be different from the new password." });
+            }
+            if (changePassword.NewPassword != changePassword.ConfirmNewPassword)
+            {
+                return BadRequest(new { message = "Confirm password does not match." });
+            }
+
+            user.Password = changePassword.NewPassword;
+            await _userService.Update(user);
+
+            return NoContent();
+        }
+        [HttpPut("{id}/UpdateProfile")]
+        public async Task<IActionResult> UpdateUser(Guid id, UpdateProfileDTO updateProfile)
+        {
+                var user = await _userService.Get(id);
+                if (user == null)
+                {
+                    return NotFound();
+                }
+
+                user.UserName = updateProfile.UserName;
+                user.PhoneNumber = updateProfile.PhoneNumber;
+                user.Address = updateProfile.Address;
+
+                if (updateProfile.Avatar != null)
+                {
+                    
+                    var avatarDirectory = Path.Combine("wwwroot", "Avatars");
+                    if (!Directory.Exists(avatarDirectory))
+                    {
+                        Directory.CreateDirectory(avatarDirectory);
+                    }
+
+                    var avatarFileName = $"{Guid.NewGuid()}_{updateProfile.Avatar.FileName}";
+                    var avatarPath = Path.Combine(avatarDirectory, avatarFileName);
+                    using (var stream = new FileStream(avatarPath, FileMode.Create))
+                    {
+                        await updateProfile.Avatar.CopyToAsync(stream);
+                    }
+                    user.Avatar = avatarFileName;
+                }
+
+                await _userService.Update(user);
+
+                return NoContent();
         }
     }
 }

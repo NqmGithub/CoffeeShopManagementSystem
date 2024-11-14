@@ -17,6 +17,8 @@ namespace CoffeeShopManagement.Data.UnitOfWork
         IOrderDetailRepository OrderDetailRepository { get; }
         IProductRepository ProductRepository { get; }
         IUserRepository UserRepository { get; }
+        IContactRepository ContactRepository { get; }
+        IProblemTypeRepository ProblemTypeRepository { get; }
         int SaveChanges();
         Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
     }

@@ -1,4 +1,5 @@
-export interface Category {
-    id: string,
-    categoryName: string
+export interface ProblemType {
+    id : string;
+    problemName: string;
+    status: string;
 }
