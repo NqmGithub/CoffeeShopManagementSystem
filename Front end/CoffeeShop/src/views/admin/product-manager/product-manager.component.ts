@@ -95,7 +95,7 @@ export class ProductManagerComponent implements OnInit {
   }
 
   getImage(name: string){
-    return `https://localhost:44344/Resources/Images/${name}`;
+    return `https://localhost:44344/wwwroot/Images/${name}`;
   }
 
   loadCategoryNames(){

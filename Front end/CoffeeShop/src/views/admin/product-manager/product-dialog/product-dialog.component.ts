@@ -205,6 +205,6 @@ export class ProductDialogComponent implements OnInit {
   }
 
   getImage(name: string){
-    return `https://localhost:44344/Resources/Avatars/${name}`;
+    return `https://localhost:44344/wwwroot/Images/${name}`;
   }
 }

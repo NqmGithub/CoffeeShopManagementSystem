@@ -72,7 +72,7 @@ export class UserDialogComponent {
   }
 
   getImage(path: string){
-
+    return `https://localhost:44344/wwwroot/Avatars/${path}`;
   }
 
   onUpdate(){

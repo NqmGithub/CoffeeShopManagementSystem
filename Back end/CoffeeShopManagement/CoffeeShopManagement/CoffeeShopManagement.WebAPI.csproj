@@ -25,8 +25,25 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Resources\Images\" />
-    <Folder Include="Resources\Avatars\" />
+    <Folder Include="Resources\" />
+    <Folder Include="wwwroot\Images\" />
+    <Folder Include="wwwroot\Avatars\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\Avatars\avatar.jpg" />
+    <None Include="wwwroot\Images\asdasd.jpg" />
+    <None Include="wwwroot\Images\blueberry_muffin.jpg" />
+    <None Include="wwwroot\Images\brownie.jpg" />
+    <None Include="wwwroot\Images\cappuccino.png" />
+    <None Include="wwwroot\Images\coffee_beans.png" />
+    <None Include="wwwroot\Images\croissant.jpg" />
+    <None Include="wwwroot\Images\espresso.png" />
+    <None Include="wwwroot\Images\latte.png" />
+    <None Include="wwwroot\Images\mocha.png" />
+    <None Include="wwwroot\Images\tea_blend.png" />
+    <None Include="wwwroot\Images\tumbler.jpg" />
+    <None Include="wwwroot\Images\Yogurt.jpg" />
   </ItemGroup>
 
 </Project>

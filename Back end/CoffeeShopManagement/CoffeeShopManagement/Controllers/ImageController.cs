@@ -14,7 +14,7 @@ namespace CoffeeShopManagement.WebAPI.Controllers
             {
                 var formCollection = await Request.ReadFormAsync();
                 var file = formCollection.Files.First();
-                var folderName = Path.Combine("Resources", folder);
+                var folderName = Path.Combine("wwwroot", folder);
                 var pathToSave = Path.Combine(Directory.GetCurrentDirectory(), folderName);
                 if (file.Length > 0)
                 {
