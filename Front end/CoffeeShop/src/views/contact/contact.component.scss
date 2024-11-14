@@ -1,0 +1,23 @@
+.main-content{
+    margin: 10px;
+    display: flex;
+    justify-content: center;
+}
+.example-card {
+    max-width: 800px;
+  }
+  
+  .example-full-width {
+    width: 100%;
+  }
+  .ck-editor__editable_inline {
+    height: 200px;
+}
+.main-content{
+  background: url('/backgroundFeedback.webp') no-repeat center center fixed;
+  background-size: cover;
+  height: 91vh; /* 100% of the viewport height */
+  width: 100%; /* Ensure it stretches across the full width */
+  margin: 0px;
+}
+  

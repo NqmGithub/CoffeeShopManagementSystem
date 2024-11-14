@@ -11,5 +11,6 @@ public partial class ProblemType
 
     public string ProblemName { get; set; }
 
-    public virtual ICollection<Feedback> Feedbacks { get; set; } = new List<Feedback>();
+    public int Status { get; set; }
+    public virtual ICollection<Contact> Feedbacks { get; set; } = new List<Contact>();
 }

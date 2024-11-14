@@ -4,7 +4,10 @@ import { catchError, Observable, throwError } from 'rxjs';
 import { Product } from '../Interfaces/product';
 import { CreateProduct } from '../Interfaces/createProduct';
 import { User } from '../Interfaces/user';
-import { I } from '@angular/cdk/keycodes';
+import { Contact } from '../Interfaces/contact';
+import { CreateContact } from '../Interfaces/createContact';
+import { UpdateContactResponse } from '../Interfaces/updateContactResponse';
+import { ProblemType } from '../Interfaces/category';
 
 @Injectable({
   providedIn: 'root'
@@ -92,14 +95,28 @@ export class ApiService {
     return this.http.get<string[]>(this.baseurl + '/Category/name',this.headerCustom);
   }
 
-  uploadImage(name:string, formData: FormData, folder: string): Observable<HttpEvent<any>>{
+  uploadImage(name:string,file: File,folder:string): Observable<HttpEvent<any>>{
+    const formData: FormData = new FormData();
+    formData.append('file', file);
     let params = new HttpParams()
     .set('name', name)
     .set('folder', folder);
     
     return this.http.post<any>(`${this.baseurl}/Image/upload`,formData,{
-      params:params
+      params:params,
+      ...this.headerCustom
     });
+  }
+
+  updateNameImage(oldName:string,newName: string){
+    let params = new HttpParams()
+    .set('oldName',oldName)
+    .set('newName',newName)
+
+    return this.http.put<any>(`${this.baseurl}/Image/update-name`,{},{
+      params:params,
+      ...this.headerCustom
+    })
   }
 
   checkProductNameExist(productName:string):Observable<boolean>{
@@ -118,4 +135,38 @@ export class ApiService {
     return this.http.put<boolean>(`${this.baseurl}/Product/`+id+'?status='+status,this.headerCustom);
   }
 
+  //feedback
+  getAllContacts(): Observable<Contact[]> {
+    return this.http.get<Contact[]>(this.baseurl + '/Contact',this.headerCustom);
+  }
+
+  getContactById(id: string): Observable<Contact> {
+    return this.http.get<Contact>(this.baseurl + '/Contact/'+id,this.headerCustom);
+  }
+
+  postContact(createContact: CreateContact): Observable<boolean>{
+    return this.http.post<boolean>(`${this.baseurl}/Contact`,createContact,this.headerCustom);
+  }
+
+  putContact(id: string,updateContactResponse: UpdateContactResponse): Observable<boolean>{
+    return this.http.post<boolean>(`${this.baseurl}/Contact/`+id,updateContactResponse,this.headerCustom);
+  }
+
+  //problemType
+  //feedback
+  getAllProblemTypes(): Observable<Contact[]> {
+    return this.http.get<Contact[]>(this.baseurl + '/ProblemType',this.headerCustom);
+  }
+
+  getProblemTypeById(id: string): Observable<Contact> {
+    return this.http.get<Contact>(this.baseurl + '/ProblemType/'+id,this.headerCustom);
+  }
+
+  postProblemType(problemType: ProblemType): Observable<boolean>{
+    return this.http.post<boolean>(`${this.baseurl}/ProblemType`,problemType,this.headerCustom);
+  }
+
+  putProblemType(id: string,problemType: ProblemType): Observable<boolean>{
+    return this.http.post<boolean>(`${this.baseurl}/ProblemType/`+id,problemType,this.headerCustom);
+  }
 }

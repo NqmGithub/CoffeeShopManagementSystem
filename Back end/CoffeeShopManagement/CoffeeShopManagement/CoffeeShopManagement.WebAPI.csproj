@@ -25,7 +25,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Resources\" />
     <Folder Include="wwwroot\Images\" />
     <Folder Include="wwwroot\Avatars\" />
   </ItemGroup>
@@ -44,6 +43,7 @@
     <None Include="wwwroot\Images\tea_blend.png" />
     <None Include="wwwroot\Images\tumbler.jpg" />
     <None Include="wwwroot\Images\Yogurt.jpg" />
+    <Folder Include="wwwroot\Contacts\" />
   </ItemGroup>
 
 </Project>

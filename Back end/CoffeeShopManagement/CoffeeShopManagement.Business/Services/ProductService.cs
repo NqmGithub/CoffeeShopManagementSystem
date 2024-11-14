@@ -94,6 +94,7 @@ namespace CoffeeShopManagement.Business.Services
 
         public async Task<bool> UpdateProduct(ProductUpdateDTO productUpdateDTO)
         {
+            ValidationHelper.ModelValidation(productUpdateDTO);
             var product = await _unitOfWork.ProductRepository.GetByIdAsync(productUpdateDTO.Id);
 
             if (product == null)

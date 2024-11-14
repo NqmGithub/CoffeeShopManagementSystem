@@ -8,15 +8,13 @@ namespace CoffeeShopManagement.WebAPI.Controllers
     {
 
         [HttpPost("upload"), DisableRequestSizeLimit]
-        public async Task<IActionResult> Upload(string name, string folder)
+        public async Task<IActionResult> Upload(string name, IFormFile file, string folder)
         {
             try
             {
-                var formCollection = await Request.ReadFormAsync();
-                var file = formCollection.Files.First();
                 var folderName = Path.Combine("wwwroot", folder);
                 var pathToSave = Path.Combine(Directory.GetCurrentDirectory(), folderName);
-                if (file.Length > 0)
+                if (file != null && file.Length > 0)
                 {
                     var fileName = name;
                     var fullPath = Path.Combine(pathToSave, fileName);
@@ -38,6 +36,34 @@ namespace CoffeeShopManagement.WebAPI.Controllers
                 {
                     return BadRequest();
                 }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex}");
+            }
+        }
+
+        [HttpPut("update-name")]
+        public IActionResult UpdateFileName(string oldName, string newName)
+        {
+            try
+            {
+                var folderName = Path.Combine("Resources", "Images");
+                var pathToSave = Path.Combine(Directory.GetCurrentDirectory(), folderName);
+
+                var existingFile = Directory.GetFiles(pathToSave, oldName).FirstOrDefault();
+                if (existingFile == null)
+                {
+                    return NotFound("File not found.");
+                }
+
+                var extension = Path.GetExtension(existingFile);
+
+                var newFullPath = Path.Combine(pathToSave, newName);
+
+                System.IO.File.Move(existingFile, newFullPath);
+
+                return Ok(new { message = "File name updated successfully.", newPath = newFullPath });
             }
             catch (Exception ex)
             {

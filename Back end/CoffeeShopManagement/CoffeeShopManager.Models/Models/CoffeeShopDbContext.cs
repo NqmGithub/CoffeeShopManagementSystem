@@ -19,7 +19,7 @@ public partial class CoffeeShopDbContext : DbContext
 
     public virtual DbSet<Discount> Discounts { get; set; }
 
-    public virtual DbSet<Feedback> Feedbacks { get; set; }
+    public virtual DbSet<Contact> Feedbacks { get; set; }
 
     public virtual DbSet<Order> Orders { get; set; }
 
@@ -70,11 +70,11 @@ public partial class CoffeeShopDbContext : DbContext
             entity.Property(e => e.StartDate).HasColumnType("datetime");
         });
 
-        modelBuilder.Entity<Feedback>(entity =>
+        modelBuilder.Entity<Contact>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PK__Feedback__3214EC072FB7CCC8");
 
-            entity.ToTable("Feedback");
+            entity.ToTable("Contact");
 
             entity.Property(e => e.Id).ValueGeneratedNever();
             entity.Property(e => e.AdminId).HasColumnName("AdminID");
@@ -82,13 +82,11 @@ public partial class CoffeeShopDbContext : DbContext
             entity.Property(e => e.Description)
                 .IsRequired()
                 .HasMaxLength(255);
-            entity.Property(e => e.Img)
-                .IsRequired()
-                .HasMaxLength(255);
             entity.Property(e => e.SendDate).HasColumnType("datetime");
             entity.Property(e => e.Subject)
                 .IsRequired()
                 .HasMaxLength(255);
+            entity.Property(e => e.Response).HasMaxLength(1000);
             entity.HasOne(d => d.Admin).WithMany(p => p.FeedbackAdmins)
                 .HasForeignKey(d => d.AdminId)
                 .OnDelete(DeleteBehavior.ClientSetNull)

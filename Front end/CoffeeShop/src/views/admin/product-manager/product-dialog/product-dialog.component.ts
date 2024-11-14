@@ -46,7 +46,15 @@ export class ProductDialogComponent implements OnInit {
   descriptionFormControl = new FormControl();
   selectedStatusFormControl = new FormControl('Active');
 
-  createProduct: CreateProduct;
+  createProduct: CreateProduct = {
+    productName: '',
+      categoryName: '',
+      price: 0,
+      quantity: 0,
+      thumbnail: '',
+      description:'',
+      status: '',
+  };
   
   constructor(@Inject(MAT_DIALOG_DATA) public data: Product, private dialogRef: MatDialogRef<ProductDialogComponent>, private apiService: ApiService) {
     if (data) {
@@ -59,6 +67,9 @@ export class ProductDialogComponent implements OnInit {
       this.quantityFormControl.setValue(product.quantity);
       this.descriptionFormControl.setValue(product.description);
       this.selectedStatusFormControl.setValue(product.status);
+      this.createProduct.thumbnail= data.thumbnail;
+      this.fileExtension = data.thumbnail ? (data.thumbnail.split('.').pop() || '') : '';
+      console.log(this.fileExtension);
     } 
     this.loadCategoryNames();
     this.createProduct = {
@@ -76,7 +87,6 @@ export class ProductDialogComponent implements OnInit {
 
     this.productNameFormControl.valueChanges.subscribe(value => {
       this.createProduct.productName = value || ''; 
-      this.createProduct.thumbnail = this.createProduct.productName+'.'+this.fileExtension;
     });
     this.categoryNameFormControl.valueChanges.subscribe(value => {
       this.createProduct.categoryName = value || ''; 
@@ -129,21 +139,23 @@ export class ProductDialogComponent implements OnInit {
       this.quantityFormControl.invalid){
         return;
       }
-
-      console.log(this.createProduct.productName)
+    const oldThumbnail = this.createProduct.thumbnail;
     const product: Product = {
       id: this.id,
     productName: this.createProduct.productName,
     categoryName: this.createProduct.categoryName,
     price: this.createProduct.price,
     quantity: this.createProduct.quantity,
-    thumbnail: this.createProduct.thumbnail,
+    thumbnail: this.createProduct.productName+'.'+ this.fileExtension,
     description:this.createProduct.description,
     status: this.createProduct.status
     }
     this.dialogRef.close(product); 
-
-    this.uploadImage();
+    if(this.fileToUpload == null){
+      this.updateNameImage(oldThumbnail,product.thumbnail);
+    }else{
+      this.uploadImage();
+    }
   }
 
   async OnAdd() {
@@ -155,23 +167,29 @@ export class ProductDialogComponent implements OnInit {
         return;
       }
     this.dialogRef.close(this.createProduct); 
-
-    this.uploadImage();
+    if (!this.fileToUpload) {
+      return;
+    }else{
+      this.uploadImage();
+    }
   }
 
   uploadImage(){
-    //add image to storage
-    if (!this.fileToUpload) {
-      return;
-    }
-    const formData = new FormData();
-    formData.append('file', this.fileToUpload, this.fileToUpload.name);
-    this.apiService.uploadImage(this.createProduct.thumbnail,formData, 'Images').subscribe({
+
+this.apiService.uploadImage(this.createProduct.thumbnail,this.fileToUpload!,'Images').subscribe({
+  next: (event) => {
+},
+error: (err: HttpErrorResponse) => console.log(err)
+});
+  }
+  updateNameImage(oldName:string,newName:string){
+
+    this.apiService.updateNameImage(oldName,newName).subscribe({
       next: (event) => {
     },
     error: (err: HttpErrorResponse) => console.log(err)
     });
-  }
+      }
 
   onCancel() {
     this.dialogRef.close();
