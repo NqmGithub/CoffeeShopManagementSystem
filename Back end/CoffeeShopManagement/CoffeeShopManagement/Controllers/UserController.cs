@@ -55,7 +55,7 @@ namespace CoffeeShopManagement.WebAPI.Controllers
             return Ok(user);
         }
 
-        [HttpGet("{pageNumber}/{pageSize}")]
+/*        [HttpGet("{pageNumber}/{pageSize}")]
         public async Task<IActionResult> GetPatientPgaination(int pageNumber, int pageSize)
         {
             var users = await _userService.GetPagination(pageNumber, pageSize);
@@ -63,6 +63,20 @@ namespace CoffeeShopManagement.WebAPI.Controllers
             {
                 return NotFound();
             }
+            return Ok(users);
+        }*/
+
+        [HttpGet("count")]
+        public async Task<IActionResult> GetCount()
+        {
+            var users = await _userService.GetUserCount();
+            return Ok(users);
+        }
+
+        [HttpGet("search")]
+        public async Task<IActionResult> SearchUser([FromQuery] string keyword="", [FromQuery] string status = "all", int pageNumber = 1, int pageSize = 5)
+        {
+            var users = await _userService.SearchUser(keyword, status, pageNumber, pageSize);
             return Ok(users);
         }
 
@@ -99,6 +113,20 @@ namespace CoffeeShopManagement.WebAPI.Controllers
         public async Task<IActionResult> DeleteUser(Guid id)
         {
             await _userService.Delete(id);
+
+            return NoContent();
+        }
+
+        [HttpPatch("{id}")]
+        public async Task<IActionResult> PatchDelete(Guid id)
+        {
+            var user = await _userService.Get(id);
+            if (user == null)
+            {
+                return NotFound("User not found.");
+            }
+            user.Status = 2;
+            await _userService.Update(user);
 
             return NoContent();
         }

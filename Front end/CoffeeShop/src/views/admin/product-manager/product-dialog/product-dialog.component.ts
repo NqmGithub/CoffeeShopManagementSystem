@@ -22,7 +22,7 @@ import { Product } from '../../../../Interfaces/product';
     MatInputModule,
     MatButtonModule,
     MatNativeDateModule,
-    MatRadioButton,
+    // MatRadioButton,
     FormsModule,
     ReactiveFormsModule,
     MatIconModule
@@ -160,17 +160,17 @@ export class ProductDialogComponent implements OnInit {
   }
 
   uploadImage(){
-//add image to storage
-if (!this.fileToUpload) {
-  return;
-}
-const formData = new FormData();
-formData.append('file', this.fileToUpload, this.fileToUpload.name);
-this.apiService.uploadImage(this.createProduct.thumbnail,formData).subscribe({
-  next: (event) => {
-},
-error: (err: HttpErrorResponse) => console.log(err)
-});
+    //add image to storage
+    if (!this.fileToUpload) {
+      return;
+    }
+    const formData = new FormData();
+    formData.append('file', this.fileToUpload, this.fileToUpload.name);
+    this.apiService.uploadImage(this.createProduct.thumbnail,formData, 'Images').subscribe({
+      next: (event) => {
+    },
+    error: (err: HttpErrorResponse) => console.log(err)
+    });
   }
 
   onCancel() {
@@ -205,6 +205,6 @@ error: (err: HttpErrorResponse) => console.log(err)
   }
 
   getImage(name: string){
-    return `https://localhost:44344/Resources/Images/${name}`;
+    return `https://localhost:44344/Resources/Avatars/${name}`;
   }
 }

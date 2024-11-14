@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-unauthorized',
@@ -8,5 +9,8 @@ import { Component } from '@angular/core';
   styleUrl: './unauthorized.component.scss'
 })
 export class UnauthorizedComponent {
-
+  router: Router = inject(Router)
+  tohome(){
+    this.router.navigate(['home']);
+  }
 }

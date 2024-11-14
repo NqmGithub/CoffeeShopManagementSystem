@@ -3,6 +3,8 @@ import { Injectable } from '@angular/core';
 import { catchError, Observable, throwError } from 'rxjs';
 import { Product } from '../Interfaces/product';
 import { CreateProduct } from '../Interfaces/createProduct';
+import { User } from '../Interfaces/user';
+import { I } from '@angular/cdk/keycodes';
 
 @Injectable({
   providedIn: 'root'
@@ -13,9 +15,9 @@ export class ApiService {
 
   constructor(private http: HttpClient) {
     this.headerCustom = { headers: { "Authorization": "Bearer " + localStorage.getItem("token") } }
-
   }
 
+  //auth
   login(data: any): Observable<any>{
     return this.http.post<any>(this.baseurl + '/Auth/login', data);
   }
@@ -24,10 +26,40 @@ export class ApiService {
     return this.http.post<any>(this.baseurl + '/Auth/signup', data);
   }
 
+  //user
   getUserById(id: any): Observable<any>{
-    return this.http.get<any>(this.baseurl + `/User/byId/${id}`);
+    return this.http.get<any>(this.baseurl + `/User/byId/${id}`, this.headerCustom);
   }
+
+  getUserCount(): Observable<any>{
+    return this.http.get<any>(this.baseurl + '/User/count', this.headerCustom);
+  }
+
+  addUser(user: User): Observable<any>{
+    return this.http.post<User[]>(this.baseurl + `/User`, user, this.headerCustom);
+  }
+
+  updateUser(id: string, user: User): Observable<any>{
+    return this.http.put<User[]>(this.baseurl + `/User/${id}`, user, this.headerCustom);
+  }
+
+  makeUserInactive(id: string): Observable<any>{
+    return this.http.patch<User[]>(this.baseurl + `/User/${id}`, this.headerCustom);
+  }
+
+  searchUser(keyword: string, status: string, pageNumber: number, pageSize: number) {
+    let params = new HttpParams()
+      .set('pageNumber', pageNumber.toString())
+      .set('pageSize', pageSize.toString())
+      .set('status', status);
   
+    if (keyword) {
+      params = params.set('keyword', keyword);
+    }
+  
+    return this.http.get<User[]>(`${this.baseurl}/User/search`, { params});
+  }
+
   //Product
   getProducts(search: string, filterCategory: string, filterStatus: string, page: number, pageSize: number,
     sortColumn: string, sortDirection: string): Observable<{ list: Product[], total: number }> {
@@ -60,12 +92,12 @@ export class ApiService {
     return this.http.get<string[]>(this.baseurl + '/Category/name',this.headerCustom);
   }
 
-  uploadImage(name:string,formData: FormData): Observable<HttpEvent<any>>{
-    let params = new HttpParams();
-    if(name){
-      params = params.set('name',name);
-    }
-    return this.http.post<any>(`${this.baseurl}/Product/upload`,formData,{
+  uploadImage(name:string, formData: FormData, folder: string): Observable<HttpEvent<any>>{
+    let params = new HttpParams()
+    .set('name', name)
+    .set('folder', folder);
+    
+    return this.http.post<any>(`${this.baseurl}/Image/upload`,formData,{
       params:params
     });
   }

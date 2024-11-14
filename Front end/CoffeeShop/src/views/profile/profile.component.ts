@@ -17,7 +17,8 @@ export class ProfileComponent implements OnInit{
   currentUser: User | null = null;
   
   ngOnInit(): void {
-    this.auth.currentUser$.subscribe(user => this.currentUser = user);
-    // this.currentUser = this.auth.getCurrentUser();
+    this.auth.getCurrentUser().subscribe(u =>{
+      this.currentUser = u;
+    })
   }
 }

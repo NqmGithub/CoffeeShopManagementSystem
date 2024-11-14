@@ -1,5 +1,6 @@
-<mat-card appearance="outlined" style="margin: 10%;padding: 30px;">
-    <h1>Sign up</h1>
+<mat-card appearance="raised" style="margin-left: 10%; margin-top: 10%; margin-right: 10%;padding: 30px;border: solid burlywood;">
+    <img src="/coffeshop.png" style="width: 100px; border: solid burlywood; border-radius: 50%; margin-left: auto; margin-right: auto; margin-top: -50px;" />
+    <h1 style="font-weight: 500;">Sign up</h1>
     <form  [formGroup]="signupForm" (submit)="signup()">
         @if((signupForm.get('email')?.dirty || signupForm.get('email')?.touched) && signupForm.get('email')?.invalid){
             @if(signupForm.get('email')?.errors?.['required']){
@@ -87,8 +88,11 @@
             <mat-spinner></mat-spinner>
         }
         @else {
-        <button style="width: 100%; margin-top: 10px; font-size: 20px" mat-flat-button type="submit">Sign up</button>
+        <button style="background-color: burlywood;width: 100%; margin-top: 10px; font-size: 20px" mat-flat-button type="submit">Sign up</button>
         }
     </form>
     <a style="margin-left: 5px; margin-top: 10px;" [routerLink]="'/login'">Already have an account? Log in</a>
 </mat-card>
+<button (click)="toHome()" style="margin-top:10px; margin-left: 10%; background-color: burlywood; color: white; font-size: 20px;" mat-raised-button>
+    Home
+</button>
