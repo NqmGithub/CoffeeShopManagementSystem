@@ -63,5 +63,20 @@ namespace CoffeeShopManagement.Data.Repositories
         {
             return await _context.Users.CountAsync();
         }
+
+        public async Task<IEnumerable<User>> SearchUser(string keyword, string Status, int pageNumber, int pageSize)
+        {
+            var list = _context.Users.
+                Where(u => (u.UserName.Contains(keyword) || u.Email.Contains(keyword)));
+            if(Status == "active")
+            {
+                list = list.Where(u => u.Status == 1);
+            }
+            if(Status == "inactive")
+            {
+                list = list.Where(u => u.Status != 1);
+            }
+            return await list.Skip(pageSize * (pageNumber - 1)).Take(pageSize).ToListAsync();
+        }
     }
 }

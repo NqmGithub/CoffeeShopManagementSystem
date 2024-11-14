@@ -1,1 +1,91 @@
-<p>user-manager works!</p>
+<h2 style="color:#6b4f34; font-weight: bolder;">User List</h2>
+<div style="display: flex; justify-content: space-between;">
+  <div>
+    <mat-form-field class="example-full-width" appearance="outline">
+      <input matInput [(ngModel)]="search" name="search" (keyup.enter)="onSearchChange()"  placeholder="Search">
+      <mat-icon matSuffix (click)="onSearchChange()">search</mat-icon>
+    </mat-form-field>
+  
+    <mat-form-field class="example-full-width" appearance="outline">
+      <mat-label>Status</mat-label>
+    <mat-select [(value)]="status" (selectionChange)="loadUser()" name="categoryStatus">
+      <mat-option value="all">All</mat-option>
+      <mat-option value="active">Active</mat-option>
+      <mat-option value="inactive">InActive</mat-option>
+    </mat-select>
+    </mat-form-field>
+  </div>
+  <button class="addButton" mat-raised-button (click)="addUser()">Add User</button>
+</div>
+
+<table mat-table [dataSource]="userData" matSort (matSortChange)="sortData($event)" class="mat-elevation-z8 demo-table">
+
+  <ng-container matColumnDef="Avatar">
+    <th mat-header-cell *matHeaderCellDef> Avatar </th>
+    <td mat-cell *matCellDef="let element"><img [src]="getImage(element.avatar)" style="width:60px; height:60px;"> </td>
+  </ng-container>
+
+  <ng-container matColumnDef="UserName">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header="userName"> UserName </th>
+    <td mat-cell *matCellDef="let element"> {{element.userName}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="Email">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header="email"> Email </th>
+    <td mat-cell *matCellDef="let element"> {{element.email}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="PhoneNumber">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header="phoneNumber"> PhoneNumber </th>
+    <td mat-cell *matCellDef="let element"> {{element.phoneNumber}} </td>
+  </ng-container>
+  
+  <ng-container matColumnDef="Address">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header="address"> Address </th>
+    <td mat-cell *matCellDef="let element"> {{element.address}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="role">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header="role"> Role </th>
+    <td mat-cell *matCellDef="let element"> {{element.role == 1 ? 'user' : 'admin'}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="Status">
+    <th mat-header-cell *matHeaderCellDef> Status </th>
+    <td mat-cell *matCellDef="let element">
+      @if (element.status == '1') {
+        <span style="color: green; font-weight: 500;">Active</span>
+      }@else {
+        <span style="color: red;font-weight: 500;">InActive</span>
+      }      
+    </td>
+  </ng-container>
+
+   <ng-container matColumnDef="Actions">
+    <th mat-header-cell *matHeaderCellDef > Actions </th>
+    <td mat-cell *matCellDef="let element">
+      <div class="actions">
+        <button mat-icon-button class="view-button" (click)="viewDetail(element)">
+          <mat-icon >visibility</mat-icon>
+        </button>
+        <button mat-icon-button class="edit-button" (click)="updateUser(element)">
+          <mat-icon>edit</mat-icon>
+        </button>
+        @if(element.status == 'Active'){
+          <button mat-button (click)="changeStatus(element)" style="background-color: #fad1d1; color: red;border-radius: 10%;">DeActive </button>
+        } @else {
+          <button mat-button (click)="changeStatus(element)" style=" background-color: #d7f3d9; color: #2e7d32; ;border-radius: 10%;" >Active</button>
+        }
+        
+      </div>          
+    </td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="['Avatar','UserName', 'Address', 'Email', 'PhoneNumber', 'Status', 'role', 'Actions']"></tr>
+  <tr mat-row *matRowDef="let row; columns: ['Avatar','UserName', 'Address', 'Email', 'PhoneNumber', 'Status', 'role', 'Actions']"></tr>
+</table>
+
+
+<!-- pagination -->
+<mat-paginator [length]="userCount" [pageSize]="5" (page)="onPageChange($event)" [pageIndex]="pageNumber">
+</mat-paginator>

@@ -70,6 +70,7 @@ export class ProductManagerComponent implements OnInit {
     this.sortDirection = this.sort.direction;
     this.loadProducts();
   }
+  
   onPageChange(event:PageEvent):void{
     console.log(event.pageSize)
     this.page = event.pageIndex;

@@ -1,0 +1,133 @@
+<div style="display: flex; justify-content: space-between; height: 50px; padding: 10px;">
+    <h2 mat-dialog-title style="color: #6b4f34; font-weight: bold;">{{header}}</h2>
+    <mat-icon class="closeButton" (click)="onCancel()">close</mat-icon>
+</div>
+<mat-dialog-content style="padding: 10px;">
+    <form  [formGroup]="addUserForm" (submit)="onAdd()" style="display: flex; flex-direction: row; gap: 10px;">
+      <div>
+        <input #file type="file" (change)="handleFileInput($event)" style="display:none;" />
+        @if(isUpdate){       
+            @if(imageUrl){
+                <img  [src]="imageUrl" class="image" (click)="file.click()">
+            <!-- }@else if(currentUser.avatar) {
+                <img  [src]="getImage(currentUser.avatar)" class="image" (click)="file.click()"> -->
+            }@else {
+                <img src="/avatar.jpg" class="image" (click)="file.click()">
+            }      
+        }
+        <mat-form-field class="example-full-width" appearance="outline">
+          <mat-label>Status</mat-label>
+          <mat-select [(value)]="status"  name="categoryStatus">
+            <mat-option value="active">Active</mat-option>
+            <mat-option value="inactive">InActive</mat-option>
+          </mat-select>
+        </mat-form-field>
+        
+        <mat-form-field class="example-full-width" appearance="outline">
+          <mat-label>Role</mat-label>
+          <mat-select [(value)]="role"  name="categoryStatus">
+            <mat-option value="user">User</mat-option>
+            <mat-option value="admin">Admin</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <div>
+      @if((addUserForm.get('email')?.dirty || addUserForm.get('email')?.touched) && addUserForm.get('email')?.invalid){
+          @if(addUserForm.get('email')?.errors?.['required']){
+              <small>Email is required.</small>
+          }
+          @if(addUserForm.get('email')?.errors?.['email']){
+              <small>Email is invalid.</small>
+          }
+      }
+
+      <mat-form-field style="width: 100%;">
+          <mat-label>Email</mat-label>
+          <input matInput formControlName="email" [readonly]="isUpdate">
+      </mat-form-field>
+
+      @if((addUserForm.get('userName')?.dirty || addUserForm.get('userName')?.touched) && addUserForm.get('userName')?.invalid){
+          @if(addUserForm.get('userName')?.errors?.['required']){
+              <small>Username is required.</small>
+          }
+          @else{
+              <small>User must be longer than 3 characters and smaller than 20.</small>
+          }
+      }
+
+      <mat-form-field style="width: 100%;">
+          <mat-label>Username</mat-label>
+          <input matInput formControlName="userName">
+      </mat-form-field>
+
+      @if((addUserForm.get('password')?.dirty || addUserForm.get('password')?.touched) && addUserForm.get('password')?.invalid){
+          @if(addUserForm.get('password')?.errors?.['required']){
+              <small>Password is required.</small>
+          }
+          @else{
+              <small>Password must be longer than 5 characters and smaller than 20.</small>
+          }
+      }
+
+      <mat-form-field style="width: 100%;">
+          <mat-label>Password</mat-label>
+          <input type="password" matInput formControlName="password">
+      </mat-form-field>
+
+      @if((addUserForm.get('rePassword')?.dirty || addUserForm.get('rePassword')?.touched) && addUserForm.hasError('passwordMismatch')){
+          <small>Password does not match</small>
+      }
+
+      <mat-form-field style="width: 100%;">
+          <mat-label>Re-Enter Password</mat-label>
+          <input type="password" matInput formControlName="rePassword">
+      </mat-form-field>
+
+      @if((addUserForm.get('address')?.dirty || addUserForm.get('address')?.touched) && addUserForm.get('address')?.invalid){
+          @if(addUserForm.get('address')?.errors?.['required']){
+              <small>Address is required.</small>
+          }
+          @else{
+              <small>Address must be longer than 2 characters and smaller than 30.</small>
+          }
+      }
+
+      <mat-form-field style="width: 100%;">
+          <mat-label>Address</mat-label>
+          <input type="text" matInput formControlName="address">
+      </mat-form-field>
+
+      @if((addUserForm.get('phoneNumber')?.dirty || addUserForm.get('phoneNumber')?.touched) && addUserForm.get('phoneNumber')?.invalid){
+          @if(addUserForm.get('phoneNumber')?.errors?.['required']){
+              <small>Phone Number is required.</small>
+          }
+          @else{
+              <small>Phone Number must be 10 numbers.</small>
+          }
+      }
+      
+      <mat-form-field style="width: 100%;">
+          <mat-label>Phone Number</mat-label>
+          <input type="text" matInput formControlName="phoneNumber">
+      </mat-form-field>
+      
+      @if(msg != ''){
+          <h4 style="color: red;">{{msg}}</h4>
+      }
+      @if(isLoading){
+          <mat-spinner></mat-spinner>
+      }
+      @else if(isUpdate){
+        <button (click)="onUpdate()" style="background-color: burlywood;width: 100%; margin-top: 10px; font-size: 20px" mat-flat-button type="submit">
+          Update
+        </button>
+      }
+      @else {
+        <button (click)="onAdd()" style="background-color: burlywood;width: 100%; margin-top: 10px; font-size: 20px" mat-flat-button type="submit">
+          Add
+        </button>
+      }
+    </div>
+  </form>
+</mat-dialog-content>

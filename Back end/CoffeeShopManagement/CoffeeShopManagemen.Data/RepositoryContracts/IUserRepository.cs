@@ -14,10 +14,8 @@ namespace CoffeeShopManagement.Data.RepositoryContracts
         Task Delete(Guid id);
         Task<IEnumerable<User>> GetAll();
         Task<User> GetById(Guid id);
-        Task<IEnumerable<User>> GetPagination(int pageNumber, int pageSize);
         Task Update(User user);
-
         Task<int> GetUserCount();
-
+        Task<IEnumerable<User>> SearchUser(string keyword, string status, int pageNumber, int pageSize);
     }
 }

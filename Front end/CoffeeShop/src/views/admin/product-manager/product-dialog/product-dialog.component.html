@@ -57,11 +57,6 @@
           }
       </mat-form-field>
 
-      <!-- <mat-radio-group name="status" [(ngModel)]="selectedStatus" >
-          @for (item of status; track $index) {
-            <mat-radio-button [value]="item" [checked]="selectedStatus ==item ">{{item}}</mat-radio-button>
-          }          
-        </mat-radio-group> -->
       <div>
         <p style="font-size: 16px;">Status: </p>
           <input type="radio" value="Active" [formControl]="selectedStatusFormControl " name="status" >Active

@@ -7,6 +7,8 @@ import { ProductManagerComponent } from '../views/admin/product-manager/product-
 import { RegisterComponent } from '../views/register/register.component';
 import { ProfileComponent } from '../views/profile/profile.component';
 import { AuthGuard } from '../service/auth.guard';
+import { RoleGuardService } from '../service/role.guard';
+import { UserManagerComponent } from '../views/admin/user-manager/user-manager.component';
 
 export const routes: Routes = [
     {
@@ -23,10 +25,16 @@ export const routes: Routes = [
               path: 'products',
               title: 'Product Manager',
               component: ProductManagerComponent,
-              outlet: 'mainContent'
-              
+              outlet: 'mainContent'       
+            },
+            {
+                path: 'users',
+                title: 'User Manager',
+                component: UserManagerComponent,
+                outlet: 'mainContent'
             }
-          ]          
+        ],
+        // canActivate: [RoleGuardService]
     },
     {path:'register', component:RegisterComponent},
     {path:'login', component:LoginComponent},
