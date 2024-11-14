@@ -7,7 +7,7 @@ import { ProductManagerComponent } from '../views/admin/product-manager/product-
 import { RegisterComponent } from '../views/register/register.component';
 // import { ProfileComponent } from '../views/profile/profile.component';
 import { AuthGuard } from '../service/auth.guard';
-import { FeedbackComponent } from '../views/feedback/feedback.component';
+import { ContactComponent } from '../views/contact/contact.component';
 import { ProfileComponent } from '../views/profile/profile.component';
 
 export const routes: Routes = [
@@ -30,7 +30,7 @@ export const routes: Routes = [
             }
           ]          
     },
-    {path:'feedback', component:FeedbackComponent},
+    {path:'contact', component:ContactComponent},
     {path:'register', component:RegisterComponent},
     {path:'login', component:LoginComponent},
     {path:'profile', component:ProfileComponent, canActivate: [AuthGuard]},

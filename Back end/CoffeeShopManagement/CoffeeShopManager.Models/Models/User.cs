@@ -35,9 +35,9 @@ public partial class User
     [Required(ErrorMessage = "Status is required")]
     public int Status { get; set; }
 
-    public virtual ICollection<Feedback> FeedbackAdmins { get; set; } = new List<Feedback>();
+    public virtual ICollection<Contact> FeedbackAdmins { get; set; } = new List<Contact>();
 
-    public virtual ICollection<Feedback> FeedbackCustomers { get; set; } = new List<Feedback>();
+    public virtual ICollection<Contact> FeedbackCustomers { get; set; } = new List<Contact>();
 
     public virtual ICollection<Order> Orders { get; set; } = new List<Order>();
 }

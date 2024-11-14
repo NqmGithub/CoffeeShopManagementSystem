@@ -1,0 +1,53 @@
+<app-navbar></app-navbar>
+<div class="main-content">
+    <mat-card class="example-card" appearance="outlined" style="margin-top: 10px; max-height: 600px;">
+        <mat-card-header>
+            <h2 style="color:#6b4f34; font-weight: bolder;">Contact</h2>
+        </mat-card-header>
+        <mat-card-content>
+            <form class="example-form" [formGroup]="applyForm">
+                <div style="display: flex; ">
+                    <mat-form-field class="example-full-width" appearance="outline" >
+                        <mat-label>Email</mat-label>
+                        <input type="email" matInput placeholder="Ex. pat@example.com" formControlName="email"  >
+                        <mat-icon matSuffix>email</mat-icon>
+                    </mat-form-field>
+                    <mat-form-field class="example-full-width" appearance="outline" style="margin-left: 10px;">
+                        <mat-label>Problem type</mat-label>
+                        <mat-select formControlName="problemType" >
+                            @for (p of listProblemType; track $index) {
+                              <mat-option value="{{p.problemName}}">{{p.problemName}}</mat-option>
+                            }     
+                          </mat-select>
+                    </mat-form-field>
+                </div>
+                    
+                    <mat-form-field class="example-full-width" appearance="outline" >
+                        <mat-label>Subject</mat-label>
+                        <input type="text" matInput formControlName="subject">
+                        @if (applyForm.get('subject')?.hasError('required')) {
+                            <mat-error>Subject is <strong>required</strong></mat-error>
+                        } @else if(applyForm.get('subject')?.hasError('maxlength(255)')){
+                            <mat-error>Max length is <strong>255</strong></mat-error>
+                        }
+                    </mat-form-field>
+                <div class="editor-container editor-container_classic-editor editor-container_include-style" #editorContainerElement>
+                    <div class="editor-container__editor">
+                        <div #editorElement>
+                            <ckeditor [editor]="Editor" [config]="config" formControlName="content"></ckeditor>
+                            @if (applyForm.get('content')?.hasError('required')) {
+                                <mat-error>Subject is <strong>required</strong></mat-error>
+                            } @else if(applyForm.get('content')?.hasError('maxlength(1000)')){
+                                <mat-error>Max length is <strong>1000</strong></mat-error>
+                            } 
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </mat-card-content>
+        <mat-card-actions style="display: flex; justify-content: space-between;">
+            <button mat-button (click)="onReset()">Reset</button>
+            <button mat-button (click)="onSubmit()">Send</button>
+        </mat-card-actions>
+    </mat-card>
+</div>
