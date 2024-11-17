@@ -75,7 +75,7 @@ namespace CoffeeShopManagement.Business.Services
                     Id = d.Id,
                     ProductId = d.ProductId,
                     Quantity = d.Quantity,
-                    OrderPrice = d.OrderPrice
+                    Price = d.OrderPrice
                 }).ToList()
             };
         }
