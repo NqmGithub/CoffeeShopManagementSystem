@@ -88,8 +88,21 @@ namespace CoffeeShopManagement.WebAPI.Controllers
             {
                 return BadRequest(ModelState);
             }
-            await _userService.Add(user);
-            return CreatedAtAction(nameof(GetUserById), new { id = user.Id }, user); ;
+
+            try
+            {
+                if (user.Id == Guid.Empty)
+                {
+                    user.Id = Guid.NewGuid();
+                }
+
+                await _userService.Add(user);
+                return CreatedAtAction(nameof(GetUserById), new { id = user.Id }, user);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { Message = "An error occurred while creating the user.", Details = ex.Message });
+            }
         }
 
         [HttpPut("{id}")]
@@ -118,17 +131,16 @@ namespace CoffeeShopManagement.WebAPI.Controllers
             return NoContent();
         }
 
-        [HttpPatch("{id}")]
-        public async Task<IActionResult> PatchDelete(Guid id)
+        [HttpPut("status/{id}")]
+        public async Task<IActionResult> changeStatus(Guid id,[FromQuery] string status)
         {
             var user = await _userService.Get(id);
             if (user == null)
             {
                 return NotFound("User not found.");
             }
-            user.Status = 2;
+            user.Status = (status == "active") ? 1 : 2;
             await _userService.Update(user);
-
             return NoContent();
         }
 

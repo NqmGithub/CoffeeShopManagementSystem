@@ -1,4 +1,5 @@
 <h2 style="color:#6b4f34; font-weight: bolder;">User List</h2>
+<p style="color: red;">{{msg}}</p>
 <div style="display: flex; justify-content: space-between;">
   <div>
     <mat-form-field class="example-full-width" appearance="outline">
@@ -65,13 +66,10 @@
     <th mat-header-cell *matHeaderCellDef > Actions </th>
     <td mat-cell *matCellDef="let element">
       <div class="actions">
-        <button mat-icon-button class="view-button" (click)="viewDetail(element)">
-          <mat-icon >visibility</mat-icon>
-        </button>
         <button mat-icon-button class="edit-button" (click)="updateUser(element)">
           <mat-icon>edit</mat-icon>
         </button>
-        @if(element.status == 'Active'){
+        @if(element.status == '1'){
           <button mat-button (click)="changeStatus(element)" style="background-color: #fad1d1; color: red;border-radius: 10%;">DeActive </button>
         } @else {
           <button mat-button (click)="changeStatus(element)" style=" background-color: #d7f3d9; color: #2e7d32; ;border-radius: 10%;" >Active</button>

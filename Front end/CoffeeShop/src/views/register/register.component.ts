@@ -8,6 +8,7 @@ import { MatCardModule } from '@angular/material/card';
 import { Router, RouterModule } from '@angular/router';
 import { User } from '../../Interfaces/user';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { ApiService } from '../../Api/api.service';
 @Component({
   selector: 'app-register',
   standalone: true,
@@ -32,7 +33,8 @@ export class RegisterComponent {
   isLoading = false;
 
   auth: AuthService = inject(AuthService);
-  router: Router = inject(Router)
+  api: ApiService = inject(ApiService);
+  router: Router = inject(Router);
   signup(){
     this.isLoading = true;
     const email = this.signupForm.value.email ?? '';
@@ -51,14 +53,24 @@ export class RegisterComponent {
       status: 1,
       role: 1
     }
-    this.auth.signup(user).subscribe({
-      next:() => {
-        this.isLoading = false;
+    this.api.checkEmail(email).subscribe({
+      complete:() => {
+        this.router.navigate(['verifyEmail'], {
+          queryParams: {
+            id: user.id,
+            address: user.address,
+            email: user.email,
+            phoneNumber: user.phoneNumber,
+            userName: user.userName,
+            password: user.password
+          }
+      })
       },
       error: e =>{
-        this.msg = e;
+        this.msg = e.error;
+        this.isLoading = false;
       }
-    });
+    })
   }
 
   toHome(){

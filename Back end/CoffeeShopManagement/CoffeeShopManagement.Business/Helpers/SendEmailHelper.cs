@@ -53,7 +53,7 @@ namespace CoffeeShopManagement.Business.Helpers
                 Console.WriteLine();
             }
 
-            return output == "Email(s) sent\n";
+            return output == "Email(s) sent\r\n";
         }
 
         public static bool SendEmailResetPassword(string to, string newPass)
@@ -99,7 +99,7 @@ namespace CoffeeShopManagement.Business.Helpers
                 Console.WriteLine();
             }
 
-            return output == "Email(s) sent\n";
+            return output == "Email(s) sent\r\n";
         }
 
     }

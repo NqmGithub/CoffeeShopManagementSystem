@@ -59,13 +59,13 @@ namespace CoffeeShopManagement.Business.Services
 
         public async Task<bool> ResetPassword(string email)
         {
-            var randomPassword = GenerateOtp() + GenerateOtp();
+            var randomPassword = GenerateOtp();
             var user = await _unitOfWork.UserRepository.GetByEmail(email);
             if(user == null)
             {
                 return false;
             }
-            user.Password = randomPassword;
+            user.Password = PasswordHelper.HashPassword(randomPassword);
             await _unitOfWork.UserRepository.Update(user);
 
             bool result = SendEmailHelper.SendEmailResetPassword(email, randomPassword);

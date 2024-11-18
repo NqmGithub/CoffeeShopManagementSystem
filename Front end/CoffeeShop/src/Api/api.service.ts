@@ -8,11 +8,18 @@ import { Contact } from '../Interfaces/contact';
 import { CreateContact } from '../Interfaces/createContact';
 import { UpdateContactResponse } from '../Interfaces/updateContactResponse';
 import { ProblemType } from '../Interfaces/category';
+import { E } from '@angular/cdk/keycodes';
+
+interface validOtp{
+  email : string;
+  otpCode : string;
+}
 
 @Injectable({
   providedIn: 'root'
 })
 export class ApiService {
+  
   private baseurl = "https://localhost:44344/api"
   private headerCustom = {}
 
@@ -25,8 +32,33 @@ export class ApiService {
     return this.http.post<any>(this.baseurl + '/Auth/login', data);
   }
 
+  resetPassword(email: string): Observable<boolean>{
+    const body = { email };
+    return this.http.post<boolean>(this.baseurl + '/Auth/reset-password', body);
+  }
+
   signup(data: any): Observable<any>{
     return this.http.post<any>(this.baseurl + '/Auth/signup', data);
+  }
+
+  checkEmail(email: string): Observable<any>{
+    const body = { email };
+    return this.http.post<any>(this.baseurl + '/Auth/checkEmail', body);
+  }
+
+  sendOtp(email: string): Observable<any>{
+    const request = {
+      email: email
+    }
+    return this.http.post<any>(this.baseurl + '/Auth/send-otp', request);
+  }
+
+  validateOtp(email: string, otpCode: string): Observable<any>{
+    const request: validOtp = {
+      email: email,
+      otpCode: otpCode
+    }
+    return this.http.post<any>(this.baseurl + '/Auth/validate-otp', request);
   }
 
   //user
@@ -46,8 +78,8 @@ export class ApiService {
     return this.http.put<User[]>(this.baseurl + `/User/${id}`, user, this.headerCustom);
   }
 
-  makeUserInactive(id: string): Observable<any>{
-    return this.http.patch<User[]>(this.baseurl + `/User/${id}`, this.headerCustom);
+  makeUserInactive(id: string, status: string): Observable<void>{
+    return this.http.put<void>(`${this.baseurl}/User/status/`+id+'?status='+status,this.headerCustom);
   }
 
   searchUser(keyword: string, status: string, pageNumber: number, pageSize: number) {

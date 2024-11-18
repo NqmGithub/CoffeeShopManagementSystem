@@ -52,6 +52,23 @@ namespace CoffeeShopManagement.WebAPI.Controllers
             public string Address { get; set; }
         }
 
+        [HttpPost("checkEmail")]
+        public async Task<IActionResult> CheckEmail([FromBody] OTPRequest request)
+        {
+            if (string.IsNullOrWhiteSpace(request.Email))
+            {
+                return BadRequest("Email is required.");
+            }
+
+            var existingUser = await _userService.GetByEmail(request.Email);
+            if (existingUser != null)
+            {
+                return Conflict("A user with this email already exists.");
+            }
+
+            return Ok();
+        }
+
         [HttpPost("signup")]
         public async Task<IActionResult> Signup([FromBody] SignupRequest signupRequest)
         {
@@ -80,8 +97,8 @@ namespace CoffeeShopManagement.WebAPI.Controllers
                 Role = 1,
                 PhoneNumber = signupRequest.PhoneNumber,
                 Address = signupRequest.Address,
-                Avatar = "avatar.jpg",
-            Status = 1
+                Avatar = "wwwroot/Avatars/avatar.jpg",
+                Status = 1
             };
 
             await _userService.Add(newUser);
@@ -129,33 +146,53 @@ namespace CoffeeShopManagement.WebAPI.Controllers
                 throw new ArgumentNullException("Invalid email format or email empty");
             }
 
-            bool result = await _otpService.SendOtp(request.Email);
+            try
+            {
+                bool result = await _otpService.SendOtp(request.Email);
 
-            return Ok(result);
+                if (!result)
+                {
+                    return StatusCode(500, new { success = false, message = "Failed to send OTP. Try again later." });
+                }
+
+                return Ok(new { success = true, message = "OTP sent successfully." });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { success = false, message = ex.Message });
+            }
         }
 
         public class ValidateOTPRequest
         {
-            [Required] public string Email { get; set; }
-            [Required] public string OtpCode { get; set; }
+            [Required] public string email { get; set; }
+            [Required] public string otpCode { get; set; }
         }
-        [HttpPost("validate_otp")]
+        [HttpPost("validate-otp")]
         public async Task<IActionResult> ValidateOtp([FromBody] ValidateOTPRequest request)
         {
             string pattern = @"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$";
             Regex regex = new Regex(pattern);
-            if (request.Email == null || !regex.IsMatch(request.Email))
+            if (request.email == null || !regex.IsMatch(request.email))
             {
                 throw new ArgumentNullException("Invalid email format or email empty");
             }
 
-            var isvalid = await _otpService.ValidateOtp(request.Email, request.OtpCode);
-
-            if(!isvalid)
+            try
             {
-                return BadRequest("Invalid");
+                var isValid = await _otpService.ValidateOtp(request.email, request.otpCode);
+
+                if (!isValid)
+                {
+                    return BadRequest(new { success = false, message = "Invalid or expired OTP." });
+                }
+
+                return Ok(new { success = true, message = "OTP validated successfully." });
             }
-            return Ok("valid");
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { success = false, message = ex.Message });
+            }
         }
 
         [HttpPost("reset-password")]

@@ -28,6 +28,6 @@ export class ChangeStatusDialogComponent {
   }
 
   onConfirm(): void {
-    this.dialogRef.close(this.user.status == 1 ?'InActive':'Active');
+    this.dialogRef.close(this.user.status == 1 ?'inActive':'active');
   }
 }

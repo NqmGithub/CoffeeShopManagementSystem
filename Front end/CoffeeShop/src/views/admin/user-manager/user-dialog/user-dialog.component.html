@@ -5,16 +5,14 @@
 <mat-dialog-content style="padding: 10px;">
     <form  [formGroup]="addUserForm" (submit)="onAdd()" style="display: flex; flex-direction: row; gap: 10px;">
       <div>
-        <input #file type="file" (change)="handleFileInput($event)" style="display:none;" />
-        @if(isUpdate){       
-            @if(imageUrl){
-                <img  [src]="imageUrl" class="image" (click)="file.click()">
-            }@else if(currentUser.avatar) {
-                <img  [src]="getImage(currentUser.avatar)" class="image" (click)="file.click()">
-            }@else {
-                <img src="/avatar.jpg" class="image" (click)="file.click()">
-            }      
-        }
+        <input #file type="file" (change)="handleFileInput($event)" style="display:none;" />    
+        @if(imageUrl){
+            <img  [src]="imageUrl" class="image" (click)="file.click()">
+        }@else if(currentUser.avatar) {
+            <img  [src]="getImage(currentUser.avatar)" class="image" (click)="file.click()">
+        }@else {
+            <img src="/avatar.jpg" class="image" (click)="file.click()">
+        }      
         <mat-form-field class="example-full-width" appearance="outline">
           <mat-label>Status</mat-label>
           <mat-select [(value)]="status"  name="categoryStatus">

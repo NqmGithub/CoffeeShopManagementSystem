@@ -21,16 +21,10 @@ namespace CoffeeShopManagement.Business.Services
 
         public async Task Add(User user)
         {
-            User existId = await _unitOfWork.UserRepository.GetById(user.Id);
-            if(existId != null)
-            {
-                throw new ArgumentException("Already exist user with this id with username: " + existId.UserName);
-            }
-
             User existEmail = await _unitOfWork.UserRepository.GetByEmail(user.Email);
-            if (existId != null)
+            if (existEmail != null)
             {
-                throw new ArgumentException("Already exist user with this email with username: " + existId.UserName);
+                throw new ArgumentException("Already exist user with this email with username: " + existEmail.UserName);
             }
 
             user.Id = Guid.NewGuid();
