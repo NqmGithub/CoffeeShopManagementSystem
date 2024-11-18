@@ -81,7 +81,7 @@ import {
 	Undo,
 	type EditorConfig
 } from 'ckeditor5';
-import { ProblemType } from '../../Interfaces/category';
+import { ProblemType } from '../../Interfaces/problemType';
 import { ApiService } from '../../Api/api.service';
 import { MatSelectModule } from '@angular/material/select';
 import { CreateContact } from '../../Interfaces/createContact';

@@ -1,20 +1,43 @@
 <app-navbar></app-navbar>
-<mat-card appearance="outlined" style="margin: 5%;padding: 30px;">
-    <mat-card-header style="display: flex; flex-direction: column;align-items: center;">
-        <img style="margin: auto; min-width: 150px; min-height: 150px;" mat-card-avatar src="../../avatar.jpg">
-        <mat-card-title>{{currentUser!.userName}}</mat-card-title>
-    </mat-card-header>
-    <mat-card appearance="outlined" style="padding: 15px; display: flex; align-items: center; flex-direction:row; justify-content: space-between;">
-        <mat-card-title>Email</mat-card-title>
-        <mat-card-title>{{currentUser!.email}}</mat-card-title>
-    </mat-card>
-    <mat-card appearance="outlined" style="padding: 15px; display: flex; align-items: center; flex-direction:row; justify-content: space-between;">
-        <mat-card-title>Phone Number</mat-card-title>
-        <mat-card-title>{{currentUser!.phoneNumber}}</mat-card-title>
-    </mat-card>
-    <mat-card appearance="outlined" style="padding: 15px; display: flex; align-items: center; flex-direction:row; justify-content: space-between;">
-        <mat-card-title>Address</mat-card-title>
-        <mat-card-title>{{currentUser!.address}}</mat-card-title>
-    </mat-card>
+<h1 style="display: block;margin-top: 30px; text-align: center;">Profile</h1>
 
+<mat-card appearance="outlined" style="margin: 15px; padding: 30px; display: flex; flex-direction: row; align-items: center;">
+  
+  <!-- Avatar Section (Left Side) -->
+  <div style="display: flex; flex-direction: column; align-items: center; margin-right: 30px;">
+    <img 
+      style="width: 250px; height: 250px; margin-bottom: 10px; border: 3px solid #000; border-radius: 50%;" 
+      mat-card-avatar 
+      [src]="getImage(currentUser!.avatar)">
+    <mat-card-title style="font-size: 40px; text-align: center; margin-top: 15px;">
+      {{currentUser!.userName}}
+    </mat-card-title>
+  </div>
+  
+  <!-- Right Section (Email, Phone, Address & Buttons) -->
+  <div style="flex: 1;">
+    <!-- User Details Section -->
+    <mat-card appearance="outlined" style="padding: 15px; display: flex; align-items: center; flex-direction:row; justify-content: space-between;">
+      <mat-card-title>Email:</mat-card-title>
+      <mat-card-title>{{currentUser!.email}}</mat-card-title>
+  </mat-card>
+  <mat-card appearance="outlined" style="padding: 15px; display: flex; align-items: center; flex-direction:row; justify-content: space-between;">
+      <mat-card-title>Phone Number:</mat-card-title>
+      <mat-card-title>{{currentUser!.phoneNumber}}</mat-card-title>
+  </mat-card>
+  <mat-card appearance="outlined" style="padding: 15px; display: flex; align-items: center; flex-direction:row; justify-content: space-between;">
+      <mat-card-title>Address:</mat-card-title>
+      <mat-card-title>{{currentUser!.address}}</mat-card-title>
+  </mat-card>
+
+    <!-- Action Buttons Section -->
+    <mat-card-actions style="display: flex; justify-content: space-around; margin-top: 20px;">
+      <button (click)="openUpdateProfileDialog()" style="background-color: azure; width: 200px; height: 50px;">
+        Update Profile
+      </button>   
+      <button (click)="openChangePasswordDialog()" style="background-color: azure; width: 200px; height: 50px;">
+        Change Password
+      </button>
+    </mat-card-actions>
+  </div>
 </mat-card>

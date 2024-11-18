@@ -1,0 +1,45 @@
+mat-form-field {
+        width: 100%;
+}
+mat-dialog-actions {
+    display: flex;
+    justify-content: flex-end;
+    padding: 1rem 0;
+
+    button {
+      margin-left: 0.5rem;
+    }
+}
+
+  .mat-dialog-title {
+    color: #3f51b5;
+    font-weight: 700;
+    text-align: center;
+  }
+  mat-form-field {
+    margin-top: 5px;
+    margin-right: 10px;
+  }
+.closeButton{
+  margin-top: 10px;
+  margin-right: 10px;
+  color: red;
+}
+.closeButton:hover{
+  cursor: pointer;
+}  
+.mat-dialog-content {
+  width: 84%;
+  height: 64%;
+  display: block;
+  box-sizing: border-box;
+  max-height: inherit;
+  min-height: inherit;
+  min-width: inherit;
+  max-width: inherit;
+  outline: 0;
+}
+.error-snackbar {
+  background-color: red;
+  color: white;
+}

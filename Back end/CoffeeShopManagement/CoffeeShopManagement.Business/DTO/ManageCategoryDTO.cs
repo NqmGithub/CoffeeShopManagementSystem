@@ -15,12 +15,14 @@ namespace CoffeeShopManagement.Business.DTO
 
         [Required(ErrorMessage = "CategoryName is required")]
         public string CategoryName { get; set; }
+        public int Status { get; set; }
         public Category ToCategory()
         {
             return new Category
             {
                 Id = Guid.NewGuid(),
                 CategoryName = CategoryName,
+                Status = Status,
             };
         }
     }

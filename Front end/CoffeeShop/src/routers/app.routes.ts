@@ -11,6 +11,7 @@ import { RoleGuardService } from '../service/role.guard';
 import { UserManagerComponent } from '../views/admin/user-manager/user-manager.component';
 import { ContactComponent } from '../views/contact/contact.component';
 import { ProfileComponent } from '../views/profile/profile.component';
+import { CategoryManagerComponent } from '../views/admin/category-manager/category-manager.component';
 
 export const routes: Routes = [
     {
@@ -33,6 +34,12 @@ export const routes: Routes = [
                 path: 'users',
                 title: 'User Manager',
                 component: UserManagerComponent,
+                outlet: 'mainContent'
+            },
+            {
+                path: 'categories',
+                title: 'Category Manager',
+                component: CategoryManagerComponent,
                 outlet: 'mainContent'
             }
         ],

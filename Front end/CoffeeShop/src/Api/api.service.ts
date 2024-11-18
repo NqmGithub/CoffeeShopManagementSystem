@@ -7,8 +7,11 @@ import { User } from '../Interfaces/user';
 import { Contact } from '../Interfaces/contact';
 import { CreateContact } from '../Interfaces/createContact';
 import { UpdateContactResponse } from '../Interfaces/updateContactResponse';
-import { ProblemType } from '../Interfaces/category';
-
+import { Category } from '../Interfaces/category';
+import { ProblemType } from '../Interfaces/problemType';
+import { CreateCategory } from '../Interfaces/createCategory';
+import { UpdateProfile } from '../Interfaces/updateProfile';
+import { ChangePassword } from '../Interfaces/changePassword';
 @Injectable({
   providedIn: 'root'
 })
@@ -62,7 +65,37 @@ export class ApiService {
   
     return this.http.get<User[]>(`${this.baseurl}/User/search`, { params});
   }
-
+  
+  uploadAvatar(name:string,file: File,folder:string): Observable<HttpEvent<any>>{
+    const formData: FormData = new FormData();
+    formData.append('file', file);
+    let params = new HttpParams()
+    .set('name', name)
+    .set('folder', folder);
+    
+    return this.http.post<any>(`${this.baseurl}/Image/upload`,formData,{
+      params:params,
+      ...this.headerCustom
+    });
+  }
+  
+  updateProfile(id: string, formData: FormData): Observable<boolean> {
+    return this.http.put<boolean>(`${this.baseurl}/User/UpdateProfile/${id}`, formData, this.headerCustom);
+  }
+  changePassword(id: string, changePassword: ChangePassword): Observable<boolean> {
+    const mappedChangePassword = {
+      currentPassword: changePassword.currentPassword,
+      newPassword: changePassword.newPassword,
+      confirmNewPassword: changePassword.confirmNewPassword, 
+    };
+  
+    return this.http.put<boolean>(
+      `${this.baseurl}/User/ChangePassword/${id}`,
+      mappedChangePassword,
+      this.headerCustom
+    );
+  }
+  
   //Product
   getProducts(search: string, filterCategory: string, filterStatus: string, page: number, pageSize: number,
     sortColumn: string, sortDirection: string): Observable<{ list: Product[], total: number }> {
@@ -169,4 +202,51 @@ export class ApiService {
   putProblemType(id: string,problemType: ProblemType): Observable<boolean>{
     return this.http.post<boolean>(`${this.baseurl}/ProblemType/`+id,problemType,this.headerCustom);
   }
+  //category
+  
+  getCategoryById(id: any): Observable<any>{
+    return this.http.get<any>(this.baseurl + `/Category/${id}`, this.headerCustom);
+  }
+
+  getCategoryCount(): Observable<any>{
+    return this.http.get<any>(this.baseurl + '/Category/count', this.headerCustom);
+  }
+
+  addCategory(category: Category): Observable<any>{
+    return this.http.post<Category[]>(this.baseurl + `/Category`, category, this.headerCustom);
+  }
+
+  updateCategory(id: string, category: Category): Observable<any>{
+    return this.http.put<Category[]>(this.baseurl + `/Category/update/${id}`, category, this.headerCustom);
+  }
+
+  changeStatusCategory(id:string, status:number):Observable<boolean>{
+    return this.http.put<boolean>(`${this.baseurl}/Category/`+id+'?status='+status,this.headerCustom);
+  }
+  searchCategory(keyword: string, status: string, pageNumber: number, pageSize: number) {
+    let params = new HttpParams()
+      .set('pageNumber', pageNumber.toString())
+      .set('pageSize', pageSize.toString())
+      .set('status', status);
+  
+    if (keyword) {
+      params = params.set('keyword', keyword);
+    }
+  
+    return this.http.get<any>('https://localhost:44344/api/Category/search', { params });
+  }
+  
+  
+  checkCategoryNameExist(categoryName: string): Observable<boolean> {
+    return this.http.get<boolean>(`${this.baseurl}/Category/checkName?categoryName=${categoryName}`, this.headerCustom);
+  }
+
+  postCategory(createCategory: CreateCategory): Observable<boolean>{
+    return this.http.post<boolean>(`${this.baseurl}/Category`,createCategory,this.headerCustom);
+  }
+
+  putCategory(id:string, updateCategory:Category):Observable<boolean>{
+    return this.http.put<boolean>(`${this.baseurl}/Category/update/`+id,updateCategory,this.headerCustom);
+  }
+
 }

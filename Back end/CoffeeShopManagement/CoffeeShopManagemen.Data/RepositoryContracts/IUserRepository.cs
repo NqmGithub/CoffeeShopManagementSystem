@@ -15,6 +15,7 @@ namespace CoffeeShopManagement.Data.RepositoryContracts
         Task<IEnumerable<User>> GetAll();
         Task<User> GetById(Guid id);
         Task Update(User user);
+        Task<bool> UpdateProfile(User user);
         Task<int> GetUserCount();
         Task<IEnumerable<User>> SearchUser(string keyword, string status, int pageNumber, int pageSize);
     }

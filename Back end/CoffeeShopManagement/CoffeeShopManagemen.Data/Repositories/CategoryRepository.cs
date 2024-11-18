@@ -31,6 +31,10 @@ namespace CoffeeShopManagement.Data.Repositories
             await _context.Categories.AddAsync(category);
             await _context.SaveChangesAsync();
         }
+        public IQueryable<Category> GetAll()
+        {
+            return _context.Categories.AsQueryable();
+        }
 
         public async Task DeleteCategory(Guid id)
         {
@@ -50,7 +54,67 @@ namespace CoffeeShopManagement.Data.Repositories
         {
             return await _context.Categories.ToListAsync();
         }
+        public async Task<int> GetCategoryCount()
+        {
+            return await _context.Categories.CountAsync();
+        }
+        public async Task<IEnumerable<Category>> SearchCategory(string keyword, string status, int pageNumber, int pageSize)
+        {
+            var query = _context.Categories.AsQueryable();
+
+            if (!string.IsNullOrEmpty(keyword))
+            {
+                query = query.Where(c => c.CategoryName.Contains(keyword));
+            }
+
+            if (!string.IsNullOrEmpty(status))
+            {
+                if (status.ToLower() == "active")
+                {
+                    query = query.Where(c => c.Status == 1);
+                }
+                else if (status.ToLower() == "inactive")
+                {
+                    query = query.Where(c => c.Status != 1);
+                }
+            }
+
+            return await query
+                .Skip(pageSize * (pageNumber - 1))
+                .Take(pageSize)
+                .ToListAsync();
+        }
+
+
+        public async Task<int> GetCategoryCount(string keyword, string status)
+        {
+            var query = _context.Categories.AsQueryable();
+
+            if (!string.IsNullOrEmpty(keyword))
+            {
+                query = query.Where(c => c.CategoryName.Contains(keyword));
+            }
+
+            if (!string.IsNullOrEmpty(status))
+            {
+                if (status.ToLower() == "active")
+                {
+                    query = query.Where(c => c.Status == 1);
+                }
+                else if (status.ToLower() == "inactive")
+                {
+                    query = query.Where(c => c.Status != 1);
+                }
+            }
+
+            return await query.CountAsync();
+        }
+
+
+
     }
+
 }
+
 
 
