@@ -1,0 +1,30 @@
+.example-container {
+    width: auto;
+    height: 600px;
+    margin: 10px;
+    border: 1px solid #555;
+    /* The background property is added to clearly distinguish the borders between drawer and main
+       content */
+    background: #eee;
+  }
+  p{
+    margin: 0px;
+  }
+  .example-header-image {
+    background-image: url('https://material.angular.io/assets/img/examples/shiba1.jpg');
+    background-size: cover;
+  }
+  .ck-editor__editable {
+    min-height: 200px;
+    height: 200px !important; /* Đảm bảo chiều cao được áp dụng */
+  }
+.mat-card{
+  border-radius: 0px; cursor: pointer;
+  &:hover{
+    background-color: rgb(216, 216, 243);
+  } 
+}
+.mat-card.selected {
+  background-color: #e0f7fa;
+  border: 2px solid #00acc1;
+}

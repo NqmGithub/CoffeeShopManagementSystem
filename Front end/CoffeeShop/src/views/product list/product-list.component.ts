@@ -41,7 +41,9 @@ export class ProductListComponent implements OnInit {
     this.loadCategories();
     this.loadProducts();
   }
-
+  getImage(name: string){
+    return `https://localhost:44344/wwwroot/Images/${name}`;
+  }
   loadCategories(): void {
     this.apiService.getAllCategoryNames().subscribe((categories) => {
       this.categories = categories.map((cat: any) => cat.name);

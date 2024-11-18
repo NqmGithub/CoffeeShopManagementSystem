@@ -11,8 +11,6 @@ namespace CoffeeShopManagement.Business.ServiceContracts
 {
     public interface IProductService
     {
-        ICollection<ProductDTO> GetBestSeller();
-
         Task<ProductDTO> GetProductById(Guid id);
 
         ICollection<ProductDTO> GetListProduct();

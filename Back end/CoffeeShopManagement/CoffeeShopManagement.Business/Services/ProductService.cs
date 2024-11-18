@@ -56,30 +56,9 @@ namespace CoffeeShopManagement.Business.Services
             return result > 0;
         }
 
-        public ICollection<ProductDTO> GetBestSeller()
-        {
-            var _context = _unitOfWork.Context;
-            var topProducts = _unitOfWork.OrderDetailRepository.GetQuery()
-                .Include(x => x.Order).Where(x => x.Order.Status != 3)
-                .GroupBy(x => x.ProductId).Select(x => new
-                {
-                    ProductId = x.Key,
-                    TotalQuantity = x.Sum(x => x.Quantity)
-                })
-                .OrderByDescending(x => x.TotalQuantity).Take(3)
-                .Join(
-                    _context.Products,
-                    x => x.ProductId,
-                    y => y.Id,
-                    (x, y) => y
-                )
-                .Select(x => x.ToProductDTO(_unitOfWork)).ToList();
-            return topProducts;
-        }
-
         public ICollection<ProductDTO> GetListProduct()
         {
-            return _unitOfWork.ProductRepository.GetAll().Select(x => x.ToProductDTO(_unitOfWork)).ToList();
+            return _unitOfWork.ProductRepository.GetQuery().Include(x => x.Categoty.Status == 1).Select(x => x.ToProductDTO(_unitOfWork)).ToList();
         }
 
         public async Task<ProductDTO> GetProductById(Guid id)
@@ -127,7 +106,7 @@ namespace CoffeeShopManagement.Business.Services
 
         public async Task<ProductListResponse> GetProductWithCondition(ProductQueryRequest productQueryRequest)
         {
-            var query = _unitOfWork.ProductRepository.GetQuery().Include(x => x.Categoty).AsQueryable();
+            var query = _unitOfWork.ProductRepository.GetQuery().Include(x => x.Categoty).Where(x => x.Categoty.Status == 1).AsQueryable();
 
             // Apply search
             if (!string.IsNullOrEmpty(productQueryRequest.Search))

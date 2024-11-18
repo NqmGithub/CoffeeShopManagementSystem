@@ -25,6 +25,7 @@ builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 builder.Services.AddScoped<IContactRepository, ContactRepository>();
 builder.Services.AddScoped<IProblemTypeRepository, ProblemTypeRepository>();
+builder.Services.AddScoped<IOtpRepository, OtpRepository>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 builder.Services.AddScoped<IUserService, UserService>();
@@ -34,6 +35,7 @@ builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<IContactService, ContactService>();
 builder.Services.AddScoped<IProblemTypeService, ProblemTypeService>();
+builder.Services.AddScoped<IOtpService, OtpService>();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<CartCookieService>();
 
@@ -118,22 +120,22 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+
 app.UseStaticFiles();
 app.UseCors("AllowSpecificOrigin");
 
-app.UseStaticFiles();
 app.UseStaticFiles(new StaticFileOptions()
 {
-    FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot")),
-    RequestPath = new PathString("/wwwroot")
-});
+   FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot")),
+ RequestPath = new PathString("/wwwroot")
+});app.UseHttpsRedirection();
+
+app.UseCors("AllowSpecificOrigin");
 
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.UseCors("AllowSpecificOrigin");
-
 app.MapControllers();
 
 app.Run();
+

@@ -4,6 +4,8 @@ import { SliderComponent } from './slider/slider.component';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { RouterModule } from '@angular/router';
+import { Product } from '../../Interfaces/product';
+import { ApiService } from '../../Api/api.service';
 @Component({
   selector: 'app-home',
   standalone: true,
@@ -19,24 +21,20 @@ import { RouterModule } from '@angular/router';
 })
 export class HomeComponent  {
 
-  coffeeBestsellers = [
-    {
-      title: 'Espresso',
-      description: 'Strong and bold espresso made from 100% Arabica beans.',
-      price: '$2.99',
-      image: '/slider1.png'
-    },
-    {
-      title: 'Cappuccino',
-      description: 'A delicious blend of espresso, steamed milk, and foam.',
-      price: '$3.99',
-      image: '/slider1.png'
-    },
-    {
-      title: 'Latte',
-      description: 'Smooth and creamy latte with a hint of vanilla.',
-      price: '$3.49',
-      image: '/slider1.png'
-    }
-  ];
+  listBestSellerProducts: Product[] =[];
+
+  constructor(private apiService: ApiService) {
+    this.apiService.getTop3BestSeller().subscribe(
+      response => {
+        this.listBestSellerProducts = response;
+      },
+      error =>{
+        console.log(error);
+      }
+    )    
+  }
+
+  getImage(name: string){
+    return `https://localhost:44344/wwwroot/Images/${name}`;
+  }
 }

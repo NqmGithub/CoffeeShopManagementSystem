@@ -12,8 +12,8 @@ namespace CoffeeShopManagement.Data.Repositories
 {
     public class GenericRepository<T> : IGenericRepository<T> where T : class
     {
-        protected readonly CoffeeShopDbContext _db;
-        protected readonly DbSet<T> _dbSet;
+        private readonly CoffeeShopDbContext _db;
+        private readonly DbSet<T> _dbSet;
 
         public GenericRepository(CoffeeShopDbContext db)
         {

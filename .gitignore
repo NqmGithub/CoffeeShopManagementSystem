@@ -102,3 +102,4 @@ coverage/
 /Back end/CoffeeShopManagement/.vs
 /Back end/CoffeeShopManagement/.vs
 Back end/CoffeeShopManagement/CoffeeShopManagement/CoffeeShopManagement.WebAPI.csproj.user
+/Back end/CoffeeShopManagement/CoffeeShopManagement.Business/Helpers/EmailSending

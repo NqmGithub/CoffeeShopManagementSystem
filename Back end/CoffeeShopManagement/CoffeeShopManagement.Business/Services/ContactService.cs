@@ -61,14 +61,14 @@ namespace CoffeeShopManagement.Business.Services
                     var imageData = Convert.FromBase64String(base64Data);
 
                     var fileName = $"{Guid.NewGuid()}.{imageType}";
-                    var folderName = Path.Combine("Resources", "Contacts");
+                    var folderName = Path.Combine("wwwroot", "Contacts");
                     var pathToSave = Path.Combine(Directory.GetCurrentDirectory(), folderName);
                     var fullPath = Path.Combine(pathToSave, fileName);
 
                     await System.IO.File.WriteAllBytesAsync(fullPath, imageData);
 
                     var scheme = _httpContextAccessor.HttpContext.Request.Scheme;
-                    var host =  _httpContextAccessor.HttpContext.Request.Host;
+                    var host = _httpContextAccessor.HttpContext.Request.Host;
 
                     var imageUrl = $"{scheme}://{host}/Resources/Contacts/{fileName}";
 
@@ -87,31 +87,172 @@ namespace CoffeeShopManagement.Business.Services
 
         public async Task<ICollection<ContactDTO>> GetListContact()
         {
-            return await _unitOfWork.ContactRepository.GetQuery().Select(x => x.ToContactDTO(_unitOfWork)).ToListAsync();
+            return await _unitOfWork.ContactRepository.GetQuery()
+       .Include(x => x.Customer)
+       .Include(x => x.Admin)
+       .Include(x => x.Problem)
+       .Select(x => new ContactDTO
+       {
+           Id = x.Id,
+           Customer = new UserContactDTO
+           {
+               UserName = x.Customer.UserName,
+               Avatar = x.Customer.Avatar
+           },
+           AdminName = x.Admin != null ? x.Admin.UserName : null,
+           SendDate = x.SendDate,
+           Subject = x.Subject,
+           Description = x.Description,
+           ProblemName = x.Problem.ProblemName,
+           Response = x.Response,
+           Status = ContactHelper.ConvertToStatusString(x.Status)
+       }).OrderByDescending(x => x.SendDate)
+       .ToListAsync();
         }
 
         public async Task<ContactDTO> GetContactById(Guid id)
         {
-            return (await _unitOfWork.ContactRepository.GetByIdAsync(id)).ToContactDTO(_unitOfWork);
+            return await _unitOfWork.ContactRepository.GetQuery()
+                .Include(x => x.Customer)
+                .Include(x => x.Admin)
+                .Include(x => x.Problem)
+                .Where(x => x.Id == id)
+                .Select(x => new ContactDTO
+                {
+                    Id = x.Id,
+                    Customer = new UserContactDTO
+                    {
+                        UserName = x.Customer.UserName,
+                        Avatar = x.Customer.Avatar
+                    },
+                    AdminName = x.Admin != null ? x.Admin.UserName : null,
+                    SendDate = x.SendDate,
+                    Subject = x.Subject,
+                    Description = x.Description,
+                    ProblemName = x.Problem.ProblemName,
+                    Response = x.Response,
+                    Status = ContactHelper.ConvertToStatusString(x.Status)
+                })
+                .FirstOrDefaultAsync(); 
         }
 
+
         public async Task<bool> UpdateContactResponseAsync(Guid id, ContactResponseDTO contactResponseDTO)
+    {
+        if (id != contactResponseDTO.ContactId)
         {
-            if(id != contactResponseDTO.ContactId)
+            throw new ArgumentException("Id diff");
+        }
+        var contact = _unitOfWork.ContactRepository.GetById(contactResponseDTO.ContactId);
+        if (contact == null)
+        {
+            throw new ArgumentException(nameof(contact));
+        }
+        contact.AdminId = contactResponseDTO.AdminId;
+        contact.Response = await formatContent(contactResponseDTO.Response);
+        contact.Status = ContactHelper.ConvertToStatusInt(contactResponseDTO.Status);
+
+        var result = await _unitOfWork.SaveChangesAsync();
+        return result > 0;
+    }
+
+    public async Task<ContactListResponse> GetContactWithCondition(ContactQueryRequest contactQueryRequest)
+    {
+        var query = _unitOfWork.ContactRepository.GetQuery().Include(x => x.Problem).Include(x => x.Customer).Where(x => x.Problem.Status == 1);
+
+        // Apply search
+        if (!string.IsNullOrEmpty(contactQueryRequest.Search))
+        {
+            query = query.Where(p => p.Subject.Contains(contactQueryRequest.Search) || p.Description.Contains(contactQueryRequest.Search)
+            || p.Problem.ProblemName.Contains(contactQueryRequest.Search));
+        }
+
+        // Apply filter
+
+        if (!string.IsNullOrEmpty(contactQueryRequest.FilterStatus))
+        {
+            query = query.Where(p => p.Status == ContactHelper.ConvertToStatusInt(contactQueryRequest.FilterStatus));
+        }
+        // Apply sorting
+        if (contactQueryRequest.SortColumn.Equals("ProblemName"))
+        {
+            // Sort by CategoryName using the navigation property
+            query = contactQueryRequest.SortDirection.Equals("asc", StringComparison.OrdinalIgnoreCase)
+                ? query.OrderBy(p => p.Problem.ProblemName)
+                : query.OrderByDescending(p => p.Problem.ProblemName);
+        }
+        else if (contactQueryRequest.SortColumn.Equals("CustomerName"))
+        {
+            query = contactQueryRequest.SortDirection.Equals("asc", StringComparison.OrdinalIgnoreCase)
+                ? query.OrderBy(p => p.Customer.UserName)
+                : query.OrderByDescending(p => p.Customer.UserName);
+        }
+        else
+        {
+            // Sort by the property in Product
+            query = contactQueryRequest.SortDirection.Equals("asc", StringComparison.OrdinalIgnoreCase)
+                ? query.OrderBy(p => EF.Property<object>(p, contactQueryRequest.SortColumn))
+                : query.OrderByDescending(p => EF.Property<object>(p, contactQueryRequest.SortColumn));
+        }
+
+        // Apply pagination
+        var totalContacts = query.Count();
+        var contacts = query.Skip(contactQueryRequest.Page * contactQueryRequest.PageSize).Take(contactQueryRequest.PageSize)
+            .Select(p => new ContactDTO()
             {
-                throw new ArgumentException("Id diff");
-            }
-            var contact = _unitOfWork.ContactRepository.GetById(contactResponseDTO.ContactId);
-            if (contact == null) 
-            {
-                throw new ArgumentException(nameof(contact));
-            }
-            contact.AdminId = contactResponseDTO.AdminId;
-            contact.Response = contactResponseDTO.Response;
-            contact.Status  = ContactHelper.ConvertToStatusInt(contactResponseDTO.Status);
+                Id = p.Id,
+                AdminName = p.AdminId != null ? _unitOfWork.UserRepository.GetQuery().First(x => x.Id == p.AdminId).UserName : null,
+                Customer = new UserContactDTO
+                {
+                    UserName = _unitOfWork.UserRepository.GetQuery().First(x => x.Id == p.CustomerId).UserName,
+                    Avatar = _unitOfWork.UserRepository.GetQuery().First(x => x.Id == p.CustomerId).Avatar
+                },
+                ProblemName = _unitOfWork.ProblemTypeRepository.GetQuery().First(x => x.Id == p.ProblemId).ProblemName,
+                Description = p.Description,
+                SendDate = p.SendDate,
+                Subject = p.Subject,
+                Status = ContactHelper.ConvertToStatusString(p.Status),
+            }).ToListAsync();
+
+        return new ContactListResponse()
+        {
+            List = await contacts,
+            Total = totalContacts,
+        };
+    }
+
+        public async Task<bool> ChangeStatus(Guid id, string status)
+        {
+            var contact = _unitOfWork.ContactRepository.GetById(id);
+            contact.Status = ContactHelper.ConvertToStatusInt(status);
 
             var result = await _unitOfWork.SaveChangesAsync();
-            return result > 0;
+            return result>0;
+        }
+
+        public async Task<ICollection<ContactDTO>> GetListContactsByUserId(Guid id)
+        {
+            return await _unitOfWork.ContactRepository.GetQuery().Where(x => x.CustomerId == id)
+       .Include(x => x.Customer)
+       .Include(x => x.Admin)
+       .Include(x => x.Problem)
+       .Select(x => new ContactDTO
+       {
+           Id = x.Id,
+           Customer = new UserContactDTO
+           {
+               UserName = x.Customer.UserName,
+               Avatar = x.Customer.Avatar
+           },
+           AdminName = x.Admin != null ? x.Admin.UserName : null,
+           SendDate = x.SendDate,
+           Subject = x.Subject,
+           Description = x.Description,
+           ProblemName = x.Problem.ProblemName,
+           Response = x.Response,
+           Status = ContactHelper.ConvertToStatusString(x.Status)
+       }).OrderByDescending(x => x.SendDate)
+       .ToListAsync();
         }
     }
 }

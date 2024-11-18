@@ -28,6 +28,13 @@ namespace CoffeeShopManagement.WebAPI.Controllers
             return Ok(product);
         }
 
+        [HttpGet("best-seller")]
+        public async Task<IActionResult> GetTop3BestSeller()
+        {
+            var product = await _productService.GetTopBestsellerProductsAsync(3);
+            return Ok(product);
+        }
+
         [HttpGet]
         public async Task<IActionResult> GetListProducts(string search = "",
            string filterCategory = "", string filterStatus = "",

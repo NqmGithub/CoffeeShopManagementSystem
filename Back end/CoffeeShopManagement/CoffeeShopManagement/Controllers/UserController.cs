@@ -44,7 +44,7 @@ namespace CoffeeShopManagement.WebAPI.Controllers
 
             var emailRegex = new Regex(@"^[^@\s]+@[^@\s]+\.[^@\s]+$", RegexOptions.IgnoreCase);
 
-            if (!emailRegex.IsMatch(email)){
+            if (!emailRegex.IsMatch(email)) {
                 return BadRequest("Invalid email");
             }
 
@@ -56,16 +56,16 @@ namespace CoffeeShopManagement.WebAPI.Controllers
             return Ok(user);
         }
 
-/*        [HttpGet("{pageNumber}/{pageSize}")]
-        public async Task<IActionResult> GetPatientPgaination(int pageNumber, int pageSize)
-        {
-            var users = await _userService.GetPagination(pageNumber, pageSize);
-            if (users == null)
-            {
-                return NotFound();
-            }
-            return Ok(users);
-        }*/
+        /*        [HttpGet("{pageNumber}/{pageSize}")]
+                public async Task<IActionResult> GetPatientPgaination(int pageNumber, int pageSize)
+                {
+                    var users = await _userService.GetPagination(pageNumber, pageSize);
+                    if (users == null)
+                    {
+                        return NotFound();
+                    }
+                    return Ok(users);
+                }*/
 
         [HttpGet("count")]
         public async Task<IActionResult> GetCount()
@@ -75,7 +75,7 @@ namespace CoffeeShopManagement.WebAPI.Controllers
         }
 
         [HttpGet("search")]
-        public async Task<IActionResult> SearchUser([FromQuery] string keyword="", [FromQuery] string status = "all", int pageNumber = 1, int pageSize = 5)
+        public async Task<IActionResult> SearchUser([FromQuery] string keyword = "", [FromQuery] string status = "all", int pageNumber = 1, int pageSize = 5)
         {
             var users = await _userService.SearchUser(keyword, status, pageNumber, pageSize);
             return Ok(users);
@@ -88,8 +88,21 @@ namespace CoffeeShopManagement.WebAPI.Controllers
             {
                 return BadRequest(ModelState);
             }
-            await _userService.Add(user);
-            return CreatedAtAction(nameof(GetUserById), new { id = user.Id }, user); ;
+
+            try
+            {
+                if (user.Id == Guid.Empty)
+                {
+                    user.Id = Guid.NewGuid();
+                }
+
+                await _userService.Add(user);
+                return CreatedAtAction(nameof(GetUserById), new { id = user.Id }, user);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { Message = "An error occurred while creating the user.", Details = ex.Message });
+            }
         }
 
         [HttpPut("{id}")]
@@ -104,7 +117,6 @@ namespace CoffeeShopManagement.WebAPI.Controllers
             {
                 return BadRequest(ModelState);
             }
-            user.Password = PasswordHelper.HashPassword(user.Password);
             await _userService.Update(user);
 
             return NoContent();
@@ -118,21 +130,20 @@ namespace CoffeeShopManagement.WebAPI.Controllers
             return NoContent();
         }
 
-        [HttpPatch("{id}")]
-        public async Task<IActionResult> PatchDelete(Guid id)
+        [HttpPut("status/{id}")]
+        public async Task<IActionResult> changeStatus(Guid id,[FromQuery] string status)
         {
             var user = await _userService.Get(id);
             if (user == null)
             {
                 return NotFound("User not found.");
             }
-            user.Status = 2;
+            user.Status = (status == "active") ? 1 : 2;
             await _userService.Update(user);
-
             return NoContent();
         }
 
-        [HttpPut("{id}/ChangePassword")]
+        [HttpPut("ChangePassword/{id}")]
         public async Task<IActionResult> ChangePassword(Guid id, ChangePasswordDTO changePassword)
         {
             var user = await _userService.Get(id);
@@ -140,11 +151,11 @@ namespace CoffeeShopManagement.WebAPI.Controllers
             {
                 return NotFound(new { message = "User not found." });
             }
-            if (user.Password != changePassword.CurrentPassword)
+            if (!PasswordHelper.VerifyPassword(changePassword.CurrentPassword, user.Password))
             {
                 return BadRequest(new { message = "Current password is incorrect." });
             }
-            if (user.Password == changePassword.NewPassword)
+            if (PasswordHelper.VerifyPassword(changePassword.NewPassword, user.Password))
             {
                 return BadRequest(new { message = "The old password must be different from the new password." });
             }
@@ -152,46 +163,84 @@ namespace CoffeeShopManagement.WebAPI.Controllers
             {
                 return BadRequest(new { message = "Confirm password does not match." });
             }
+            user.Password = PasswordHelper.HashPassword(changePassword.NewPassword);
+            var result = await _userService.ChangePassword(user);
 
-            user.Password = changePassword.NewPassword;
-            await _userService.Update(user);
+            return Ok(new { success = result, message = "Password changed successfully." });
 
-            return NoContent();
         }
-        [HttpPut("{id}/UpdateProfile")]
-        public async Task<IActionResult> UpdateUser(Guid id, UpdateProfileDTO updateProfile)
+        [HttpPut("UpdateProfile/{id}")]
+        public async Task<IActionResult> UpdateProfile(Guid id, UpdateProfileDTO updateProfile)
         {
-                var user = await _userService.Get(id);
-                if (user == null)
+            var user = await _userService.Get(id);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            user.UserName = updateProfile.UserName;
+            user.PhoneNumber = updateProfile.PhoneNumber;
+            user.Address = updateProfile.Address;
+
+            var updateResult = await _userService.UpdateProfile(user);
+            if (updateResult == null)
+            {
+                return StatusCode(500, "Unable to update profile.");
+            }
+
+            if (updateProfile.Avatar != null)
+            {
+                var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".gif" };
+                var fileExtension = Path.GetExtension(updateProfile.Avatar.FileName).ToLower();
+                if (!allowedExtensions.Contains(fileExtension))
                 {
-                    return NotFound();
+                    return BadRequest("Invalid file type. Only images are allowed.");
                 }
 
-                user.UserName = updateProfile.UserName;
-                user.PhoneNumber = updateProfile.PhoneNumber;
-                user.Address = updateProfile.Address;
+                var avatarDirectory = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Avatars");
 
-                if (updateProfile.Avatar != null)
+                if (!string.IsNullOrEmpty(user.Avatar))
                 {
-                    
-                    var avatarDirectory = Path.Combine("wwwroot", "Avatars");
-                    if (!Directory.Exists(avatarDirectory))
+                    var oldAvatarPath = Path.Combine(avatarDirectory, user.Avatar);
+                    if (System.IO.File.Exists(oldAvatarPath))
                     {
-                        Directory.CreateDirectory(avatarDirectory);
+                        System.IO.File.Delete(oldAvatarPath);
                     }
+                }
 
-                    var avatarFileName = $"{Guid.NewGuid()}_{updateProfile.Avatar.FileName}";
-                    var avatarPath = Path.Combine(avatarDirectory, avatarFileName);
+                if (!Directory.Exists(avatarDirectory))
+                {
+                    Directory.CreateDirectory(avatarDirectory);
+                }
+
+                var sanitizedEmail = user.Email.Replace("@", "_").Replace(".", "_");
+                var avatarFileName = $"{sanitizedEmail}{fileExtension}";
+                var avatarPath = Path.Combine(avatarDirectory, avatarFileName);
+
+                try
+                {
                     using (var stream = new FileStream(avatarPath, FileMode.Create))
                     {
                         await updateProfile.Avatar.CopyToAsync(stream);
                     }
+
                     user.Avatar = avatarFileName;
                 }
+                catch (Exception ex)
+                {
+                    return StatusCode(500, $"Internal server error: {ex.Message}");
+                }
+            }
 
-                await _userService.Update(user);
+            var result = await _userService.UpdateProfile(user);
+            if (result == null)
+            {
+                return StatusCode(500, "Unable to update profile with new avatar.");
+            }
 
-                return NoContent();
+            return Ok(result);
         }
+
+
     }
 }

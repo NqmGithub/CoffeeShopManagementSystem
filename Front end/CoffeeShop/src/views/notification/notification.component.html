@@ -1,0 +1,70 @@
+<app-navbar></app-navbar>
+<mat-drawer-container class="example-container" style="border-radius: 10px; border: 5px solid #6b4f34; margin-top: 20px;">
+    <mat-drawer mode="side" opened>
+          @for (contact of contacts; track $index) {
+            <mat-card appearance="outlined" class="mat-card" (click)="onClick(contact.id)" [ngClass]="{'selected': selectedContactId === contact.id}">
+            <mat-card-header style="padding-top: 0px;">
+              <mat-card-title style="font-size: medium; font-weight: 500; display: flex;">
+                 <span>{{contact.customer.userName}}</span>
+                 @if (contact.status == 'Pending') {
+                  <span style="margin-left: 220px; color: red;">{{contact.status}}</span>
+                 }@else if(contact.status == 'In Processing'){
+                  <span style="margin-left: 200px; color: blue;">{{contact.status}}</span>
+                 } @else if(contact.status == 'Done') {
+                  <span style="margin-left: 220px; color: green;">{{contact.status}}</span>
+                 }
+                 
+                </mat-card-title>
+            </mat-card-header>
+            <mat-card-content style="padding-bottom: 0px;padding-right: 0px;">
+              <div style="display: flex; justify-content: space-between;width: 95%;color: rgb(79, 79, 224); font-weight: 500;" >
+                  <p style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 200px;">{{contact.subject}}</p>
+                    <p style="white-space: nowrap;">{{contact.sendDate | date: 'dd/MM/yyyy' }}</p>
+                </div>
+              <div style="margin: 0px;">
+                  <p style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 400px;">{{contact.problemName}}</p>
+              </div>
+            </mat-card-content>
+      </mat-card>
+          }
+                       
+    </mat-drawer>
+    <mat-drawer-content>
+        <mat-card appearance="outlined" style="position: sticky;top: 0;z-index: 1000;border-radius: 0px;">
+            <mat-card-content style="font-size: medium; font-weight: 500;">{{selectedContact.subject}}</mat-card-content>
+          </mat-card>
+          
+        <mat-card class="example-card" appearance="outlined" style="border-radius: 0px;">
+            <mat-card-header>
+              <div mat-card-avatar class="example-header-image"></div>
+              <mat-card-title><span>{{selectedContact.customer.userName}}</span></mat-card-title>
+              <mat-card-subtitle style="width: 100%;">
+                <div style="display: flex; justify-content: space-between;" >
+                    <p >Send</p>
+                    <p  style="margin-left: 500px;">{{selectedContact.sendDate}}</p>
+                  </div>
+                </mat-card-subtitle>
+            </mat-card-header>
+            <mat-card-content [innerHTML]="selectedContact.description">
+            </mat-card-content>
+          </mat-card>
+          @if (selectedContact.response) {
+            <mat-card class="example-card" appearance="outlined" style="border-radius: 0px; margin-top: 30px; display: flex; align-items: end;">
+              <mat-card-header>
+                <mat-card-title><span>{{selectedContact.adminName}}</span></mat-card-title>
+                <div class="example-header-image" style="height: 40px; width: 40px;border-radius: 100%;"></div>
+                <mat-card-subtitle >
+                  <div >
+                    <p>Reply</p>
+                  </div>
+                </mat-card-subtitle>
+              </mat-card-header>
+              <mat-card-content [innerHTML]="selectedContact.response" style="flex: 1; padding-left: 16px;">
+              </mat-card-content>
+            </mat-card>
+            
+                                            
+          }          
+    </mat-drawer-content>
+  </mat-drawer-container>
+

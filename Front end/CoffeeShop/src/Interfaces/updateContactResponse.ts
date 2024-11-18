@@ -1,6 +1,6 @@
 export interface UpdateContactResponse {
-    id : string;
-    adminName:string; 
-    response: string;
+    contactId : string;
+    adminId:string|null; 
+    response: string|null;
     status: string;
 }

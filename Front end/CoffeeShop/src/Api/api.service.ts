@@ -5,16 +5,25 @@ import { Product } from '../Interfaces/product';
 import { CreateProduct } from '../Interfaces/createProduct';
 import { User } from '../Interfaces/user';
 import { Contact } from '../Interfaces/contact';
-import { Order } from '../Interfaces/order';
+import { Order, OrderDTO } from '../Interfaces/order';
 import { CreateContact } from '../Interfaces/createContact';
 import { UpdateContactResponse } from '../Interfaces/updateContactResponse';
-import { ProblemType } from '../Interfaces/category';
+import { UserOrderDetails } from '../Interfaces/userOrderDetails';
+interface validOtp{
+  email : string;
+  otpCode : string;
+}
 
-
+import { Category } from '../Interfaces/category';
+import { ProblemType } from '../Interfaces/problemType';
+import { CreateCategory } from '../Interfaces/createCategory';
+import { UpdateProfile } from '../Interfaces/updateProfile';
+import { ChangePassword } from '../Interfaces/changePassword';
 @Injectable({
   providedIn: 'root'
 })
 export class ApiService {
+  
   private baseurl = "https://localhost:44344/api"
   private headerCustom = {}
 
@@ -27,8 +36,33 @@ export class ApiService {
     return this.http.post<any>(this.baseurl + '/Auth/login', data);
   }
 
+  resetPassword(email: string): Observable<boolean>{
+    const body = { email };
+    return this.http.post<boolean>(this.baseurl + '/Auth/reset-password', body);
+  }
+
   signup(data: any): Observable<any>{
     return this.http.post<any>(this.baseurl + '/Auth/signup', data);
+  }
+
+  checkEmail(email: string): Observable<any>{
+    const body = { email };
+    return this.http.post<any>(this.baseurl + '/Auth/checkEmail', body);
+  }
+
+  sendOtp(email: string): Observable<any>{
+    const request = {
+      email: email
+    }
+    return this.http.post<any>(this.baseurl + '/Auth/send-otp', request);
+  }
+
+  validateOtp(email: string, otpCode: string): Observable<any>{
+    const request: validOtp = {
+      email: email,
+      otpCode: otpCode
+    }
+    return this.http.post<any>(this.baseurl + '/Auth/validate-otp', request);
   }
 
   //user
@@ -48,8 +82,8 @@ export class ApiService {
     return this.http.put<User[]>(this.baseurl + `/User/${id}`, user, this.headerCustom);
   }
 
-  makeUserInactive(id: string): Observable<any>{
-    return this.http.patch<User[]>(this.baseurl + `/User/${id}`, this.headerCustom);
+  makeUserInactive(id: string, status: string): Observable<void>{
+    return this.http.put<void>(`${this.baseurl}/User/status/`+id+'?status='+status,this.headerCustom);
   }
 
   searchUser(keyword: string, status: string, pageNumber: number, pageSize: number) {
@@ -64,8 +98,43 @@ export class ApiService {
   
     return this.http.get<User[]>(`${this.baseurl}/User/search`, { params});
   }
-
+  
+  uploadAvatar(name:string,file: File,folder:string): Observable<HttpEvent<any>>{
+    const formData: FormData = new FormData();
+    formData.append('file', file);
+    let params = new HttpParams()
+    .set('name', name)
+    .set('folder', folder);
+    
+    return this.http.post<any>(`${this.baseurl}/Image/upload`,formData,{
+      params:params,
+      ...this.headerCustom
+    });
+  }
+  
+  updateProfile(id: string, formData: FormData): Observable<boolean> {
+    return this.http.put<boolean>(`${this.baseurl}/User/UpdateProfile/${id}`, formData, this.headerCustom);
+  }
+  changePassword(id: string, changePassword: ChangePassword): Observable<boolean> {
+    const mappedChangePassword = {
+      currentPassword: changePassword.currentPassword,
+      newPassword: changePassword.newPassword,
+      confirmNewPassword: changePassword.confirmNewPassword, 
+    };
+  
+    return this.http.put<boolean>(
+      `${this.baseurl}/User/ChangePassword/${id}`,
+      mappedChangePassword,
+      this.headerCustom
+    );
+  }
+  
   //Product
+
+  getTop3BestSeller(): Observable<Product[]> {
+    return this.http.get<Product[]>(this.baseurl + '/Product/best-seller',this.headerCustom);
+  }
+
   getProducts(search: string, filterCategory: string, filterStatus: string, page: number, pageSize: number,
     sortColumn: string, sortDirection: string): Observable<{ list: Product[], total: number }> {
 
@@ -179,8 +248,34 @@ getAllCategoryNames(): Observable<string[]> {
   );
 }
   //feedback
+  getContacts(search: string,filterStatus: string, page: number, pageSize: number,
+    sortColumn: string, sortDirection: string): Observable<{ list: Contact[], total: number }> {
+
+    let params = new HttpParams()
+      .set('page', page.toString())
+      .set('pageSize', pageSize.toString())
+      .set('sortColumn', sortColumn)
+      .set('sortDirection', sortDirection);
+
+    if (search) {
+      params = params.set('search', search);
+    }
+    if (filterStatus) {
+      params = params.set('filterStatus', filterStatus);
+    }
+
+    return this.http.get<{ list: Contact[], total: number }>(this.baseurl + '/Contact', {
+      ...this.headerCustom,
+      params: params
+    });
+  }
+
   getAllContacts(): Observable<Contact[]> {
-    return this.http.get<Contact[]>(this.baseurl + '/Contact',this.headerCustom);
+    return this.http.get<Contact[]>(this.baseurl + '/Contact/all',this.headerCustom);
+  }
+
+  getListContactsByUserId(id: string): Observable<Contact[]> {
+    return this.http.get<Contact[]>(this.baseurl + '/Contact/customer/'+id,this.headerCustom);
   }
 
   getContactById(id: string): Observable<Contact> {
@@ -191,12 +286,15 @@ getAllCategoryNames(): Observable<string[]> {
     return this.http.post<boolean>(`${this.baseurl}/Contact`,createContact,this.headerCustom);
   }
 
-  putContact(id: string,updateContactResponse: UpdateContactResponse): Observable<boolean>{
-    return this.http.post<boolean>(`${this.baseurl}/Contact/`+id,updateContactResponse,this.headerCustom);
+  responseContact(id: string,updateContactResponse: UpdateContactResponse): Observable<boolean>{
+    return this.http.put<boolean>(`${this.baseurl}/Contact/`+id,updateContactResponse,this.headerCustom);
+  }
+
+  changeStatusContact(id:string, status:string) :Observable<boolean>{
+    return this.http.put<boolean>(`${this.baseurl}/Contact/${id}/update-status?status=${status}`,this.headerCustom);
   }
 
   //problemType
-  //feedback
   getAllProblemTypes(): Observable<Contact[]> {
     return this.http.get<Contact[]>(this.baseurl + '/ProblemType',this.headerCustom);
   }
@@ -210,7 +308,7 @@ getAllCategoryNames(): Observable<string[]> {
   }
 
   putProblemType(id: string,problemType: ProblemType): Observable<boolean>{
-    return this.http.post<boolean>(`${this.baseurl}/ProblemType/`+id,problemType,this.headerCustom);
+    return this.http.put<boolean>(`${this.baseurl}/ProblemType/`+id,problemType,this.headerCustom);
   }
  // Order Management
  getOrders(search: string, status: string, sortColumn: string, sortDirection: string, pageNumber: number, pageSize: number): Observable<any> {
@@ -286,4 +384,60 @@ getProductById(productId: string): Observable<Product> {
 getRelatedProducts(productId: string): Observable<Product[]> {
   return this.http.get<Product[]>(`${this.baseurl}/UserProductDetail/related/${productId}`);
 }
+
+  //order
+  getAllOrdersByUserId(id:string): Observable<OrderDTO[]> {
+    return this.http.get<OrderDTO[]>(this.baseurl + '/Order/customer/'+id,this.headerCustom);
+  }
+
+  getOrderDetailsByOrderId(id:string): Observable<UserOrderDetails[]>{
+    return this.http.get<UserOrderDetails[]>(this.baseurl + '/OrderDetail/'+id)
+  }
+  //category
+  
+  getCategoryById(id: any): Observable<any>{
+    return this.http.get<any>(this.baseurl + `/Category/${id}`, this.headerCustom);
+  }
+
+  getCategoryCount(): Observable<any>{
+    return this.http.get<any>(this.baseurl + '/Category/count', this.headerCustom);
+  }
+
+  addCategory(category: Category): Observable<any>{
+    return this.http.post<Category[]>(this.baseurl + `/Category`, category, this.headerCustom);
+  }
+
+  updateCategory(id: string, category: Category): Observable<any>{
+    return this.http.put<Category[]>(this.baseurl + `/Category/update/${id}`, category, this.headerCustom);
+  }
+
+  changeStatusCategory(id:string, status:number):Observable<boolean>{
+    return this.http.put<boolean>(`${this.baseurl}/Category/`+id+'?status='+status,this.headerCustom);
+  }
+  searchCategory(keyword: string, status: string, pageNumber: number, pageSize: number) {
+    let params = new HttpParams()
+      .set('pageNumber', pageNumber.toString())
+      .set('pageSize', pageSize.toString())
+      .set('status', status);
+  
+    if (keyword) {
+      params = params.set('keyword', keyword);
+    }
+  
+    return this.http.get<any>('https://localhost:44344/api/Category/search', { params });
+  }
+  
+  
+  checkCategoryNameExist(categoryName: string): Observable<boolean> {
+    return this.http.get<boolean>(`${this.baseurl}/Category/checkName?categoryName=${categoryName}`, this.headerCustom);
+  }
+
+  postCategory(createCategory: CreateCategory): Observable<boolean>{
+    return this.http.post<boolean>(`${this.baseurl}/Category`,createCategory,this.headerCustom);
+  }
+
+  putCategory(id:string, updateCategory:Category):Observable<boolean>{
+    return this.http.put<boolean>(`${this.baseurl}/Category/update/`+id,updateCategory,this.headerCustom);
+  }
+
 }

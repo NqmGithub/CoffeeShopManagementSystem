@@ -15,6 +15,8 @@ namespace CoffeeShopManagement.Business.ServiceContracts
         Task<User> Get(Guid id);
         Task Add(User user);
         Task Update(User user);
+        Task<bool> ChangePassword(User user);
+        Task<bool> UpdateProfile(User user);
         Task Delete(Guid id);
         Task<int> GetUserCount();
         Task<IEnumerable<User>> SearchUser(string keyword, string status, int pageNumber, int pageSize);

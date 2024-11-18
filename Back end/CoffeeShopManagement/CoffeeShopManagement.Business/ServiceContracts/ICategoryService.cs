@@ -11,14 +11,16 @@ namespace CoffeeShopManagement.Business.ServiceContracts
     public interface ICategoryService
     {
 
-        Task<IEnumerable<Category>>GetListCategory();
-        Task<Category> GetCategory(Guid id);
+        Task<IEnumerable<CategoryDTO>>GetListCategory();
+        Task<CategoryDTO> GetCategory(Guid id);
         Task<bool> AddCategory(ManageCategoryDTO categoryAddDTO);
         Task<bool> UpdateCategory(Guid id, ManageCategoryDTO categoryUpdateDTO);
         Task DeleteCategory(Guid id);
-
-
+        Task<bool> ChangeStatusCategoryById(Guid id, int choice);
+        Task<int> GetCategoryCount();
         Task<IEnumerable<Category>> GetAllCategory();
-
+        Task<SearchCategoryResult> SearchCategory(string keyword, string status, int pageNumber, int pageSize);
+        Task<int> CountSearchCategory(string keyword, string status);
+        Task<bool> CheckCategoryNameExist(string categoryName);
     }
 }

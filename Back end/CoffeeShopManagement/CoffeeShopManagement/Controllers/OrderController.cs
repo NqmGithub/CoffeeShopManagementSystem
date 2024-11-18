@@ -2,10 +2,11 @@
 using CoffeeShopManagement.Business.ServiceContracts;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Http;
+
 
 namespace CoffeeShopManagement.WebAPI.Controllers
 {
-    //[Authorize(Roles = "Admin")]
     [Route("api/[controller]")]
     [ApiController]
     public class OrderController : ControllerBase
@@ -61,5 +62,11 @@ namespace CoffeeShopManagement.WebAPI.Controllers
             return Ok(new { Message = "Status updated successfully", NewStatus = result.NewStatus });
         }
        
+        [HttpGet("customer/{id}")]
+        public async Task<IActionResult> GetListContactByUserId(Guid id)
+        {
+            var orders = await _orderService.GetOrdersByUserId(id);
+            return Ok(orders);
+        }
     }
 }

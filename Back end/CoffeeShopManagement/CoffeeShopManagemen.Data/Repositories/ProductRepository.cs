@@ -32,7 +32,8 @@ namespace CoffeeShopManagement.Data.Repositories
         {
             var query = _context.Products
                                 .Include(p => p.Categoty)
-                                .Where(p => p.Status !=0)
+                                .Where(p => p.Status==1)
+                                .Where(p => p.Categoty.Status == 1)
                                 .AsQueryable();
 
             if (!string.IsNullOrEmpty(search))
@@ -79,6 +80,8 @@ namespace CoffeeShopManagement.Data.Repositories
         {
             return await _context.Products
                 .Include(p => p.Categoty)
+                .Where(p => p.Categoty.Status == 1)
+                .Where(p => p.Status == 1)
                 .OrderByDescending(p => p.OrderDetails.Sum(od => od.Quantity))
                 .Take(top)
                 .ToListAsync();

@@ -30,12 +30,22 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 export class UserDialogComponent {
 
   header: string = "Add user"
-  imageUrl: any;
+  imageUrl: any = null;
   msg: string = '';
   isLoading = false;
   isUpdate = false;
   addUserForm: FormGroup;
-  currentUser!: User;
+  currentUser: User = {
+    address: '',
+    userName: '',
+    avatar: '',
+    password: '',
+    phoneNumber: '',
+    email: '',
+    id: '',
+    role: 1,
+    status: 1
+  };
   status: string = 'active';
   role: string = 'user';
   fileToUpload: File| null = null;
@@ -52,7 +62,7 @@ export class UserDialogComponent {
     }, { validators: passwordMatchValidator });
 
     if (data) {
-      this.currentUser = data;
+      this.currentUser = {...data};
       this.isUpdate = true;
       this.header = "Update user";
       const user = { ...data };
@@ -62,7 +72,7 @@ export class UserDialogComponent {
         address: user.address,
         phoneNumber: user.phoneNumber,
         rePassword: '',
-        password: user.password
+        password: ''
       });
     }
   }
@@ -76,10 +86,7 @@ export class UserDialogComponent {
   }
 
   onUpdate(){
-
-  }
-
-  onAdd(){
+    const oldAvatar = this.currentUser.avatar;
     this.isLoading = true;
     const email = this.addUserForm.value.email;
     const userName = this.addUserForm.value.userName;
@@ -87,17 +94,51 @@ export class UserDialogComponent {
     const phoneNumber = this.addUserForm.value.phoneNumber
     const password = this.addUserForm.value.password;
     const user: User = {
-      id: "",
+      id: this.currentUser.id,
       address: address,
       email: email,
       phoneNumber: phoneNumber,
       userName: userName,
       password: password,
-      avatar: this.imageUrl,
+      avatar: this.addUserForm.value.email + '.' + this.fileExtension,
       status: this.status == 'active' ? 1 : 2,
       role: 1
     }
-    this.dialogRef.close(user); 
+    this.dialogRef.close(user);
+    if(this.fileToUpload == null){
+      this.updateNameImage(oldAvatar, user.avatar);
+    }else{
+      this.uploadImage();
+    }
+  }
+
+  onAdd(){
+    if(this.isUpdate){
+      return;
+    }
+    this.isLoading = true;
+    const email = this.addUserForm.value.email;
+    const userName = this.addUserForm.value.userName;
+    const address = this.addUserForm.value.address;
+    const phoneNumber = this.addUserForm.value.phoneNumber
+    const password = this.addUserForm.value.password;
+    const userAdd: Partial<User> = {
+      address: address,
+      email: email,
+      phoneNumber: phoneNumber,
+      userName: userName,
+      password: password,
+      avatar: this.addUserForm.value.email + '.' + this.fileExtension,
+      status: this.status === 'active' ? 1 : 2,
+      role: this.role === 'user' ? 1 : 2
+    }
+    this.dialogRef.close(userAdd); 
+
+    if (!this.fileToUpload) {
+      return;
+    }else{
+      this.uploadImage();
+    }
   }
 
   handleFileInput(event: Event){
@@ -112,7 +153,7 @@ export class UserDialogComponent {
         const fileName = this.fileToUpload.name;
         const fileExtension = fileName.split('.').pop();
         this.fileExtension = fileExtension!;
-        this.currentUser.avatar = this.currentUser.userName+'.'+this.fileExtension;
+        this.currentUser.avatar = this.addUserForm.value.email + '.' + this.fileExtension;
 
         let reader = new FileReader();
         reader.onload = (event: any) => {
@@ -126,6 +167,23 @@ export class UserDialogComponent {
       console.error("File list is empty or input.files is null.");
     }
   }
+
+  uploadImage(){
+    this.api.uploadImage(this.currentUser.avatar,this.fileToUpload!,'Avatars').subscribe({
+      next: (event) => {
+    },
+    error: (err) => console.log(err)
+    });
+  }
+
+  updateNameImage(oldName:string,newName:string){
+    this.api.updateNameImage(oldName,newName).subscribe({
+      next: (event) => {
+    },
+      error: (err) => console.log(err)
+    });
+  }
+
 }
 
 function passwordMatchValidator(control: AbstractControl): ValidationErrors | null {

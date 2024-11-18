@@ -24,7 +24,8 @@ export class LoginComponent {
   msg: string = ''
   isLoading = false;
   auth: AuthService = inject(AuthService);
-  router: Router = inject(Router)
+  router: Router = inject(Router);
+  
   login(){
     this.isLoading = true;
     const email = this.loginForm.value.email ?? '';
@@ -35,6 +36,7 @@ export class LoginComponent {
       },    
       error:(e) => {
         this.msg = e;
+        this.isLoading = false
       }
     }); 
     

@@ -141,7 +141,7 @@ export class ProductDialogComponent implements OnInit {
       }
     const oldThumbnail = this.createProduct.thumbnail;
     const product: Product = {
-      id: this.id,
+    id: this.id,
     productName: this.createProduct.productName,
     categoryName: this.createProduct.categoryName,
     price: this.createProduct.price,
@@ -175,21 +175,20 @@ export class ProductDialogComponent implements OnInit {
   }
 
   uploadImage(){
-
-this.apiService.uploadImage(this.createProduct.thumbnail,this.fileToUpload!,'Images').subscribe({
-  next: (event) => {
-},
-error: (err: HttpErrorResponse) => console.log(err)
-});
-  }
-  updateNameImage(oldName:string,newName:string){
-
-    this.apiService.updateNameImage(oldName,newName).subscribe({
+    this.apiService.uploadImage(this.createProduct.thumbnail,this.fileToUpload!,'Images').subscribe({
       next: (event) => {
     },
     error: (err: HttpErrorResponse) => console.log(err)
     });
-      }
+  }
+
+  updateNameImage(oldName:string,newName:string){
+    this.apiService.updateNameImage(oldName,newName).subscribe({
+      next: (event) => {
+    },
+      error: (err: HttpErrorResponse) => console.log(err)
+    });
+  }
 
   onCancel() {
     this.dialogRef.close();

@@ -8,6 +8,7 @@ using CoffeeShopManagement.Business.ServiceContracts;
 using CoffeeShopManagement.Data.RepositoryContracts;
 using CoffeeShopManagement.Models.Models;
 using Microsoft.EntityFrameworkCore;
+using CoffeeShopManagement.Data.UnitOfWork;
 
 namespace CoffeeShopManagement.Business.Services
 {
@@ -42,7 +43,7 @@ namespace CoffeeShopManagement.Business.Services
                 TotalPrice = order.OrderDetails.Sum(od => od.OrderPrice * od.Quantity), // Tổng giá trị đơn hàng
                 TotalQuantity = order.OrderDetails.Sum(od => od.Quantity), // Tổng số lượng sản phẩm
                                                                            // Thêm chi tiết sản phẩm vào DTO
-                OrderDetails = order.OrderDetails.Select(detail => new OrderDetailDTO
+                OrderDetails = order.OrderDetails.Select(detail => new AdminOrderDetailDTO
                 {
                     Id = detail.Id,
                     ProductId = detail.ProductId,
@@ -69,7 +70,7 @@ namespace CoffeeShopManagement.Business.Services
                 OrderDate = order.OrderDate,
                 TotalPrice = order.OrderDetails.Sum(od => od.OrderPrice * od.Quantity),
                 TotalQuantity = order.OrderDetails.Sum(od => od.Quantity),
-                OrderDetails = order.OrderDetails.Select(d => new OrderDetailDTO
+                OrderDetails = order.OrderDetails.Select(d => new AdminOrderDetailDTO
                 {
                     Id = d.Id,
                     ProductId = d.ProductId,
@@ -106,5 +107,28 @@ namespace CoffeeShopManagement.Business.Services
             await _orderRepository.UpdateOrder(order);
             return (true, "Status updated successfully", order.Status);
         } 
+        private readonly IUnitOfWork _unitOfWork;
+
+        public OrderService(IUnitOfWork unitOfWork)
+        {
+            _unitOfWork = unitOfWork;
+        }
+        public async Task<IEnumerable<UserOrderDTO>> GetOrdersByUserId(Guid id)
+        {
+            var orders = _unitOfWork.OrderRepository.GetQuery()
+                .Where(x => x.UserId == id)
+                .OrderByDescending(x => x.OrderDate)
+                .ToList();
+
+            return orders.Select(x =>
+            {
+                var totalPrice = _unitOfWork.OrderDetailRepository.GetQuery()
+                    .Where(d => d.OrderId == x.Id)
+                    .Sum(d => d.OrderPrice * d.Quantity);
+
+                return x.ToOrderDTO(totalPrice);
+            });
+        }
+
     }
 }

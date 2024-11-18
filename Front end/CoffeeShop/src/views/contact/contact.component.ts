@@ -81,7 +81,7 @@ import {
 	Undo,
 	type EditorConfig
 } from 'ckeditor5';
-import { ProblemType } from '../../Interfaces/category';
+import { ProblemType } from '../../Interfaces/problemType';
 import { ApiService } from '../../Api/api.service';
 import { MatSelectModule } from '@angular/material/select';
 import { CreateContact } from '../../Interfaces/createContact';
@@ -114,7 +114,7 @@ export class ContactComponent {
 		email: new FormControl({ value: '', disabled: true },),
 		problemType: new FormControl('',[Validators.required]),
 		subject: new FormControl('',[Validators.required, Validators.maxLength(255)]),
-		content: new FormControl('',[Validators.required,Validators.maxLength(1000)])
+		content: new FormControl(' ',[Validators.required,Validators.maxLength(1000)])
 	  })
 	listProblemType: ProblemType[] = [];
 	public Editor = ClassicEditor;
@@ -391,9 +391,15 @@ export class ContactComponent {
 			contentToolbar: ['tableColumn', 'tableRow', 'mergeTableCells', 'tableProperties', 'tableCellProperties']
 		}
 	}; // CKEditor needs the DOM tree before calculating the configuration.
-	constructor( private apiService: ApiService) {
+	constructor( private apiService: ApiService, private auth: AuthService) {
 		this.loadProblemType();
-		this.applyForm.controls['email'].setValue( localStorage.getItem('email'));
+		this.auth.getCurrentUser().subscribe(response =>{
+			if(response){
+				console.log(response)
+				this.applyForm.controls['email'].setValue(response?.email);
+			}			
+		})
+		
 	}
 
 	loadProblemType() {

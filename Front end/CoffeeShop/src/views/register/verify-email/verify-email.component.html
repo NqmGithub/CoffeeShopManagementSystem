@@ -1,0 +1,44 @@
+
+<mat-card appearance="raised" style="margin-left: 10%; margin-top: 10%; margin-right: 10%;padding: 30px; border: solid burlywood;">
+    <img src="/coffeshop.png" style="width: 100px; border: solid burlywood; border-radius: 50%; margin-left: auto; margin-right: auto; margin-top: -50px;" />
+    <h1 style="font-weight: 500;">Verify email</h1>
+    <form  [formGroup]="loginForm" (submit)="validateOtp()">
+        @if((loginForm.get('email')?.dirty || loginForm.get('email')?.touched) && loginForm.get('email')?.invalid){
+            @if(loginForm.get('email')?.errors?.['required']){
+                <small>Email is required.</small>
+            }
+            @if(loginForm.get('email')?.errors?.['email']){
+                <small>Email is invalid.</small>
+            }
+        }
+
+        <mat-form-field style="width: 100%;">
+            <mat-label>OTP</mat-label>
+            <input matInput formControlName="otp">
+        </mat-form-field>
+
+        @if(msg != ''){
+            <h4>{{msg}}</h4>
+        }
+        @if(isLoadingCheck){
+            <mat-spinner style="margin-left: auto; margin-right: auto;"></mat-spinner>
+        }
+        @else {
+            <button style="background-color: burlywood;width: 100%; margin-top: 10px; font-size: 20px" mat-flat-button type="submit">
+                Check otp 
+            </button>
+        }
+    </form>
+    @if(isLoadingSend){
+        <mat-spinner style="margin-left: auto; margin-right: auto;"></mat-spinner>
+    }
+    @else {
+        <button (click)="sendOtp()" style="background-color: burlywood;width: 100%; margin-top: 10px; font-size: 20px" mat-flat-button >
+            Send otp 
+        </button>
+    }
+    <a style="margin-left: 5px; margin-top: 10px;" [routerLink]="'/register'">Back to signup</a>  
+</mat-card>
+<button (click)="toHome()" style="margin-top:10px; margin-left: 10%; background-color: burlywood; color: white; font-size: 20px;" mat-raised-button>
+    Home
+</button>

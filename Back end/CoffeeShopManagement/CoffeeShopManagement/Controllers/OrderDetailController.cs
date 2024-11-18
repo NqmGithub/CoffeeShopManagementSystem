@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
+
 
 namespace CoffeeShopManagement.WebAPI.Controllers
 {
@@ -35,7 +37,7 @@ namespace CoffeeShopManagement.WebAPI.Controllers
         {
             var cartItems = _cartService.GetCartItems();
 
-            var orderDetails = cartItems.Select(ci => new OrderDetailDTO
+            var orderDetails = cartItems.Select(ci => new AdminOrderDetailDTO
             {
                 ProductId = ci.ProductId,
                 ProductName = ci.ProductName,
@@ -52,6 +54,16 @@ namespace CoffeeShopManagement.WebAPI.Controllers
             }
 
             return StatusCode(500, "Failed to update order details");
+        }
+        public OrderDetailController(IOrderDetailService orderDetailService)
+        {
+            _orderDetailService = orderDetailService;
+        }
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetListContactByUserId(Guid id)
+        {
+            var list = await _orderDetailService.GetListOrderDetailsByOrderId(id);
+            return Ok(list);
         }
     }
 }

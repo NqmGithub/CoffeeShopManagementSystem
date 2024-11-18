@@ -58,7 +58,12 @@ namespace CoffeeShopManagement.Data.Repositories
             _context.Users.Update(user);
             await _context.SaveChangesAsync();
         }
-
+        public async Task<bool> UpdateProfile(User user)
+        {
+            _context.Users.Update(user);
+            var resuilt = await _context.SaveChangesAsync();
+            return resuilt > 0;
+        }
         public async Task<int> GetUserCount()
         {
             return await _context.Users.CountAsync();

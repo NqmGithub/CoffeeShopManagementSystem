@@ -1,0 +1,60 @@
+.upload-label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+  }
+  
+  .avatar-preview {
+    display: block;
+    margin-top: 10px;
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 50%;
+  }
+  mat-dialog-content {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    align-items: center; /* Center all content horizontally */
+  }
+  
+  mat-form-field {
+    width: 100%; /* Ensure form fields take full width */
+  }
+  
+  .upload-label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+    text-align: center; /* Center the label */
+  }
+  
+  input[type="file"] {
+    display: block;
+    margin-bottom: 1rem;
+    text-align: center; /* Center the file input */
+  }
+  
+  .avatar-preview {
+    max-width: 100px; /* Set a max width for the image preview */
+    max-height: 100px; /* Set a max height for the image preview */
+    margin-top: 0.5rem;
+  }
+  
+  .file-upload-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Center the file input and image preview */
+    margin-bottom: 1rem;
+  }
+  .error-message {
+    color: red;
+    font-size: 12px;
+    margin-top: 5px;
+  }
+  
+  .invalid {
+    border-color: red;
+  }
+  

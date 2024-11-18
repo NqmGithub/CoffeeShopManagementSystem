@@ -18,9 +18,10 @@ namespace CoffeeShopManagement.Data.UnitOfWork
         private readonly IUserRepository _userRepository;
         private readonly IContactRepository _contactRepository;
         private readonly IProblemTypeRepository _problemTypeRepository;
+        private readonly IOtpRepository _otpRepository;
 
         private readonly CoffeeShopDbContext _db;
-        public UnitOfWork(CoffeeShopDbContext db, ICategoryRepository categoryRepository, IOrderRepository orderRepository, IOrderDetailRepository orderDetailRepository, IProductRepository productRepository, IUserRepository userRepository, IContactRepository contactRepository, IProblemTypeRepository problemTypeRepository)
+        public UnitOfWork(CoffeeShopDbContext db, ICategoryRepository categoryRepository, IOrderRepository orderRepository, IOrderDetailRepository orderDetailRepository, IProductRepository productRepository, IUserRepository userRepository, IContactRepository contactRepository, IProblemTypeRepository problemTypeRepository, IOtpRepository otpRepository)
         {
             _db = db;
             _categoryRepository = categoryRepository;
@@ -30,6 +31,8 @@ namespace CoffeeShopManagement.Data.UnitOfWork
             _userRepository = userRepository;
             _contactRepository = contactRepository;
             _problemTypeRepository = problemTypeRepository;
+            _otpRepository = otpRepository;
+
         }
         public CoffeeShopDbContext Context => _db;
 
@@ -47,6 +50,7 @@ namespace CoffeeShopManagement.Data.UnitOfWork
 
         public IProblemTypeRepository ProblemTypeRepository => _problemTypeRepository;
 
+        public IOtpRepository OtpRepository => _otpRepository;
         public int SaveChanges()
         {
             return _db.SaveChanges();

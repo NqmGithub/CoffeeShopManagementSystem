@@ -12,6 +12,7 @@ import { ApiService } from '../../../Api/api.service';
 import { User } from '../../../Interfaces/user';
 import { MatDialog } from '@angular/material/dialog';
 import { UserDialogComponent } from './user-dialog/user-dialog.component';
+import { ChangeStatusDialogComponent } from './change-status-dialog/change-status-dialog.component';
 
 @Component({
   selector: 'app-user-manager',
@@ -37,6 +38,7 @@ export class UserManagerComponent implements OnInit{
   userData: User[] = [];
   userCount!: number;
   pageNumber: number = 0;
+  msg: string = '';
   
   ngOnInit(): void {
     this.api.getUserCount().subscribe(data => this.userCount = data);
@@ -75,26 +77,60 @@ export class UserManagerComponent implements OnInit{
   }
 
   addUser(){
+    this.msg = '';
     const dialogRef = this.dialog.open(UserDialogComponent);
+
+    dialogRef.afterClosed().subscribe((result: User) => {
+      if(result){
+        this.api.addUser(result).subscribe({
+          error: (e) => {
+            this.msg = e.message || 'An error occurred while adding the user.';
+            console.error('Error:', e);
+          },
+          complete: () => this.loadUser()
+        })
+      }
+    })
   }
 
-  getImage(name: string){
-
-  }
-
-  viewDetail(user: User){
-
+  getImage(path: string){
+    return `https://localhost:44344/wwwroot/Avatars/${path}`;
   }
 
   updateUser(user: User){
+    this.msg = '';
     const dialogRef = this.dialog.open(UserDialogComponent, {
       data: user
     });
+
+    dialogRef.afterClosed().subscribe((result: any) => {
+      if(result){
+        this.api.updateUser(result.id, result).subscribe({
+          error: (e) => {
+            this.msg = e.message || 'An error occurred while adding the user.';
+            console.error('Error:', e);
+          },
+          complete: () => this.loadUser()
+        })
+      }
+    })
   }
 
   changeStatus(user: User){
-    this.api.makeUserInactive(user.id);
-    this.loadUser();
+    const dialogRef = this.dialog.open(ChangeStatusDialogComponent, {
+      data: user
+    });
+
+    dialogRef.afterClosed().subscribe((result: string) => {
+      if (result) {
+        this.api.makeUserInactive(user.id, result).subscribe(
+          {
+            error: (e) => console.error("error", e),
+            complete: () => this.loadUser()
+          }
+        )
+      }
+    });
   }
 
   onPageChange(e: PageEvent){

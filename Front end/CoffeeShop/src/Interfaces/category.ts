@@ -1,5 +1,5 @@
-export interface ProblemType {
+export interface Category {
     id : string;
-    problemName: string;
-    status: string;
+    categoryName: string;
+    status: number;
 }

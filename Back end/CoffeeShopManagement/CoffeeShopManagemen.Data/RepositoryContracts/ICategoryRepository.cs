@@ -15,6 +15,9 @@ namespace CoffeeShopManagement.Data.RepositoryContracts
         Task<Category> GetCategoryById(Guid id);       
         Task UpdateCategory(Category category);
         Task<IEnumerable<Category>> GetAllAsync();
-
+        Task<int> GetCategoryCount();
+        Task<IEnumerable<Category>> SearchCategory(string keyword, string status, int pageNumber, int pageSize);
+        IQueryable<Category> GetAll();
+        Task<int> GetCategoryCount(string keyword, string status);
     }
 }

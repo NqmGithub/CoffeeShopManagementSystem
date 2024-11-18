@@ -41,7 +41,7 @@
     <!-- Products Grid Section -->
     <div class="product-grid">
       <div *ngFor="let product of products" class="product-card" (click)="viewProductDetail(product.id)">
-        <img [src]="product.thumbnail" alt="Product Image" class="product-image"/>
+        <img [src]="getImage(product.thumbnail)" alt="Product Image" class="product-image"/>
         <div class="product-info">
           <h3>{{ product.productName }}</h3>
           <p>{{ product.categoryName }}</p>

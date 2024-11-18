@@ -21,5 +21,6 @@ namespace CoffeeShopManagement.Business.ServiceContracts
         Task<OrderDTO?> GetOrderById(Guid id);
         Task<(bool IsSuccess, string Message, int NewStatus)> ToggleOrderStatus(Guid id);
        
+        Task<IEnumerable<UserOrderDTO>> GetOrdersByUserId(Guid id);
     }
 }
