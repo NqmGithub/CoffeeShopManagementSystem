@@ -16,63 +16,68 @@ namespace CoffeeShopManagement.Data.Repositories
         {
             _context = db;
         }
-        public async Task<IEnumerable<Order>> GetOrders(
-     string? search,
-     int? status,
-     string? sortColumn,
-     bool isDescending,
-     int pageNumber,
-     int pageSize)
+        public async Task<(List<Order>, int)> GetOrders(
+            string search,
+            int? status,
+            string sortColumn,
+            bool isDescending,
+            int pageNumber,
+            int pageSize)
         {
-            IQueryable<Order> query = _context.Orders.Include(o => o.User).Include(o => o.OrderDetails);
+            var query = _context.Orders
+                .Include(o => o.OrderDetails) // Nạp các OrderDetails
+                .Include(o => o.OrderDetails).ThenInclude(od => od.Product) // Nạp thông tin sản phẩm
+                .Include(o => o.User) // Nạp thông tin User
+                .AsQueryable();
 
+            // Lọc theo search
             if (!string.IsNullOrEmpty(search))
             {
                 query = query.Where(o => o.User.UserName.Contains(search));
             }
 
+            // Lọc theo status
             if (status.HasValue)
             {
                 query = query.Where(o => o.Status == status.Value);
             }
 
-            switch (sortColumn?.ToLower())
+            // Thực hiện sắp xếp dựa trên cột được chọn
+            query = sortColumn switch
             {
-                case "totalprice":
-                    query = isDescending ? query.OrderByDescending(o => o.OrderDetails.Sum(od => od.OrderPrice * od.Quantity))
-                                          : query.OrderBy(o => o.OrderDetails.Sum(od => od.OrderPrice * od.Quantity));
-                    break;
-                case "totalquantity":
-                    query = isDescending ? query.OrderByDescending(o => o.OrderDetails.Sum(od => od.Quantity))
-                                          : query.OrderBy(o => o.OrderDetails.Sum(od => od.Quantity));
-                    break;
-                case "status":
-                    query = isDescending ? query.OrderByDescending(o => o.Status) : query.OrderBy(o => o.Status);
-                    break;
-                default:
-                    query = isDescending ? query.OrderByDescending(o => o.OrderDate) : query.OrderBy(o => o.OrderDate);
-                    break;
-            }
+                "OrderDate" => isDescending
+                    ? query.OrderByDescending(o => o.OrderDate)
+                    : query.OrderBy(o => o.OrderDate),
+                "TotalPrice" => isDescending
+                    ? query.OrderByDescending(o => o.OrderDetails.Sum(od => od.OrderPrice * od.Quantity))
+                    : query.OrderBy(o => o.OrderDetails.Sum(od => od.OrderPrice * od.Quantity)),
+                "TotalQuantity" => isDescending
+                    ? query.OrderByDescending(o => o.OrderDetails.Sum(od => od.Quantity))
+                    : query.OrderBy(o => o.OrderDetails.Sum(od => od.Quantity)),
+                "Status" => isDescending
+                    ? query.OrderByDescending(o => o.Status)
+                    : query.OrderBy(o => o.Status),
+                "OrderId" => isDescending
+                    ? query.OrderByDescending(o => o.Id)
+                    : query.OrderBy(o => o.Id),
+                "UserName" => isDescending
+                    ? query.OrderByDescending(o => o.User.UserName)
+                    : query.OrderBy(o => o.User.UserName),
+                _ => query.OrderByDescending(o => o.OrderDate) // Default to OrderDate if no match
+            };
 
-            return await query.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync();
+            // Tổng số lượng đơn hàng
+            var totalCount = await query.CountAsync();
+
+            // Phân trang và lấy dữ liệu
+            var paginatedOrders = await query
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+
+            return (paginatedOrders, totalCount);
         }
 
-        public async Task<int> GetTotalRecords(string? search, int? status)
-        {
-            var query = _context.Orders.AsQueryable();
-
-            if (!string.IsNullOrEmpty(search))
-            {
-                query = query.Where(o => o.User.UserName.Contains(search));
-            }
-
-            if (status.HasValue)
-            {
-                query = query.Where(o => o.Status == status.Value);
-            }
-
-            return await query.CountAsync();
-        }
 
         public async Task<Order?> GetOrderById(Guid id)
         {
@@ -86,5 +91,6 @@ namespace CoffeeShopManagement.Data.Repositories
             _context.Orders.Update(order);
             await _context.SaveChangesAsync();
         }
+
     }
 }

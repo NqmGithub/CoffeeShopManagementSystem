@@ -1,0 +1,60 @@
+<div class="product-detail">
+    <!-- Product Info Section -->
+    <div *ngIf="product" class="product-info">
+      <div class="product-info-left">
+        <!-- Product Image -->
+        <img [src]="product.thumbnail" alt="{{ product.productName }}" class="product-thumbnail" />
+      </div>
+  
+      <div class="product-info-right">
+        <!-- Product Category -->
+        <p class="product-category">{{ product.categoryName }}</p>
+  
+        <!-- Product Name -->
+        <h2 class="product-name">{{ product.productName }}</h2>
+  
+        <!-- Product Price -->
+        <p class="product-price">{{ product.price | currency }}</p>
+  
+        <!-- Quantity Selector -->
+        <div class="quantity-selector">
+          <label for="quantity">Quantity:</label>
+          <input type="number" id="quantity" [(ngModel)]="quantity" min="1" step="1" />
+          <button (click)="decreaseQuantity()">-</button>
+          <button (click)="increaseQuantity()">+</button>
+        </div>
+  
+        <!-- Add to Cart Button -->
+        <button class="add-to-cart-btn" (click)="addToCart(product)">Add to Cart</button>
+      </div>
+    </div>
+  
+    <!-- Product Description Section -->
+    <div class="product-description">
+      <h3>Description</h3>
+      <p>{{ product?.description }}</p>
+    </div>
+  </div>
+  
+  <!-- Related Products Section -->
+  <div *ngIf="relatedProducts && relatedProducts.length > 0" class="related-products">
+    <h3 class="related-products-title">Recommended for You</h3>
+    <div class="related-products-list">
+      <div *ngFor="let relatedProduct of relatedProducts" class="related-product-card">
+        <img [src]="relatedProduct.thumbnail" alt="{{ relatedProduct.productName }}" class="related-product-thumbnail" />
+        <div class="related-product-info">
+          <h4 class="related-product-name">{{ relatedProduct.productName }}</h4>
+          <p class="related-product-price">{{ relatedProduct.price | currency }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- No Related Products -->
+  <ng-template #noRelatedProducts>
+    <div class="no-related-products">
+      <p>No related products found. Perhaps try one of our specials!</p>
+    </div>
+  </ng-template>
+  
+  

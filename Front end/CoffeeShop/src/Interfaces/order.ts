@@ -1,6 +1,13 @@
 export interface Order {
-    id: string,
-    userId: string,
-    status: number,
-    orderDate: string
+    id: string;
+    orderNumber: string;
+    customerName: string;
+    orderDate: string;
+    totalAmount: number;
+    status: number;
+}
+export interface OrdersResponse {
+    totalRecords: number;
+    totalPages: number;
+    data: Order[];
 }

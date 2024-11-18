@@ -32,7 +32,7 @@ namespace CoffeeShopManagement.Data.Repositories
         {
             var query = _context.Products
                                 .Include(p => p.Categoty)
-                                .Where(p => p.Status==1)
+                                .Where(p => p.Status !=0)
                                 .AsQueryable();
 
             if (!string.IsNullOrEmpty(search))

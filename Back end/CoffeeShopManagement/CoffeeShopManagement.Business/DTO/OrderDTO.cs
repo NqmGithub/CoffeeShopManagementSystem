@@ -29,4 +29,14 @@ namespace CoffeeShopManagement.Business.DTO
             public decimal TotalPrice => Price * Quantity;    
 
     }
+    public class OrderCreateDto
+    {
+        public string UserName { get; set; }
+        public decimal TotalPrice { get; set; }
+    }
+    public class OrderUpdateDto
+    {
+        public Guid Id { get; set; }
+        public int Status { get; set; }
+    }
 }

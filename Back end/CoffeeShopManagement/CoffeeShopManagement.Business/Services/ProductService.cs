@@ -183,14 +183,14 @@ namespace CoffeeShopManagement.Business.Services
             };
         }
         public async Task<IEnumerable<ProductDTO>> GetAllProductsAsync(
-           string search,
-           string category,
-           decimal? minPrice,
-           decimal? maxPrice,
-           int page,
-           int pageSize,
-           SortBy sortBy,
-           bool isDescending)
+        string search,
+        string category,
+        decimal? minPrice,
+        decimal? maxPrice,
+        int page,
+        int pageSize,
+        SortBy sortBy,
+        bool isDescending)
         {
             var products = await _unitOfWork.ProductRepository.GetAllProductsAsync(
                 search, category, minPrice, maxPrice, page, pageSize, sortBy, isDescending);
@@ -207,6 +207,7 @@ namespace CoffeeShopManagement.Business.Services
                 CategoryName = p.Categoty?.CategoryName ?? "Unknown"
             });
         }
+
         public async Task<IEnumerable<ProductDTO>> GetProductsByCategoryAsync(Guid categoryId)
         {
             var products = await _unitOfWork.ProductRepository.GetProductsByCategoryId(categoryId);

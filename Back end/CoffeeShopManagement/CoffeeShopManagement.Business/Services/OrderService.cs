@@ -7,53 +7,52 @@ using CoffeeShopManagement.Business.DTO;
 using CoffeeShopManagement.Business.ServiceContracts;
 using CoffeeShopManagement.Data.RepositoryContracts;
 using CoffeeShopManagement.Models.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace CoffeeShopManagement.Business.Services
 {
     public class OrderService : IOrderService
+
     {
         private readonly IOrderRepository _orderRepository;
-
         public OrderService(IOrderRepository orderRepository)
         {
             _orderRepository = orderRepository;
         }
 
-        public async Task<(IEnumerable<OrderDTO> Orders, int TotalRecords)> GetOrders(
-      string? search,
+        public async Task<(List<OrderDTO> Orders, int TotalCount)> GetOrdersWithCount(
+      string search,
       int? status,
-      string? sortColumn,
+      string sortColumn,
       bool isDescending,
       int pageNumber,
       int pageSize)
         {
-            var orders = await _orderRepository.GetOrders(search, status, null, false, 1, int.MaxValue);
-            var totalRecords = orders.Count();
+            // Gọi đến repository để lấy danh sách orders và tổng số lượng
+            var (orders, totalCount) = await _orderRepository.GetOrders(search, status, sortColumn, isDescending, pageNumber, pageSize);
 
-            var orderDtos = orders.Select(o => new OrderDTO
+            // Mapping thủ công từ Order Entity -> OrderDTO
+            var orderDtos = orders.Select(order => new OrderDTO
             {
-                Id = o.Id,
-                UserId = o.UserId,
-                UserName = o.User?.UserName ?? "N/A",
-                OrderDate = o.OrderDate,
-                Status = o.Status,
-                TotalPrice = o.OrderDetails.Sum(od => od.OrderPrice * od.Quantity),
-                TotalQuantity = o.OrderDetails.Sum(od => od.Quantity),
-            }).AsQueryable();
+                Id = order.Id,
+                UserId = order.UserId,
+                UserName = order.User?.UserName ?? "N/A", // Đảm bảo UserName không null
+                OrderDate = order.OrderDate,
+                Status = order.Status,
+                TotalPrice = order.OrderDetails.Sum(od => od.OrderPrice * od.Quantity), // Tổng giá trị đơn hàng
+                TotalQuantity = order.OrderDetails.Sum(od => od.Quantity), // Tổng số lượng sản phẩm
+                                                                           // Thêm chi tiết sản phẩm vào DTO
+                OrderDetails = order.OrderDetails.Select(detail => new OrderDetailDTO
+                {
+                    Id = detail.Id,
+                    ProductId = detail.ProductId,
+                    ProductName = detail.Product?.ProductName ?? "Unknown", // Đảm bảo tên sản phẩm không null
+                    Quantity = detail.Quantity,
+                    Price = detail.OrderPrice
+                }).ToList()
+            }).ToList();
 
-
-            orderDtos = sortColumn?.ToLower() switch
-            {
-                "totalprice" => isDescending ? orderDtos.OrderByDescending(o => o.TotalPrice) : orderDtos.OrderBy(o => o.TotalPrice),
-                "totalquantity" => isDescending ? orderDtos.OrderByDescending(o => o.TotalQuantity) : orderDtos.OrderBy(o => o.TotalQuantity),
-                "status" => isDescending ? orderDtos.OrderByDescending(o => o.Status) : orderDtos.OrderBy(o => o.Status),
-                _ => isDescending ? orderDtos.OrderByDescending(o => o.OrderDate) : orderDtos.OrderBy(o => o.OrderDate)
-            };
-
-
-            var paginatedOrders = orderDtos.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
-
-            return (paginatedOrders, totalRecords);
+            return (orderDtos, totalCount);
         }
 
         public async Task<OrderDTO?> GetOrderById(Guid id)
@@ -106,6 +105,6 @@ namespace CoffeeShopManagement.Business.Services
 
             await _orderRepository.UpdateOrder(order);
             return (true, "Status updated successfully", order.Status);
-        }
+        } 
     }
 }
