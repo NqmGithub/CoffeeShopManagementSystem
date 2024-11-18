@@ -70,7 +70,6 @@ export class UpdateProfileComponent implements OnInit {
       reader.readAsDataURL(this.selectedFile);
     }
   }
-  
   saveChanges(): void {
     // Input validation
     if (this.updatedProfile.userName.length < 3 || this.updatedProfile.userName.length > 20) {
@@ -95,11 +94,12 @@ export class UpdateProfileComponent implements OnInit {
       formData.append('Avatar', this.selectedFile, this.selectedFile.name);
     }
     console.log('FormData:', formData);
-
+  
     this.authService.updateProfile(this.data.id, formData).subscribe({
       next: () => {
         alert('Profile updated successfully!');
         this.dialogRef.close(this.updatedProfile);
+        window.location.reload();  // Reload the page
       },
       error: (err) => {
         console.error('Failed to update profile:', err);
