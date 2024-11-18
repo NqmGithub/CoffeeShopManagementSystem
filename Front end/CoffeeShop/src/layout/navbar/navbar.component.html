@@ -16,14 +16,22 @@
     <span class="example-spacer"></span>
     <div class="nav-section">
       @if(isLoggedIn){
-        <p style="margin: 0 10px 0 0;">gg&#64;.com</p>
-        <div mat-card-avatar  [matMenuTriggerFor]="menu" class="example-header-image" style="margin: 0 10px 0 0; cursor: pointer;"></div>
-        <mat-menu #menu="matMenu">
-          <button mat-menu-item>Profile</button>
-          <button mat-menu-item (click)="notificationNavigate()">Notification</button>
-          <button mat-menu-item (click)="notificationHistory()">History</button>
-          <button mat-menu-item>Logout</button>
-        </mat-menu>
+        <p style="margin: 0 10px 0 0;">{{currentUser?.userName}}</p>
+        <div mat-card-avatar [matMenuTriggerFor]="menu"  class="example-header-image" style="margin: 0 10px 0 0; cursor: pointer;"></div>
+          <mat-menu #menu="matMenu">
+            @if(currentUser?.role === 1){
+            <button mat-menu-item (click)="toProfile()">Profile</button>
+            <button mat-menu-item (click)="notificationNavigate()">Notification</button>
+            <button mat-menu-item (click)="notificationHistory()">History</button>
+            <button mat-menu-item (click)="logout()" >Logout</button>
+            }
+            @else{
+              <button mat-menu-item (click)="toProfile()">Profile</button>
+              <button mat-menu-item (click)="toDashBoard()" >Dashboard</button>
+              <button mat-menu-item (click)="logout()" >Logout</button>
+            }
+          </mat-menu>
+        
       }
       @else {
         <button mat-button (click)="loginNavigate()">Log in</button>
