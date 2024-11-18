@@ -3,4 +3,5 @@ export interface Order {
     userId: string,
     status: number,
     orderDate: string
+    totalPrice: number
 }

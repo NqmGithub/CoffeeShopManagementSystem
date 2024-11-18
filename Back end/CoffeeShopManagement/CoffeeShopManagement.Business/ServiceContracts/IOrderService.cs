@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CoffeeShopManagement.Business.DTO;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,5 +9,6 @@ namespace CoffeeShopManagement.Business.ServiceContracts
 {
     public interface IOrderService
     {
+        Task<IEnumerable<OrderDTO>> GetOrdersByUserId(Guid id);
     }
 }

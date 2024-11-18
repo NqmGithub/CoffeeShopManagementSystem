@@ -14,5 +14,11 @@ namespace CoffeeShopManagement.Business.ServiceContracts
         Task<bool> CreateContactAsync(CreateContactDTO createContactDTO);
 
         Task<bool> UpdateContactResponseAsync(Guid id, ContactResponseDTO contactResponseDTO);
+
+        Task<bool> ChangeStatus(Guid id, string status);
+        Task<ContactListResponse> GetContactWithCondition
+            (ContactQueryRequest contactQueryRequest);
+
+        Task<ICollection<ContactDTO>> GetListContactsByUserId(Guid id);
     }
 }

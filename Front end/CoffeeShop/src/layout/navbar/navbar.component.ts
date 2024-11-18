@@ -4,13 +4,17 @@ import {MatToolbarModule} from '@angular/material/toolbar';
 import { SidebarService } from '../../service/common/sidebar.service';
 import { Router,RouterModule } from '@angular/router';
 import { AuthService } from '../../service/auth.service';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatCardModule } from '@angular/material/card';
 @Component({
   selector: 'app-navbar',
   standalone: true,
   imports: [
     MatToolbarModule,
     MatIconModule,
-    RouterModule
+    RouterModule,
+    MatMenuModule,
+    MatCardModule
   ],
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.scss'
@@ -41,6 +45,12 @@ export class NavbarComponent implements OnInit {
 
   profileNavigate(){
     this.router.navigate(['/profile'])
+  }
+  notificationNavigate(){
+    this.router.navigate(['/notification'])
+  }
+  notificationHistory(){
+    this.router.navigate(['/history'])
   }
 
   logout(){

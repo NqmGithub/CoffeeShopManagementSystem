@@ -10,6 +10,7 @@ import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { Contact } from '../../../Interfaces/contact';
 import { ApiService } from '../../../Api/api.service';
+import { Route, Router } from '@angular/router';
 
 @Component({
   selector: 'app-contact-manager',
@@ -37,13 +38,13 @@ export class ContactManagerComponent {
   filterStatus: string="";
   page: number=0;
   pageSize: number=6;
-  sortColumn: string="Date";
+  sortColumn: string="SendDate";
   sortDirection:string="des";
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
-  constructor( private apiService: ApiService) { }
+  constructor( private apiService: ApiService, private router:Router) { }
 
   ngOnInit(): void {   
 
@@ -68,23 +69,22 @@ export class ContactManagerComponent {
     this.loadContacts();
   }
 
-  // search:string,filterCategory:string, filterStatus: string,page: number, pageSize: number,
-  //   sortColumn: string,sortDirection:string
+
   loadContacts(){
     // load data
-    // this.apiService.getAllContacts(this.search,this.filterStatus,this.page,this.pageSize,this.sortColumn,this.sortDirection).subscribe(
-    //   (response: { list: Contact[], total: number }) => {
-    //     this.contacts = response.list;
-    //     this.contactsData.data = this.contacts;
-    //     this.totalContacts = response.total;
-    //   },
-    //   (error) => {
-    //     console.error('Error fetching products:', error);
-    //   }
-    // );
+    this.apiService.getContacts(this.search,this.filterStatus,this.page,this.pageSize,this.sortColumn,this.sortDirection).subscribe(
+      (response: { list: Contact[], total: number }) => {
+        this.contacts = response.list;
+        this.contactsData.data = this.contacts;
+        this.totalContacts = response.total;
+      },
+      (error) => {
+        console.error('Error fetching products:', error);
+      }
+    );
   }
 
   viewDetail(contact:Contact){
-    
+    this.router.navigate(['/admin',{ outlets: { mainContent: ['contact-detail', contact.id] } }]);
   }
 }

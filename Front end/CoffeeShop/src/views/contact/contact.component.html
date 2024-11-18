@@ -36,7 +36,7 @@
                         <div #editorElement>
                             <ckeditor [editor]="Editor" [config]="config" formControlName="content"></ckeditor>
                             @if (applyForm.get('content')?.hasError('required')) {
-                                <mat-error>Subject is <strong>required</strong></mat-error>
+                                <mat-error>Description is <strong>required</strong></mat-error>
                             } @else if(applyForm.get('content')?.hasError('maxlength(1000)')){
                                 <mat-error>Max length is <strong>1000</strong></mat-error>
                             } 

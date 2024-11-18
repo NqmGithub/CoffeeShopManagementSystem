@@ -13,9 +13,9 @@ namespace CoffeeShopManagement.Business.DTO
     {
         public Guid Id { get; set; }
 
-        public string CustomerName { get; set; }
+        public UserContactDTO Customer { get; set; }
 
-        public string AdminName { get; set; }
+        public string? AdminName { get; set; }
 
         public DateTime SendDate { get; set; }
 
@@ -25,44 +25,7 @@ namespace CoffeeShopManagement.Business.DTO
 
         public string ProblemName { get; set; }
 
+        public string Response { get; set; }
         public string Status { get; set; }
-    }
-
-    public static class ContactExtension
-    {
-        public static ContactDTO ToContactDTO(this Contact contact, IUnitOfWork unitOfWork)
-        {
-            var customer =  unitOfWork.UserRepository.GetQuery().FirstOrDefault(x => x.Id == contact.CustomerId);
-            if (customer == null) 
-            {
-                throw new ArgumentException(nameof(customer));
-            }
-            User? admin = null;
-            if(contact.AdminId != Guid.Empty)
-            {
-                 admin = unitOfWork.UserRepository.GetQuery().FirstOrDefault(x => x.Id == contact.AdminId);
-            }            
-            if (admin == null)
-            {
-                throw new ArgumentException(nameof(admin));
-            }
-
-            var problem = unitOfWork.ProblemTypeRepository.GetById(contact.ProblemId);
-            if (problem == null) 
-            {
-                throw new ArgumentException(nameof(problem));
-            }
-
-            return new ContactDTO
-            {
-                Id = contact.Id,
-                CustomerName = customer.UserName,
-                AdminName = admin.UserName,
-                SendDate = contact.SendDate,
-                Description = contact.Description,
-                ProblemName = problem.ProblemName,
-                Status = ContactHelper.ConvertToStatusString(contact.Status),
-            };
-        }
     }
 }

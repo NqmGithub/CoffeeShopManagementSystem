@@ -12,10 +12,18 @@
     <span class="example-spacer"></span>
     <button mat-button routerLink="/about">ABOUT</button>
     <span class="example-spacer"></span>
+    <button mat-button routerLink="/about">CART<mat-icon>shopping_cart</mat-icon></button>
+    <span class="example-spacer"></span>
     <div class="nav-section">
       @if(isLoggedIn){
-        <button mat-button (click)="profileNavigate()">Profile</button>
-        <button mat-button (click)="logout()">Log out</button>
+        <p style="margin: 0 10px 0 0;">gg&#64;.com</p>
+        <div mat-card-avatar  [matMenuTriggerFor]="menu" class="example-header-image" style="margin: 0 10px 0 0; cursor: pointer;"></div>
+        <mat-menu #menu="matMenu">
+          <button mat-menu-item>Profile</button>
+          <button mat-menu-item (click)="notificationNavigate()">Notification</button>
+          <button mat-menu-item (click)="notificationHistory()">History</button>
+          <button mat-menu-item>Logout</button>
+        </mat-menu>
       }
       @else {
         <button mat-button (click)="loginNavigate()">Log in</button>

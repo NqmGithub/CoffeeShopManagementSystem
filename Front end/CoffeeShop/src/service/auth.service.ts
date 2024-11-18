@@ -57,7 +57,6 @@ export class AuthService {
         return this.apiService.login(payload).pipe(
             tap(response => {
                 localStorage.setItem("token", response.token);
-                localStorage.setItem("email",email);
                 this.router.navigate(['/home']);
               }),
               catchError(error => {

@@ -5,16 +5,16 @@
         <h1 class="title">Best Seller</h1>
     </div>
     <div class="coffee-container">
-        @for (coffee of coffeeBestsellers; track $index) {
+        @for (product of listBestSellerProducts; track $index) {
         <mat-card class="coffee-card">
-            <img mat-card-image [src]="coffee.image" alt="{{ coffee.title }}">
+            <img mat-card-image style="height: 225px;" [src]="getImage(product.thumbnail)" alt="{{ product.productName }}">
             <mat-card-content>
-                <h2 class="coffee-title">{{ coffee.title }}</h2>
-                <p class="coffee-description">{{ coffee.description }}</p>
+                <h2 class="coffee-title">{{ product.productName }}</h2>
+                <p class="coffee-description">{{ product.description }}</p>
             </mat-card-content>
             <div style="display: flex; justify-content: space-between; align-items: center;">
-                <p class="coffee-price" style="margin-left: 15px;">Price: <span style="color: red;">{{ coffee.price
-                        }}</span></p>
+                <p class="coffee-price" style="margin-left: 15px;">Price: <span style="color: red;">{{ product.price
+                        }}$</span></p>
                 <mat-card-actions>
                     <button mat-raised-button color="primary">Buy Now</button>
                 </mat-card-actions>

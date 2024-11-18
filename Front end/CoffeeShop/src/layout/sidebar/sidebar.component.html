@@ -29,7 +29,7 @@
         </mat-list-item>
         <mat-list-item>
           <mat-icon>contact_mail</mat-icon>
-          <span>Contact</span>
+          <span><a [routerLink]="['/admin',{ outlets: { mainContent: ['contacts'] } }]">Contact</a></span>
         </mat-list-item>
       </mat-nav-list>
       </mat-sidenav>

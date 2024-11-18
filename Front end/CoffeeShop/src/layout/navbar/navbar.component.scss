@@ -39,6 +39,7 @@
     justify-content: space-between;
     flex: 1;
     height: 100%;
+    align-items: center;
   }
   .nav-section>button{
     width: 100px;
@@ -53,4 +54,7 @@
     font-size: 25px;
     font-weight: bold;
   }
-  
+  .example-header-image {
+    background-image: url('https://material.angular.io/assets/img/examples/shiba1.jpg');
+    background-size: cover;
+  }

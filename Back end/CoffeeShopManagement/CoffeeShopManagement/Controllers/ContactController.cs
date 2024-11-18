@@ -1,5 +1,6 @@
 ﻿using CoffeeShopManagement.Business.DTO;
 using CoffeeShopManagement.Business.ServiceContracts;
+using CoffeeShopManagement.Business.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -15,11 +16,17 @@ namespace CoffeeShopManagement.WebAPI.Controllers
             _contactService = contactService;
         }
 
-        [HttpGet]
+        [HttpGet("all")]
         public async Task<IActionResult> GetContacts()
         {
             var contacts = await _contactService.GetListContact();
             return Ok(contacts);
+        }
+        [HttpGet("customer/{id}")]
+        public async Task<IActionResult> GetListContactByUserId(Guid id)
+        {
+            var contact = await _contactService.GetListContactsByUserId(id);
+            return Ok(contact);
         }
 
         [HttpGet("{id}")]
@@ -36,10 +43,38 @@ namespace CoffeeShopManagement.WebAPI.Controllers
             return Ok(result);
         }
 
+        [HttpPut("{id}/update-status")]
+        public async Task<IActionResult> UpdateStatus(Guid id, string status)
+        {
+            var result = await _contactService.ChangeStatus(id, status);
+            return Ok(result);
+        }
+
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateContactResponse(Guid id,ContactResponseDTO contactResponseDTO)
         {
             var result = await _contactService.UpdateContactResponseAsync(id,contactResponseDTO);
+            return Ok(result);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetListContactss(string search = "",
+            string filterStatus = "",
+             int page = 0, int pageSize = 6,
+           string sortColumn = "SendDate",
+            string sortDirection = "desc")
+        {
+            //result include: list products and totalProducts after filter,sort, pagination
+            var contactQueryRequest = new ContactQueryRequest()
+            {
+                Search = search,
+                FilterStatus = filterStatus,
+                Page = page,
+                PageSize = pageSize,
+                SortColumn = sortColumn,
+                SortDirection = sortDirection
+            };
+            var result = await _contactService.GetContactWithCondition(contactQueryRequest);
             return Ok(result);
         }
     }

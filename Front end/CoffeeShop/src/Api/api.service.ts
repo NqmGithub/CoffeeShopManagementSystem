@@ -8,6 +8,7 @@ import { Contact } from '../Interfaces/contact';
 import { CreateContact } from '../Interfaces/createContact';
 import { UpdateContactResponse } from '../Interfaces/updateContactResponse';
 import { ProblemType } from '../Interfaces/category';
+import { Order } from '../Interfaces/order';
 
 @Injectable({
   providedIn: 'root'
@@ -64,6 +65,11 @@ export class ApiService {
   }
 
   //Product
+
+  getTop3BestSeller(): Observable<Product[]> {
+    return this.http.get<Product[]>(this.baseurl + '/Product/best-seller',this.headerCustom);
+  }
+
   getProducts(search: string, filterCategory: string, filterStatus: string, page: number, pageSize: number,
     sortColumn: string, sortDirection: string): Observable<{ list: Product[], total: number }> {
 
@@ -136,8 +142,34 @@ export class ApiService {
   }
 
   //feedback
+  getContacts(search: string,filterStatus: string, page: number, pageSize: number,
+    sortColumn: string, sortDirection: string): Observable<{ list: Contact[], total: number }> {
+
+    let params = new HttpParams()
+      .set('page', page.toString())
+      .set('pageSize', pageSize.toString())
+      .set('sortColumn', sortColumn)
+      .set('sortDirection', sortDirection);
+
+    if (search) {
+      params = params.set('search', search);
+    }
+    if (filterStatus) {
+      params = params.set('filterStatus', filterStatus);
+    }
+
+    return this.http.get<{ list: Contact[], total: number }>(this.baseurl + '/Contact', {
+      ...this.headerCustom,
+      params: params
+    });
+  }
+
   getAllContacts(): Observable<Contact[]> {
-    return this.http.get<Contact[]>(this.baseurl + '/Contact',this.headerCustom);
+    return this.http.get<Contact[]>(this.baseurl + '/Contact/all',this.headerCustom);
+  }
+
+  getListContactsByUserId(id: string): Observable<Contact[]> {
+    return this.http.get<Contact[]>(this.baseurl + '/Contact/customer/'+id,this.headerCustom);
   }
 
   getContactById(id: string): Observable<Contact> {
@@ -148,12 +180,15 @@ export class ApiService {
     return this.http.post<boolean>(`${this.baseurl}/Contact`,createContact,this.headerCustom);
   }
 
-  putContact(id: string,updateContactResponse: UpdateContactResponse): Observable<boolean>{
-    return this.http.post<boolean>(`${this.baseurl}/Contact/`+id,updateContactResponse,this.headerCustom);
+  responseContact(id: string,updateContactResponse: UpdateContactResponse): Observable<boolean>{
+    return this.http.put<boolean>(`${this.baseurl}/Contact/`+id,updateContactResponse,this.headerCustom);
+  }
+
+  changeStatusContact(id:string, status:string) :Observable<boolean>{
+    return this.http.put<boolean>(`${this.baseurl}/Contact/${id}/update-status?status=${status}`,this.headerCustom);
   }
 
   //problemType
-  //feedback
   getAllProblemTypes(): Observable<Contact[]> {
     return this.http.get<Contact[]>(this.baseurl + '/ProblemType',this.headerCustom);
   }
@@ -167,6 +202,11 @@ export class ApiService {
   }
 
   putProblemType(id: string,problemType: ProblemType): Observable<boolean>{
-    return this.http.post<boolean>(`${this.baseurl}/ProblemType/`+id,problemType,this.headerCustom);
+    return this.http.put<boolean>(`${this.baseurl}/ProblemType/`+id,problemType,this.headerCustom);
+  }
+
+  //order
+  getAllOrdersByUserId(id:string): Observable<Order[]> {
+    return this.http.get<Order[]>(this.baseurl + '/Order/customer/'+id,this.headerCustom);
   }
 }

@@ -1,0 +1,17 @@
+<app-navbar></app-navbar>
+<div style="margin-top: 50px;">
+    <mat-accordion >
+        @for (order of orders; track $index) {
+            <mat-expansion-panel>
+                <mat-expansion-panel-header>
+                  <mat-panel-title> Date: {{ order.orderDate| date: 'dd/MM/yyyy HH:mm:ss' }}
+                </mat-panel-title>
+                  <mat-panel-description>
+                    Total : {{order.totalPrice}}$
+                  </mat-panel-description>
+                </mat-expansion-panel-header>
+                <p>I'm visible because I am open</p>
+              </mat-expansion-panel>
+        }    
+      </mat-accordion>
+</div>

@@ -1,12 +1,9 @@
-import { Component, ViewEncapsulation } from '@angular/core';
-import { NavbarComponent } from "../../layout/navbar/navbar.component";
-import { MatCardModule } from '@angular/material/card';
+import { Component, OnInit } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
-import { MatInputModule } from '@angular/material/input';
+import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { MatDivider } from '@angular/material/divider';
-import { MatIcon } from '@angular/material/icon';
+import { MatIconModule } from '@angular/material/icon';
+import { MatSidenavModule } from '@angular/material/sidenav';
 import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
 import 'ckeditor5/ckeditor5.css';
 import {
@@ -81,43 +78,31 @@ import {
 	Undo,
 	type EditorConfig
 } from 'ckeditor5';
-import { ProblemType } from '../../Interfaces/category';
-import { ApiService } from '../../Api/api.service';
-import { MatSelectModule } from '@angular/material/select';
-import { CreateContact } from '../../Interfaces/createContact';
-import { AuthService } from '../../service/auth.service';
-import { User } from '../../Interfaces/user';
+import { Contact } from '../../../../Interfaces/contact';
+import { ApiService } from '../../../../Api/api.service';
+import { CommonModule } from '@angular/common';
+import { ActivatedRoute, Router } from '@angular/router';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { AuthService } from '../../../../service/auth.service';
+import { UpdateContactResponse } from '../../../../Interfaces/updateContactResponse';
 @Component({
-	selector: 'app-feedback',
-	standalone: true,
-	imports: [
-		NavbarComponent,
-		MatButtonModule,
-		MatCardModule,
-		MatInputModule,
-		MatFormFieldModule,
-		ReactiveFormsModule,
-		FormsModule,
-		MatDivider,
-		MatIcon,
-		CKEditorModule,
-		MatSelectModule,
-	],
-	templateUrl: './contact.component.html',
-	styleUrl: './contact.component.scss',
-	encapsulation: ViewEncapsulation.None,
-
+  selector: 'app-contact-detail',
+  standalone: true,
+  imports: [
+    MatSidenavModule,
+    MatCardModule,
+    MatButtonModule,
+    MatFormFieldModule,
+    MatIconModule,
+    CKEditorModule,
+	CommonModule,
+	ReactiveFormsModule
+  ],
+  templateUrl: './contact-detail.component.html',
+  styleUrl: './contact-detail.component.scss'
 })
-export class ContactComponent {
-	user: User|null = null;
-	applyForm = new FormGroup({
-		email: new FormControl({ value: '', disabled: true },),
-		problemType: new FormControl('',[Validators.required]),
-		subject: new FormControl('',[Validators.required, Validators.maxLength(255)]),
-		content: new FormControl(' ',[Validators.required,Validators.maxLength(1000)])
-	  })
-	listProblemType: ProblemType[] = [];
-	public Editor = ClassicEditor;
+export class ContactDetailComponent implements OnInit {
+  public Editor = ClassicEditor;
 	public config: EditorConfig = {
 		toolbar: {
 			items: [
@@ -384,54 +369,100 @@ export class ContactComponent {
 					name: 'Code (bright)',
 					element: 'pre',
 					classes: ['fancy-code', 'fancy-code-bright']
-				}
+				},
 			]
 		},
 		table: {
 			contentToolbar: ['tableColumn', 'tableRow', 'mergeTableCells', 'tableProperties', 'tableCellProperties']
 		}
 	}; // CKEditor needs the DOM tree before calculating the configuration.
-	constructor( private apiService: ApiService, private auth: AuthService) {
-		this.loadProblemType();
-		this.auth.getCurrentUser().subscribe(response =>{
-			if(response){
-				console.log(response)
-				this.applyForm.controls['email'].setValue(response?.email);
-			}			
-		})
-		
-	}
+	contacts: Contact[] = [];
+	selectedContact:Contact = this.contacts[0];
+	selectedContactId:string ='';
+	adminName:string|null = null;
+	adminId:string|null = null;
+	public editorControl = new FormControl('');
 
-	loadProblemType() {
-		this.apiService.getAllProblemTypes().subscribe(
-			(data: ProblemType[]) => {
-				this.listProblemType = data;
-				if (this.listProblemType.length > 0) {
-					this.applyForm.controls['problemType'].setValue(this.listProblemType[0].problemName);
-				  }
+	constructor(private apiService:ApiService, private route: ActivatedRoute, private auth:AuthService, private router: Router) {
+		this.loadContacts();
+		const result = this.route.snapshot.paramMap.get('id');
+		if(result){
+			this.onClick(result);
+		}
+		this.auth.getCurrentUser().subscribe(
+			response => {
+				if(response){
+					this.adminName = response?.userName;
+					this.adminId = response?.id;
+				}
+			}
+		)
+	}
+	ngOnInit() {
+		this.route.paramMap.subscribe(params => {
+		  const id = params.get('id');
+		  if (id) {
+			this.onClick(id);
+			this.loadContacts();
+		  }
+		});
+	  }
+	
+
+	loadContacts() {
+		this.apiService.getAllContacts().subscribe(
+		  (response: Contact[]) => {
+			this.contacts = response;
+		  },
+		  (error) => {
+			console.error('Error fetching contacts:', error);
+			// Thêm xử lý giao diện nếu cần
+		  }
+		);
+	  }
+	
+	onClick(id: string){
+		this.apiService.getContactById(id).subscribe(
+			(response:Contact) =>{
+				if(response.status == 'Pending'){
+					 this.apiService.changeStatusContact(response.id,'In Processing').subscribe();
+				}
+				this.selectedContact=response
+				this.selectedContactId = response.id
+				
 			},
 			(error) => {
-				console.error('Error fetching problem types:', error);
+				console.error('Error fetching contact',error);
 			}
-		);
+		)
 	}
 
-	onSubmit(){
-		let contentFormat = this.applyForm.value.content?? ''.replace(/"/g, '\\"');
-		let contact: CreateContact = {
-			email: localStorage.getItem('email')!,
-			sendDate: new Date(),
-			subject: this.applyForm.value.subject!,
-			problemName: this.applyForm.value.problemType!,
-			content: this.applyForm.value.content!
-		  };
-		  
-		this.apiService.postContact(contact).subscribe( res =>{
-
-		});
+	onClickGetDetail(id: string){
+		this.apiService.getContactById(id).subscribe(
+			(response:Contact) =>{
+				this.router.navigate(['/admin',{ outlets: { mainContent: ['contact-detail', id] } }]);
+			},
+			(error) => {
+				console.error('Error fetching contact',error);
+			}
+		)
 	}
 
-	onReset() {
-		this.applyForm.reset();
-	  }
+	onSend(){
+		const updateContactResponse: UpdateContactResponse = {
+			contactId : this.selectedContactId,
+			adminId : this.adminId,
+			response : this.editorControl.value,
+			status : 'Done'
+		}
+		this.apiService.responseContact(this.selectedContactId,updateContactResponse).subscribe(
+			response => {
+				this.selectedContact.response = updateContactResponse.response!;
+				this.loadContacts();
+			},
+			error =>{
+				console.error('Error fetching contact',error);
+			}
+		)
+	}
 }
