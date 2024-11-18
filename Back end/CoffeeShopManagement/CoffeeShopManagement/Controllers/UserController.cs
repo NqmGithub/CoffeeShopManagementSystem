@@ -117,7 +117,6 @@ namespace CoffeeShopManagement.WebAPI.Controllers
             {
                 return BadRequest(ModelState);
             }
-            user.Password = PasswordHelper.HashPassword(user.Password);
             await _userService.Update(user);
 
             return NoContent();
