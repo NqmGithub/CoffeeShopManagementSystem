@@ -25,7 +25,7 @@
         </mat-list-item>
         <mat-list-item>
           <mat-icon>category</mat-icon>
-          <span>Category</span>
+          <span><a [routerLink]="['/admin',{ outlets: { mainContent: ['categories'] } }]">Category</a></span>
         </mat-list-item>
         <mat-list-item>
           <mat-icon>contact_mail</mat-icon>

@@ -17,6 +17,7 @@ import { NotificationComponent } from '../views/notification/notification.compon
 import { HistoryComponent } from '../views/history/history.component';
 import { ResetPasswordComponent } from '../views/login/reset-password/reset-password.component';
 import { VerifyEmailComponent } from '../views/register/verify-email/verify-email.component';
+import { CategoryManagerComponent } from '../views/admin/category-manager/category-manager.component';
 
 export const routes: Routes = [
     {
@@ -51,6 +52,11 @@ export const routes: Routes = [
                 path: 'contact-detail/:id',
                 title: 'Contact Detail',
                 component: ContactDetailComponent,
+            },
+            {
+                path: 'categories',
+                title: 'Category Manager',
+                component: CategoryManagerComponent,
                 outlet: 'mainContent'
             }
         ],

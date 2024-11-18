@@ -88,6 +88,15 @@ namespace CoffeeShopManagement.Business.Services
             user.Password = PasswordHelper.HashPassword(user.Password);
             await _unitOfWork.UserRepository.Update(user);
         }
+        public async Task<bool> UpdateProfile(User user)
+        {
+            return await _unitOfWork.UserRepository.UpdateProfile(user);
+        }
+        public async Task<bool> ChangePassword(User user)
+        {
+            user.Password = user.Password;
+            return await _unitOfWork.UserRepository.UpdateProfile(user);
+        }
 
         public async Task<int> GetUserCount()
         {

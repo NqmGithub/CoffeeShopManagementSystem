@@ -1,0 +1,55 @@
+<mat-dialog-content>
+    <h4>Update Profile</h4>
+    <!-- Avatar upload section -->
+    <div class="file-upload-container">
+      <label for="avatar" class="upload-label">Avatar</label>
+      <input id="avatar" type="file" (change)="onFileSelected($event)">
+      <img *ngIf="previewUrl" [src]="previewUrl" alt="Avatar Preview" class="avatar-preview">
+      <!-- Fallback if previewUrl is null -->
+      <img *ngIf="!previewUrl && data.avatar" [src]="getImage(data.avatar)" alt="Current Avatar" class="avatar-preview">
+    </div>
+    
+    <mat-form-field appearance="fill">
+      <mat-label>Username</mat-label>
+      <input matInput [(ngModel)]="updatedProfile.userName" 
+      placeholder="Enter your username"
+      #userName="ngModel"
+      [ngClass]="{'invalid': userName.invalid && userName.touched}">
+        </mat-form-field>
+    <div *ngIf="userName.invalid && userName.touched" class="error-message">
+      User must be longer than 3 characters and smaller than 20.
+    </div>
+  
+  
+    <mat-form-field appearance="fill">
+      <mat-label>Phone Number</mat-label>
+      <input 
+        matInput 
+        [(ngModel)]="updatedProfile.phoneNumber" 
+        placeholder="Enter your phone number"
+        #phoneNumber="ngModel"
+        [ngClass]="{'invalid': phoneNumber.invalid && phoneNumber.touched}">
+    </mat-form-field>
+    
+    <div *ngIf="phoneNumber.invalid && phoneNumber.touched" class="error-message">
+      Phone number must be exactly 10 digits
+    </div>
+  
+    <mat-form-field appearance="fill">
+      <mat-label>Address</mat-label>
+      <input matInput [(ngModel)]="updatedProfile.address" 
+      placeholder="Enter your address"
+      #address="ngModel"
+      [ngClass]="{'invalid': address.invalid && address.touched}">
+    </mat-form-field>
+    <div *ngIf="address.invalid && address.touched" class="error-message">
+      Address must be longer than 2 characters and smaller than 30.
+    </div>
+   
+  </mat-dialog-content>
+  
+  <mat-dialog-actions align="end">
+    <button mat-button (click)="cancel()">Cancel</button>
+    <button mat-raised-button color="primary" (click)="saveChanges()">Save</button>
+  </mat-dialog-actions>
+  

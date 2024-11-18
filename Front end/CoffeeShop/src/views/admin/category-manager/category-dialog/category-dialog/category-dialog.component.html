@@ -1,0 +1,36 @@
+<div style="display: flex; justify-content: space-between; height: 50px;">
+    <h2 mat-dialog-title style="color: #6b4f34; font-weight: bold;">{{header}}</h2>
+    <mat-icon class="closeButton" (click)="onCancel()">close</mat-icon>
+  </div>
+  <mat-dialog-content>
+    <form #categoryForm="ngForm" >
+     
+      <div style="margin-left: 10px;">
+        <!-- category name -->
+        <mat-form-field style="width: 500px;" appearance="outline">
+          <mat-label>CategoryName</mat-label>
+          <input matInput [formControl]="categoryNameFormControl" name="categoryName" required />
+          <mat-error *ngIf="categoryNameFormControl.hasError('required')">Category name is <strong>required</strong></mat-error>
+          <mat-error *ngIf="isCategoryNameExist">Category name already <strong>exists</strong></mat-error>
+        </mat-form-field>
+        
+        
+        <div style="font-size: 20px;">
+            <p >Status: </p>
+            <input type="radio" [value]=1 [formControl]="selectedStatusFormControl" name="status" > Active
+            <input type="radio" [value]=0 [formControl]="selectedStatusFormControl" name="status"> InActive
+          </div>
+          
+          
+      </div>
+  
+    </form>
+  </mat-dialog-content>
+  <mat-dialog-actions style="display: flex; justify-content: center; text-align: center;">
+    @if (header == 'Add Category') {
+      <button mat-button cdkFocusInitial (click)="OnAdd()">Add</button>
+    } @else {
+      <button mat-button cdkFocusInitial (click)="OnUpdate()">Update</button>
+    }
+    
+  </mat-dialog-actions>
