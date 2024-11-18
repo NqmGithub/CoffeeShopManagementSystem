@@ -1,8 +1,8 @@
 <app-navbar></app-navbar>
 <div style="margin-top: 50px;">
-    <mat-accordion >
-        @for (order of orders; track $index) {
-            <mat-expansion-panel>
+  @for (order of orders; track $index;let i = $index) {
+    <mat-accordion >      
+            <mat-expansion-panel [expanded]="true">
                 <mat-expansion-panel-header>
                   <mat-panel-title> Date: {{ order.orderDate| date: 'dd/MM/yyyy HH:mm:ss' }}
                 </mat-panel-title>
@@ -10,8 +10,36 @@
                     Total : {{order.totalPrice}}$
                   </mat-panel-description>
                 </mat-expansion-panel-header>
-                <p>I'm visible because I am open</p>
-              </mat-expansion-panel>
-        }    
+                <mat-card appearance="outlined" style="border: 0px;">
+                  <mat-card-content style="display: flex; align-items: center; justify-content: space-between;">
+                    <p style="width: 60px;margin: 0px;">Img</p>
+                    <p style="width: 150px; margin: 0px;">Product</p>
+                    <p style="width: 20px;margin: 0px;">Price</p>
+                    <p style="width: 20px;margin: 0px;">Quantity</p>
+                    <p style="width: 140px;">Reviews</p>
+                  </mat-card-content>
+                </mat-card>
+                @for (product of order.product; track $index; let k = $index) {
+                  <mat-card appearance="outlined">
+                    <mat-card-content style="display: flex; align-items: center; justify-content: space-between;">
+                      <img [src]="getImage(product.img)" style="width:60px; height:60px;"> 
+                      <p style="width: 150px;">{{product.productName}}</p>
+                      <p>{{product.orderPrice}}</p>
+                      <p>{{product.quantity}}</p>
+
+                      <div class="stars" style="display: flex; gap: 5px;">
+                        @for (star of stars; track $index; let j = $index) {
+                          <mat-icon style="cursor: pointer;color: #FFD700;" [class.filled]="k < product.rating"(click)="setRating(i, k, j + 1)"> {{  j < product.rating ? 'star' : 'star_border' }}</mat-icon>
+                        }                         
+                      </div>
+                    </mat-card-content>
+                  </mat-card>
+                }
+                <button mat-flat-button style="float: right; margin-top: 10px;" (click)="submitRatings(i)">Submit</button>
+              </mat-expansion-panel>               
+              
+           
       </mat-accordion>
+    }
+    
 </div>

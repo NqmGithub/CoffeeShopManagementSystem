@@ -9,6 +9,7 @@ import { CreateContact } from '../Interfaces/createContact';
 import { UpdateContactResponse } from '../Interfaces/updateContactResponse';
 import { ProblemType } from '../Interfaces/category';
 import { Order } from '../Interfaces/order';
+import { UserOrderDetails } from '../Interfaces/userOrderDetails';
 
 @Injectable({
   providedIn: 'root'
@@ -208,5 +209,9 @@ export class ApiService {
   //order
   getAllOrdersByUserId(id:string): Observable<Order[]> {
     return this.http.get<Order[]>(this.baseurl + '/Order/customer/'+id,this.headerCustom);
+  }
+
+  getOrderDetailsByOrderId(id:string): Observable<UserOrderDetails[]>{
+    return this.http.get<UserOrderDetails[]>(this.baseurl + '/OrderDetail/'+id)
   }
 }
