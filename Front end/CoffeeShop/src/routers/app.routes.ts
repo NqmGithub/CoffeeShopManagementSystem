@@ -52,6 +52,7 @@ export const routes: Routes = [
                 path: 'contact-detail/:id',
                 title: 'Contact Detail',
                 component: ContactDetailComponent,
+                outlet: 'mainContent'
             },
             {
                 path: 'categories',
