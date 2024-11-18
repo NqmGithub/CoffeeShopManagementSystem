@@ -1,1 +1,14 @@
-<p>change-status-dialog works!</p>
+<div style="display: flex; justify-content: space-between; height: 50px;">
+    <h2 mat-dialog-title style="color: #6b4f34; font-weight: bold;">Confirm Status</h2>
+    <mat-icon class="closeButton" (click)="onCancel()">close</mat-icon>
+  </div>
+<mat-dialog-content>
+    <p>Are you sure to 
+        <span style="font-weight: 500;">
+            {{ user.status == 1 ? 'deactive' : 'active' }}
+          </span>
+        this user: <span style="color: red;">{{user.userName}}</span> ?</p>
+</mat-dialog-content>
+<mat-dialog-actions>
+    <button mat-button color="warn" (click)="onConfirm()">Update</button>
+</mat-dialog-actions>

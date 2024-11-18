@@ -9,8 +9,8 @@
         @if(isUpdate){       
             @if(imageUrl){
                 <img  [src]="imageUrl" class="image" (click)="file.click()">
-            <!-- }@else if(currentUser.avatar) {
-                <img  [src]="getImage(currentUser.avatar)" class="image" (click)="file.click()"> -->
+            }@else if(currentUser.avatar) {
+                <img  [src]="getImage(currentUser.avatar)" class="image" (click)="file.click()">
             }@else {
                 <img src="/avatar.jpg" class="image" (click)="file.click()">
             }      

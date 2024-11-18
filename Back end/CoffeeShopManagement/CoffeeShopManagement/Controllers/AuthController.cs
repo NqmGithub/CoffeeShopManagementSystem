@@ -2,10 +2,13 @@
 using CoffeeShopManagement.Business.ServiceContracts;
 using CoffeeShopManagement.Models.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.FileSystemGlobbing.Internal;
 using Microsoft.IdentityModel.Tokens;
+using System.ComponentModel.DataAnnotations;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace CoffeeShopManagement.WebAPI.Controllers
 {
@@ -14,10 +17,12 @@ namespace CoffeeShopManagement.WebAPI.Controllers
     public class AuthController : Controller
     {
         private readonly IUserService _userService;
+        private readonly IOtpService _otpService;
 
-        public AuthController(IUserService userService)
+        public AuthController(IUserService userService, IOtpService otpService)
         {
             _userService = userService;
+            _otpService = otpService;
         }
 
         public class LoginRequest
@@ -65,6 +70,7 @@ namespace CoffeeShopManagement.WebAPI.Controllers
                 return Conflict("A user with this email already exists.");
             }
 
+            var avatarDirectory = Path.Combine("wwwroot", "Avatars");
             var newUser = new User
             {
                 Id = Guid.NewGuid(),
@@ -74,8 +80,8 @@ namespace CoffeeShopManagement.WebAPI.Controllers
                 Role = 1,
                 PhoneNumber = signupRequest.PhoneNumber,
                 Address = signupRequest.Address,
-                Avatar = @"..\..\avatar.jpg",
-                Status = 1
+                Avatar = "avatar.jpg",
+            Status = 1
             };
 
             await _userService.Add(newUser);
@@ -107,10 +113,64 @@ namespace CoffeeShopManagement.WebAPI.Controllers
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
-        private string GenerateOtp()
+
+        public class OTPRequest
         {
-            var random = new Random();
-            return random.Next(100000, 999999).ToString();
+            [Required] public string Email { get; set; }
+        }
+
+        [HttpPost("send-otp")]
+        public async Task<IActionResult> SendOTP([FromBody] OTPRequest request)
+        {
+            string pattern = @"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$";
+            Regex regex = new Regex(pattern);
+            if (request.Email == null || !regex.IsMatch(request.Email))
+            {
+                throw new ArgumentNullException("Invalid email format or email empty");
+            }
+
+            bool result = await _otpService.SendOtp(request.Email);
+
+            return Ok(result);
+        }
+
+        public class ValidateOTPRequest
+        {
+            [Required] public string Email { get; set; }
+            [Required] public string OtpCode { get; set; }
+        }
+        [HttpPost("validate_otp")]
+        public async Task<IActionResult> ValidateOtp([FromBody] ValidateOTPRequest request)
+        {
+            string pattern = @"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$";
+            Regex regex = new Regex(pattern);
+            if (request.Email == null || !regex.IsMatch(request.Email))
+            {
+                throw new ArgumentNullException("Invalid email format or email empty");
+            }
+
+            var isvalid = await _otpService.ValidateOtp(request.Email, request.OtpCode);
+
+            if(!isvalid)
+            {
+                return BadRequest("Invalid");
+            }
+            return Ok("valid");
+        }
+
+        [HttpPost("reset-password")]
+        public async Task<IActionResult> ResetPassword([FromBody] OTPRequest request)
+        {
+            string pattern = @"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$";
+            Regex regex = new Regex(pattern);
+            if (request.Email == null || !regex.IsMatch(request.Email))
+            {
+                throw new ArgumentNullException("Invalid email format or email empty");
+            }
+
+            bool result = await _otpService.ResetPassword(request.Email);
+
+            return Ok(result);
         }
     }
 }

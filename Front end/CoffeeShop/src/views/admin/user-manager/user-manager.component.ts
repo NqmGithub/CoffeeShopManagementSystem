@@ -12,6 +12,7 @@ import { ApiService } from '../../../Api/api.service';
 import { User } from '../../../Interfaces/user';
 import { MatDialog } from '@angular/material/dialog';
 import { UserDialogComponent } from './user-dialog/user-dialog.component';
+import { ChangeStatusDialogComponent } from './change-status-dialog/change-status-dialog.component';
 
 @Component({
   selector: 'app-user-manager',
@@ -93,8 +94,19 @@ export class UserManagerComponent implements OnInit{
   }
 
   changeStatus(user: User){
-    this.api.makeUserInactive(user.id);
-    this.loadUser();
+    const dialogRef = this.dialog.open(ChangeStatusDialogComponent, {
+      data: user
+    });
+
+    dialogRef.afterClosed().subscribe((result: string) => {
+      if (result) {
+        this.api.makeUserInactive(user.id).subscribe(
+          {
+            error: (e) => console.error("error", e)
+          }
+        )
+      }
+    });
   }
 
   onPageChange(e: PageEvent){
