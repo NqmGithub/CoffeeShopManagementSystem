@@ -29,5 +29,5 @@ export class ChangeStatusDialogComponent {
 
   onConfirm(): void {
     this.dialogRef.close(this.product.status=='Active'?'InActive':'Active');
-}
+  }
 }

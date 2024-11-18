@@ -15,6 +15,8 @@ import { ContactManagerComponent } from '../views/admin/contact-manager/contact-
 import { ContactDetailComponent } from '../views/admin/contact-manager/contact-detail/contact-detail.component';
 import { NotificationComponent } from '../views/notification/notification.component';
 import { HistoryComponent } from '../views/history/history.component';
+import { ResetPasswordComponent } from '../views/login/reset-password/reset-password.component';
+import { VerifyEmailComponent } from '../views/register/verify-email/verify-email.component';
 
 export const routes: Routes = [
     {
@@ -59,6 +61,8 @@ export const routes: Routes = [
     {path:'history', component:HistoryComponent},
     {path:'register', component:RegisterComponent},
     {path:'login', component:LoginComponent},
+    {path:'resetPassword', component:ResetPasswordComponent},
+    {path:'verifyEmail', component: VerifyEmailComponent},
     {path:'profile', component:ProfileComponent, canActivate: [AuthGuard]},
     {path:'unauthorized', component:UnauthorizedComponent}
 ];

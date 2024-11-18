@@ -23,11 +23,7 @@ public partial class User
 
     [Required(ErrorMessage = "Phone Number is required")]
     public string PhoneNumber { get; set; } = null!;
-
-    [Required(ErrorMessage = "Avatar is required")]
     public string? Avatar { get; set; }
-
-    [Required(ErrorMessage = "Address is required")]
     public string? Address { get; set; }
 
     [Required(ErrorMessage = "Status is required")]
