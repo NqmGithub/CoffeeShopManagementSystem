@@ -32,21 +32,28 @@ export class CartComponent implements OnInit {
       res =>{
         if(res){
           this.user = res;
+          this.loadCart(this.user.id);  // Load cart when component initializes
         }
       }
     )
-    this.loadCart();  // Load cart when component initializes
   }
 
   ngOnInit(): void {
-    
+    this.authService.getCurrentUser().subscribe(
+      res =>{
+        if(res){
+          this.user = res;
+          this.loadCart(this.user.id);  // Load cart when component initializes
+
+        }
+      }
+    )
   }
   getImage(name: string) {
     return `https://localhost:44344/wwwroot/Images/${name}`;
   }
   // Load cart items from ApiService
-  loadCart(): void {
-    const userId = this.user?.id!; // Sử dụng userId mặc định khi test
+  loadCart(userId: string): void {
 
     this.cart = this.apiService.getCartItems(userId);
 
