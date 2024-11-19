@@ -1,12 +1,11 @@
-<h2 mat-dialog-title>Change Order Status</h2>
-<div mat-dialog-content>
+<h2 style="padding: 10px;" mat-dialog-title>Change Order Status</h2>
+<div mat-dialog-content style="padding: 10px;">
   <p>Are you sure you want to update the status of this order?</p>
+  <p>{{this.order.id}}</p>
+
+  <div mat-dialog-actions>
+    <button mat-button (click)="onCancel()">Cancel</button>
+    <button mat-button color="primary" (click)="changeStatus()">Confirm</button>
+  </div>
 </div>
-<div mat-dialog-actions>
-  <button mat-button (click)="onCancel()">Cancel</button>
-  <button mat-button color="primary" (click)="changeStatus()">Confirm</button>
-</div>
-
-
-
 
