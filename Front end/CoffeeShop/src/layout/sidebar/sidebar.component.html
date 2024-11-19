@@ -1,5 +1,5 @@
 <mat-sidenav-container class="sidenav-container">
-    <mat-sidenav #sidenav mode="side" [(opened)]="isSidebarOpen" class="sidenav">
+    <mat-sidenav style="border-radius: 0px; color: white;" #sidenav mode="side" [(opened)]="isSidebarOpen" class="sidenav">
   
       <!-- Group 1: Dashboard -->
       <mat-nav-list>
@@ -17,19 +17,23 @@
         <h3 mat-subheader>Management</h3>
         <mat-list-item>
           <mat-icon>group</mat-icon>
-          <span><a [routerLink]="['/admin',{ outlets: { mainContent: ['users'] } }]">Users</a></span>
+          <span><a class="custom-link" [routerLink]="['/admin',{ outlets: { mainContent: ['users'] } }]">Users</a></span>
         </mat-list-item>
         <mat-list-item>
           <mat-icon>fastfood</mat-icon>
-          <span><a [routerLink]="['/admin',{ outlets: { mainContent: ['products'] } }]">Product</a></span>
+          <span><a class="custom-link" [routerLink]="['/admin',{ outlets: { mainContent: ['products'] } }]">Product</a></span>
         </mat-list-item>
         <mat-list-item>
           <mat-icon>category</mat-icon>
-          <span><a [routerLink]="['/admin',{ outlets: { mainContent: ['categories'] } }]">Category</a></span>
+          <span><a class="custom-link" [routerLink]="['/admin',{ outlets: { mainContent: ['categories'] } }]">Category</a></span>
         </mat-list-item>
         <mat-list-item>
           <mat-icon>contact_mail</mat-icon>
-          <span><a [routerLink]="['/admin',{ outlets: { mainContent: ['contacts'] } }]">Contact</a></span>
+          <span><a class="custom-link" [routerLink]="['/admin',{ outlets: { mainContent: ['contacts'] } }]">Contact</a></span>
+        </mat-list-item>
+        <mat-list-item>
+          <mat-icon>money</mat-icon>
+          <span><a class="custom-link" [routerLink]="['/orders']">Order</a></span>
         </mat-list-item>
       </mat-nav-list>
       </mat-sidenav>

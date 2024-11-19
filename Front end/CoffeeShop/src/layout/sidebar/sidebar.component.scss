@@ -9,6 +9,7 @@
   
   .mat-icon {
     margin-right: 8px;
+    margin-bottom: -5px;
   }
   
   mat-divider {
@@ -17,7 +18,8 @@
   
   mat-list-item {
     cursor: pointer;
-    padding: 10px 0;
+    padding: 10px;
+    padding-left: 20px;
     margin-bottom: 10px;
   }
   
@@ -36,5 +38,15 @@
   }
 h3{
     font-weight: bold;
-    color: #6b4f34;
+    color: #000000;
+}
+
+
+.custom-link {
+  text-decoration: none; /* Removes the underline */
+  color: black; /* Sets the text color */
+}
+
+.custom-link:visited {
+  color: black; /* Ensures the color doesn't change when clicked (visited state) */
 }
