@@ -120,11 +120,7 @@ export class OrderManagerComponent implements OnInit {
     }
   
     const dialogRef = this.dialog.open(ChangeStatusDialogComponent, {
-      data: {
-        orderId: order.id,
-        currentStatus: order.status,
-        newStatus: newStatus // Truyền newStatus vào dialog
-      }
+      data: order
     });
   
     dialogRef.afterClosed().subscribe(result => {

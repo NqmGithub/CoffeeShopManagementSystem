@@ -51,7 +51,7 @@
               'status-pending': order.status === 0,
               'status-cancelled': order.status === 2
             }">
-            {{ order.status === 1 ? 'Completed' : order.status === 0 ? 'Pending' : 'Cancelled' }}
+            {{ order.status === 1 ? 'Processing' : order.status === 0 ? 'Pending' : 'Completed' }}
           </span>
           <button 
             mat-button 
