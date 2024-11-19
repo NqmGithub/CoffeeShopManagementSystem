@@ -7,34 +7,29 @@ using System.Threading.Tasks;
 
 namespace CoffeeShopManagement.Business.DTO
 {
+    public class OrderCreateDTO
+    {
+        public Guid UserID { get; set; }
+        public List<OrderDetailDTO> OrderDetails { get; set; }  // List of products in the order
+    }
+
+
+
+
+
     public class OrderDTO
     {
         public Guid Id { get; set; }
         public Guid UserId { get; set; }
         public int Status { get; set; }
         public DateTime OrderDate { get; set; }
-        public List<AdminOrderDetailDTO> OrderDetails { get; set; }
         public string UserName { get; set; }
         public decimal TotalPrice { get; set; }
         public int TotalQuantity { get; set; }
+        public List<OrderDetailDTO> OrderDetails { get; set; } 
     }
 
-    public class AdminOrderDetailDTO
-    {
-        public Guid Id { get; set; }
 
-        public Guid ProductId { get; set; }
-            public string ProductName { get; set; }
-            public decimal Price { get; set; }
-        public int Quantity { get; set; } 
-            public decimal TotalPrice => Price * Quantity;    
-
-    }
-    public class OrderCreateDto
-    {
-        public string UserName { get; set; }
-        public decimal TotalPrice { get; set; }
-    }
     public class OrderUpdateDto
     {
         public Guid Id { get; set; }
@@ -50,20 +45,20 @@ namespace CoffeeShopManagement.Business.DTO
             {
                 Id = order.Id,
                 UserId = order.UserId,
-                Status = order.Status+"",
+                Status = order.Status.ToString(),  // Convert status to string (e.g., "1", "2", etc.)
                 OrderDate = order.OrderDate,
                 TotalPrice = price
             };
         }
     }
-    public class UserOrderDTO{
+
+    public class UserOrderDTO
+    {
         public Guid Id { get; set; }
-      public Guid UserId { get; set; }
-
-        public string Status { get; set; }
-
+        public Guid UserId { get; set; }
+        public string Status { get; set; }  // Status as string (e.g., "Pending", "Completed", etc.)
         public DateTime OrderDate { get; set; }
-
         public decimal TotalPrice { get; set; }
     }
+
 }

@@ -1,65 +1,87 @@
-<!-- product-list.component.html -->
+<app-navbar></app-navbar>
 <div class="coffee-shop-container">
-    <!-- Filters Section (Left Panel) -->
-    <div class="filters-container">
-      <div class="filters">
-        <h3>Filter Products</h3>
-        <!-- Search Input -->
+  <!-- Left Panel: Filters Section -->
+  <div class="filters-container">
+    <div class="filters">
+      <h3>Filter Products</h3>
+      <!-- Search Input -->
+      <input 
+        [(ngModel)]="search" 
+        (ngModelChange)="onSearchChange()" 
+        placeholder="Search products..." 
+        class="search-input"
+      />
+
+      <select [(ngModel)]="categoryFilter" (ngModelChange)="onCategoryChange()" class="filter-select">
+        <option value="">All Categories</option>
+        <option *ngFor="let category of categories" [value]="category">{{ category }}</option>
+      </select>      
+
+      <!-- Price Range Filter -->
+      <div class="price-filter">
         <input 
-          [(ngModel)]="search" 
+          [(ngModel)]="minPrice" 
+          type="number" 
+          placeholder="Min Price" 
           (ngModelChange)="onSearchChange()" 
-          placeholder="Search products..." 
-          class="search-input"
+          class="price-input"
         />
-    
-        <!-- Category Filter -->
-        <select [(ngModel)]="categoryFilter" (ngModelChange)="onCategoryChange()" class="filter-select">
-          <option value="">All Categories</option>
-          <option *ngFor="let category of categories" [value]="category">{{ category }}</option>
-        </select>
-    
-        <!-- Price Range Filter -->
-        <div class="price-filter">
-          <input 
-            [(ngModel)]="minPrice" 
-            type="number" 
-            placeholder="Min Price" 
-            (ngModelChange)="onSearchChange()" 
-            class="price-input"
-          />
-          <input 
-            [(ngModel)]="maxPrice" 
-            type="number" 
-            placeholder="Max Price" 
-            (ngModelChange)="onSearchChange()" 
-            class="price-input"
-          />
-        </div>
+        <input 
+          [(ngModel)]="maxPrice" 
+          type="number" 
+          placeholder="Max Price" 
+          (ngModelChange)="onSearchChange()" 
+          class="price-input"
+        />
       </div>
     </div>
-  
-    <!-- Products Grid Section -->
+  </div>
+
+  <!-- Right Panel: Products Grid Section -->
+  <div class="products-container">
     <div class="product-grid">
-      <div *ngFor="let product of products" class="product-card" (click)="viewProductDetail(product.id)">
-        <img [src]="getImage(product.thumbnail)" alt="Product Image" class="product-image"/>
-        <div class="product-info">
-          <h3>{{ product.productName }}</h3>
-          <p>{{ product.categoryName }}</p>
-          <p>{{ product.price | currency }}</p>
-
-          <!-- Quantity controls -->
-          <div class="quantity-controls">
-            <button (click)="decreaseQuantity(product)">-</button>
-            <input type="number" [(ngModel)]="product.quantity" [min]="1" class="quantity-input"/>
-            <button (click)="increaseQuantity(product)">+</button>
+      <div *ngFor="let product of products" class="product-card">
+        <!-- Product Detail Clickable Section -->
+        <div class="product-card-detail" (click)="viewProductDetail(product.id)">
+          <img [src]="getImage(product.thumbnail)" alt="Product Image" class="product-image"/>
+          <div class="product-info">
+            <h3>{{ product.productName }}</h3>
+            <p>{{ product.categoryName }}</p>
+            <p>{{ product.price | currency }}</p>
           </div>
-
-          <!-- Add to Cart button -->
-          <button class="btn btn-primary" (click)="addToCart(product)">Add to Cart</button>
         </div>
+
+        <div class="quantity-controls">
+          <!-- Button to decrease quantity -->
+          <button 
+            (click)="tempQuantity[product.id] = Math.max(1, (tempQuantity[product.id] || 1) - 1); $event.stopPropagation()">
+            -
+          </button>
+        
+          <!-- Input for quantity -->
+          <input 
+            type="number" 
+            [(ngModel)]="tempQuantity[product.id]" 
+            [min]="1" 
+            class="quantity-input" 
+            (click)="$event.stopPropagation()"
+            (change)="onQuantityChange(product.id)"
+          />
+        
+          <!-- Button to increase quantity -->
+          <button 
+            (click)="tempQuantity[product.id] = (tempQuantity[product.id] || 1) + 1; $event.stopPropagation()">
+            +
+          </button>
+        </div>
+        
+
+
+        <!-- Add to Cart button -->
+        <button class="btn btn-primary" (click)="addToCart(product); $event.stopPropagation()">Add to Cart</button>
       </div>
     </div>
-  
+
     <!-- Pagination Section -->
     <div class="pagination-container">
       <mat-paginator 
@@ -71,3 +93,4 @@
       </mat-paginator>
     </div>
   </div>
+</div>

@@ -1,4 +1,5 @@
 ﻿using CoffeeShopManagement.Business.DTO;
+using CoffeeShopManagement.Models.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,8 +10,8 @@ namespace CoffeeShopManagement.Business.ServiceContracts
 {
     public interface IOrderDetailService
     {
-        Task<List<AdminOrderDetailDTO>> GetOrderDetails(Guid orderId);
-        Task<bool> SaveOrderDetails(Guid orderId, List<AdminOrderDetailDTO> orderDetails);
+        Task<List<OrderDetailDTO>> GetOrderDetails(Guid orderId);
+        Task<bool> SaveOrderDetails(Guid orderId, List<OrderDetailDTO> orderDetails);
         Task<ICollection<OrderDetailDTO>> GetListOrderDetailsByOrderId(Guid id);
     }
 }

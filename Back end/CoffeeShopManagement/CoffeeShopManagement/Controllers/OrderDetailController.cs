@@ -37,11 +37,11 @@ namespace CoffeeShopManagement.WebAPI.Controllers
         {
             var cartItems = _cartService.GetCartItems();
 
-            var orderDetails = cartItems.Select(ci => new AdminOrderDetailDTO
+            var orderDetails = cartItems.Select(ci => new OrderDetailDTO
             {
                 ProductId = ci.ProductId,
                 ProductName = ci.ProductName,
-                Price = ci.Price,
+                OrderPrice = ci.Price,
                 Quantity = ci.Quantity
             }).ToList();
 

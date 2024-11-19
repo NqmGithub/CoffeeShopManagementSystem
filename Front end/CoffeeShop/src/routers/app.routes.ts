@@ -82,9 +82,6 @@ export const routes: Routes = [
         path: 'productlists',
         component: ProductListComponent
       },
-      {
-        path: 'productdetail/:id',  // Đường dẫn sản phẩm chi tiết
-        component: ProductDetailComponent
-      },
+      { path: 'productdetail/:productId', component: ProductDetailComponent },
       { path: 'cart', component: CartComponent }
 ];

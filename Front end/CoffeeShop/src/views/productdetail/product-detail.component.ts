@@ -1,99 +1,113 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ApiService } from '../../Api/api.service';
 import { Product } from '../../Interfaces/product';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-
+import { NavbarComponent } from '../../layout/navbar/navbar.component';
+import { AuthService } from '../../service/auth.service';
 @Component({
   selector: 'app-product-detail',
   standalone: true,
   imports: [
     CommonModule,
-    FormsModule
+    FormsModule,
+    NavbarComponent
   ],
   templateUrl: './product-detail.component.html',
   styleUrls: ['./product-detail.component.css']
 })
 export class ProductDetailComponent implements OnInit {
-  productId: string = '';  // Product ID
-  product: Product | null = null;  // Product details
-  relatedProducts: Product[] = [];  // Related products list
-  quantity: number = 1;  // Product quantity
+  productId: string = '';  // ID của sản phẩm hiện tại
+  product: Product | null = null;  // Chi tiết sản phẩm
+  relatedProducts: Product[] = [];  // Danh sách sản phẩm liên quan
+  quantity: number = 1;  // Số lượng sản phẩm người dùng chọn
 
   constructor(
     private route: ActivatedRoute,
-    private apiService: ApiService  // Inject ApiService
+    private apiService: ApiService,  // Dịch vụ API
+    private router: Router,
+    private authService: AuthService
   ) {}
 
   ngOnInit(): void {
-    // Get productId from URL
-    this.productId = this.route.snapshot.paramMap.get('id') || '';
+    this.route.paramMap.subscribe(params => {
+      this.productId = params.get('productId') || '';
 
-    if (!this.productId) {
-      console.error('Product ID is missing!');
-      return;
-    }
+      if (!this.productId) {
+        console.error('Product ID is missing!');
+        return;
+      }
 
-    // Fetch product details
-    this.apiService.getProductById(this.productId).subscribe({
+      this.loadProductDetail(this.productId);
+      this.loadRelatedProducts(this.productId);
+    });
+  }
+
+  loadProductDetail(productId: string): void {
+    this.apiService.getProductById(productId).subscribe({
       next: (product) => {
         this.product = product;
       },
       error: (err) => {
         console.error('Error fetching product details:', err);
-        // Handle error
       }
     });
+  }
 
-    // Fetch related products
-    this.apiService.getRelatedProducts(this.productId).subscribe({
+  loadRelatedProducts(productId: string): void {
+    this.apiService.getRelatedProducts(productId).subscribe({
       next: (relatedProducts) => {
         this.relatedProducts = relatedProducts;
       },
       error: (err) => {
         console.error('Error fetching related products:', err);
-        // Handle error
       }
     });
   }
 
-  // Increase quantity
+  getImage(name: string): string {
+    return `https://localhost:44344/wwwroot/Images/${name}`;
+  }
+
+  viewProductDetail(productId: string): void {
+    this.router.navigate(['/productdetail', productId]);
+  }
+
   increaseQuantity(): void {
     this.quantity++;
   }
 
-  // Decrease quantity
   decreaseQuantity(): void {
     if (this.quantity > 1) {
       this.quantity--;
     }
   }
 
-  // Add product to cart (store in cookie)
+  // Thêm sản phẩm vào giỏ hàng
   addToCart(product: any): void {
-    let cart: any[] = JSON.parse(this.apiService.getCookie('cart') || '[]');
+    const userId = 'testUser'; // Sử dụng userId mặc định khi test
+  
+    let cart = this.apiService.getCartItems(userId);
     
-    // Check if product already exists in cart
+    // Kiểm tra nếu sản phẩm đã tồn tại trong giỏ hàng
     const existingProduct = cart.find((item: any) => item.productId === product.productId);
-    
+  
     if (existingProduct) {
-      // Update quantity if product already in cart
-      existingProduct.quantity += product.quantity;
+      existingProduct.quantity += product.quantity || 1;
     } else {
-      // Add new product to cart
       cart.push({
         productId: product.productId,
         productName: product.productName,
-        quantity: product.quantity,
+        quantity: product.quantity || 1,
         price: product.price,
         thumbnail: product.thumbnail
       });
     }
-    
-    // Save the updated cart to cookies
-    this.apiService.setCookie('cart', JSON.stringify(cart), 7);
+  
+    this.apiService.saveCartItems(userId, cart);
+    alert('Product added to cart');
   }
   
+  
 }
-

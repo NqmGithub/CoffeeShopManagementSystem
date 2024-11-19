@@ -37,5 +37,15 @@ namespace CoffeeShopManagement.Data.Repositories
 
             return await _context.SaveChangesAsync() > 0;
         }
+        public async Task AddAsync(OrderDetail orderDetail)
+        {
+            await _context.OrderDetails.AddAsync(orderDetail);
+        }
+
+        // Implement the method for adding a list of OrderDetails
+        public async Task AddAsync(List<OrderDetail> orderDetails)
+        {
+            await _context.OrderDetails.AddRangeAsync(orderDetails);  // Add the list of OrderDetails
+        }
     }
 }

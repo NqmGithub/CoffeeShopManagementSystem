@@ -21,26 +21,26 @@ namespace CoffeeShopManagement.Business.Services
             _repository = repository;
         }
 
-       public async Task<List<AdminOrderDetailDTO>> GetOrderDetails(Guid orderId)
+       public async Task<List<OrderDetailDTO>> GetOrderDetails(Guid orderId)
         {
             var details = await _repository.GetOrderDetailsByOrderId(orderId);
-            return details.Select(d => new AdminOrderDetailDTO
+            return details.Select(d => new OrderDetailDTO
             {
                 ProductId = d.ProductId,
                 ProductName = d.Product != null ? d.Product.ProductName : "Unknown Product",
-                Price = d.OrderPrice,
+                OrderPrice = d.OrderPrice,
                 Quantity = d.Quantity
             }).ToList();
         }
 
-        public async Task<bool> SaveOrderDetails(Guid orderId, List<AdminOrderDetailDTO> orderDetails)
+        public async Task<bool> SaveOrderDetails(Guid orderId, List<OrderDetailDTO> orderDetails)
         {
             var updatedDetails = orderDetails.Select(d => new OrderDetail
             {
                 OrderId = orderId,
                 ProductId = d.ProductId,
                 Quantity = d.Quantity,
-                OrderPrice = d.Price,
+                OrderPrice = d.OrderPrice,
             }).ToList();
 
             return await _repository.UpdateOrderDetails(orderId, updatedDetails);

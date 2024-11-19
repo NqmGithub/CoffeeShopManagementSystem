@@ -1,21 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using CoffeeShopManagement.Data.RepositoryContracts;
+﻿using CoffeeShopManagement.Data.RepositoryContracts;
 using CoffeeShopManagement.Models.Models;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace CoffeeShopManagement.Data.Repositories
 {
     public class OrderRepository : GenericRepository<Order>, IOrderRepository
     {
         private readonly CoffeeShopDbContext _context;
+
         public OrderRepository(CoffeeShopDbContext db) : base(db)
         {
             _context = db;
         }
+
+        // Get Orders with filters, sorting, and pagination
         public async Task<(List<Order>, int)> GetOrders(
             string search,
             int? status,
@@ -25,24 +27,24 @@ namespace CoffeeShopManagement.Data.Repositories
             int pageSize)
         {
             var query = _context.Orders
-                .Include(o => o.OrderDetails) // Nạp các OrderDetails
-                .Include(o => o.OrderDetails).ThenInclude(od => od.Product) // Nạp thông tin sản phẩm
-                .Include(o => o.User) // Nạp thông tin User
+                .Include(o => o.OrderDetails)
+                    .ThenInclude(od => od.Product) // Include Product details in OrderDetails
+                .Include(o => o.User) // Include User info in Orders
                 .AsQueryable();
 
-            // Lọc theo search
+            // Filter by search term (UserName)
             if (!string.IsNullOrEmpty(search))
             {
                 query = query.Where(o => o.User.UserName.Contains(search));
             }
 
-            // Lọc theo status
+            // Filter by status if provided
             if (status.HasValue)
             {
                 query = query.Where(o => o.Status == status.Value);
             }
 
-            // Thực hiện sắp xếp dựa trên cột được chọn
+            // Sorting logic based on the sortColumn and direction
             query = sortColumn switch
             {
                 "OrderDate" => isDescending
@@ -66,10 +68,10 @@ namespace CoffeeShopManagement.Data.Repositories
                 _ => query.OrderByDescending(o => o.OrderDate) // Default to OrderDate if no match
             };
 
-            // Tổng số lượng đơn hàng
+            // Get the total count of orders
             var totalCount = await query.CountAsync();
 
-            // Phân trang và lấy dữ liệu
+            // Paginate the query result
             var paginatedOrders = await query
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize)
@@ -78,18 +80,25 @@ namespace CoffeeShopManagement.Data.Repositories
             return (paginatedOrders, totalCount);
         }
 
-
+        // Get Order by ID
         public async Task<Order?> GetOrderById(Guid id)
         {
             return await _context.Orders
                 .Include(o => o.OrderDetails)
+                    .ThenInclude(od => od.Product) // Include Product details in OrderDetails
                 .FirstOrDefaultAsync(o => o.Id == id);
         }
 
+        // Update an existing order
         public async Task UpdateOrder(Order order)
         {
             _context.Orders.Update(order);
             await _context.SaveChangesAsync();
+        }
+        public async Task AddAsync(Order order)
+        {
+            await _context.Orders.AddAsync(order);
+            await _context.SaveChangesAsync(); // Commit the changes
         }
 
     }

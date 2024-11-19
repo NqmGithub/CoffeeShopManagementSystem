@@ -10,15 +10,12 @@ namespace CoffeeShopManagement.Business.DTO
     public class OrderDetailDTO
     {
         public Guid Id { get; set; }
-
         public Guid OrderId { get; set; }
-
+        public Guid ProductId { get; set; }
         public int Quantity { get; set; }
-
         public string ProductName { get; set; }
-
         public string Img { get; set; }
-
+        public decimal TotalPrice {  get; set; }
         public decimal OrderPrice { get; set; }
     }
 }

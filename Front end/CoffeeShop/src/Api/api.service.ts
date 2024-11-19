@@ -9,6 +9,7 @@ import { Order, OrderDTO } from '../Interfaces/order';
 import { CreateContact } from '../Interfaces/createContact';
 import { UpdateContactResponse } from '../Interfaces/updateContactResponse';
 import { UserOrderDetails } from '../Interfaces/userOrderDetails';
+
 interface validOtp{
   email : string;
   otpCode : string;
@@ -32,8 +33,8 @@ export class ApiService {
   }
 
   //auth
-  login(data: any): Observable<any>{
-    return this.http.post<any>(this.baseurl + '/Auth/login', data);
+  login(data: any): Observable<any> {
+    return this.http.post<any>(`${this.baseurl}/Auth/login`, data);
   }
 
   resetPassword(email: string): Observable<boolean>{
@@ -205,7 +206,7 @@ export class ApiService {
   changeStatus(id:string, status:string):Observable<boolean>{
     return this.http.put<boolean>(`${this.baseurl}/Product/`+id+'?status='+status,this.headerCustom);
   }
-// Product
+// Lấy danh sách sản phẩm
 getProductLists(
   search: string,
   category: string,
@@ -237,16 +238,15 @@ getProductLists(
   return this.http.get<{ list: Product[], total: number }>(`${this.baseurl}/UserProduct`, {
     ...this.headerCustom,
     params: params
-  });
-}
-
-// Lấy danh sách tất cả tên danh mục
-getAllCategoryNames(): Observable<string[]> {
-  return this.http.get<string[]>(
-    `${this.baseurl}/Category/name`,
-    this.headerCustom
+  }).pipe(
+    catchError((error) => {
+      console.error('Error fetching products:', error);
+      return throwError(error);
+    })
   );
 }
+
+
   //feedback
   getContacts(search: string,filterStatus: string, page: number, pageSize: number,
     sortColumn: string, sortDirection: string): Observable<{ list: Contact[], total: number }> {
@@ -351,30 +351,39 @@ updateOrder(orderId: string, order: Order): Observable<Order> {
 deleteOrder(orderId: string): Observable<boolean> {
   return this.http.delete<boolean>(`${this.baseurl}/Order/${orderId}`, this.headerCustom);
 }
-// Đặt giá trị vào cookie
-setCookie(name: string, value: string, days: number): void {
+addOrder(orderCreateDTO: any): Observable<any> {
+  return this.http.post(`${this.baseurl}/add-order`, orderCreateDTO,this.headerCustom);
+}
+getCartItems(userId: string): any[] {
+  const cartKey = `cart_${userId || 'testUser'}`; // Sử dụng userId mặc định khi test
+  const cart = JSON.parse(localStorage.getItem(cartKey) || '[]');
+  return cart;
+}
+
+// Lưu giỏ hàng vào localStorage
+saveCartItems(userId: string, cartItems: any[]): void {
+  const cartKey = `cart_${userId || 'testUser'}`; // Sử dụng userId mặc định khi test
+  localStorage.setItem(cartKey, JSON.stringify(cartItems));
+}
+
+// Xóa giỏ hàng trong localStorage
+clearCart(userId: string): void {
+  const cartKey = `cart_${userId || 'testUser'}`; // Sử dụng userId mặc định khi test
+  localStorage.removeItem(cartKey);
+}
+
+
+// Helper method to get a cookie by name
+private getCookie(name: string): string | null {
+  const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+  return match ? decodeURIComponent(match[2]) : null;
+}
+
+// Helper method to set a cookie
+private setCookie(name: string, value: string, days: number): void {
   const date = new Date();
-  date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000)); // Thêm số ngày vào hiện tại
-  const expires = `expires=${date.toUTCString()}`;
-  document.cookie = `${name}=${value};${expires};path=/`;
-}
-
-// Lấy giá trị của cookie
-getCookie(name: string): string | null {
-  const nameEq = `${name}=`;
-  const cookies = document.cookie.split(';');
-  for (let i = 0; i < cookies.length; i++) {
-    let c = cookies[i].trim();
-    if (c.indexOf(nameEq) === 0) {
-      return c.substring(nameEq.length, c.length);
-    }
-  }
-  return null; // Nếu không tìm thấy cookie
-}
-
-// Xóa cookie
-deleteCookie(name: string): void {
-  document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/`;
+  date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+  document.cookie = `${name}=${encodeURIComponent(value)};expires=${date.toUTCString()};path=/`;
 }
 getProductById(productId: string): Observable<Product> {
   return this.http.get<Product>(`${this.baseurl}/UserProductDetail/${productId}`);

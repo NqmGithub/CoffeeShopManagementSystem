@@ -19,5 +19,6 @@ namespace CoffeeShopManagement.Data.RepositoryContracts
 
         Task<Order?> GetOrderById(Guid id);
         Task UpdateOrder(Order order);
+        Task AddAsync(Order order);
     }
 }

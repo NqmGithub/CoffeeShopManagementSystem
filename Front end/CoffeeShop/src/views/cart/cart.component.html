@@ -1,37 +1,50 @@
 <div class="cart-container" *ngIf="cart.length > 0">
-    <h2>Your Cart</h2>
-    
-    <div *ngFor="let item of cart" class="cart-item">
-      <img [src]="item.thumbnail" alt="{{ item.productName }}" class="cart-item-image" />
-      
-      <div class="cart-item-details">
-        <h3>{{ item.productName }}</h3>
-        <p>{{ item.price | currency }}</p>
-  
-        <!-- Quantity Controls -->
-        <label for="quantity">Quantity:</label>
-        <input 
-          type="number" 
-          [(ngModel)]="item.quantity" 
-          (ngModelChange)="updateQuantity(item.productId, item.quantity)" 
-          min="1" 
-        />
-        
-        <button (click)="removeFromCart(item.productId)">Remove</button>
-      </div>
-    </div>
-  
-    <!-- Cart Total -->
-    <div class="cart-total">
-      <p>Total: {{ totalPrice | currency }}</p>
-    </div>
-  
-    <!-- Checkout Button -->
-    <button class="checkout-btn" (click)="checkout()">Proceed to Checkout</button>
+  <h2>Your Cart</h2>
+
+  <!-- Cart Table -->
+  <table class="cart-table">
+    <thead>
+      <tr>
+        <th>Product Image</th>
+        <th>Product Name</th>
+        <th>Quantity</th>
+        <th>Price</th>
+        <th>Total Price</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let item of cart">
+        <td><img [src]="getImage(item.thumbnail)" alt="Product Image" class="cart-item-image"/></td>
+        <td>{{ item.productName }}</td>
+        <td>
+          <input 
+            type="number" 
+            [(ngModel)]="item.quantity" 
+            (ngModelChange)="updateQuantity(item.productId, item.quantity)" 
+            min="1" 
+            class="quantity-input"
+          />
+        </td>
+        <td>{{ item.price | currency }}</td>
+        <td>{{ item.price * item.quantity | currency }}</td>
+        <td>
+          <button (click)="removeFromCart(item.productId)">Remove</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- Cart Total -->
+  <div class="cart-total">
+    <p><strong>Total: {{ totalPrice | currency }}</strong></p>
   </div>
-  
-  <!-- Empty Cart Message -->
-  <div *ngIf="cart.length === 0">
-    <h2>Your cart is empty</h2>
-  </div>
-  
+
+  <!-- Checkout Button -->
+  <button class="checkout-btn" (click)="addOrder()">Proceed to Checkout</button>
+</div>
+
+<!-- Empty Cart Message -->
+<div *ngIf="cart.length === 0">
+  <h2>Your cart is empty</h2>
+</div>

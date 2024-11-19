@@ -1,4 +1,6 @@
-﻿using CoffeeShopManagement.Business.ServiceContracts;
+﻿using CoffeeShopManagement.Business.DTO;
+using CoffeeShopManagement.Business.ServiceContracts;
+using CoffeeShopManagement.Business.Services;
 using CoffeeShopManagement.Models.Models;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -13,11 +15,13 @@ namespace CoffeeShopManagement.WebAPI.Controllers
     {
         private readonly IProductService productService;
         private readonly ICategoryService categoryService;
+        private readonly IOrderService orderService;
 
-        public UserProductDetailController(IProductService productService, ICategoryService categoryService)
+        public UserProductDetailController(IProductService productService, ICategoryService categoryService, IOrderService orderService)
         {
             this.productService = productService;
             this.categoryService = categoryService;
+            this.orderService = orderService;
         }
 
         [HttpGet("{productId}")]
@@ -49,6 +53,29 @@ namespace CoffeeShopManagement.WebAPI.Controllers
             }
 
             return Ok(relatedProducts);
+        }
+        [HttpPost()]
+        public async Task<IActionResult> AddOrder([FromBody] OrderCreateDTO orderCreateDTO)
+        {
+            try
+            {
+                // Kiểm tra dữ liệu đầu vào
+                if (orderCreateDTO == null || orderCreateDTO.OrderDetails == null || !orderCreateDTO.OrderDetails.Any())
+                {
+                    return BadRequest("Invalid order data. Please provide valid order items.");
+                }
+
+                // Gọi service để thêm đơn hàng
+                var result = await orderService.AddOrderAsync(orderCreateDTO);
+
+                // Trả về kết quả thành công
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                // Trả về lỗi server
+                return StatusCode(500, new { message = $"An error occurred while creating the order: {ex.Message}" });
+            }
         }
     }
 }
