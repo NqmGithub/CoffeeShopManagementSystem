@@ -10,7 +10,7 @@
     <div class="product-info-container">
       <h2 class="product-name">{{ product.productName }}</h2>
       <p class="product-category">{{ product.categoryName }}</p>
-      <p class="product-price">{{ product.price | currency }}</p>
+      <p class="product-price">{{ product.price }}đ</p>
     
       <!-- Quantity Controls -->
       <div class="quantity-controls">
@@ -50,7 +50,7 @@
       <img [src]="getImage(relatedProduct.thumbnail)" alt="Product Image" class="related-product-image"/>
       <div class="related-product-info">
         <h4>{{ relatedProduct.productName }}</h4>
-        <p>{{ relatedProduct.price | currency }}</p>
+        <p>{{ relatedProduct.price }}đ</p>
       </div>
     </div>
   </div>

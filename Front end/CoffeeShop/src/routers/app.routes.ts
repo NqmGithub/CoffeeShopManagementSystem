@@ -62,6 +62,12 @@ export const routes: Routes = [
                 title: 'Category Manager',
                 component: CategoryManagerComponent,
                 outlet: 'mainContent'
+            },
+            {
+                path: 'orders',
+                title: 'Order Manager',
+                component: OrderManagerComponent,
+                outlet: 'mainContent'
             }
         ],
         // canActivate: [RoleGuardService]
@@ -76,10 +82,6 @@ export const routes: Routes = [
     {path:'verifyEmail', component: VerifyEmailComponent},
     {path:'profile', component:ProfileComponent, canActivate: [AuthGuard]},
     {path:'unauthorized', component:UnauthorizedComponent},
-    {
-        path: 'orders',
-        component: OrderManagerComponent
-      },
       {
         path: 'productlists',
         component: ProductListComponent

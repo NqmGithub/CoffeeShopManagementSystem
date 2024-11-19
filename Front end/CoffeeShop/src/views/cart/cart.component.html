@@ -28,8 +28,8 @@
             class="quantity-input"
           />
         </td>
-        <td>{{ item.price | currency }}</td>
-        <td>{{ item.price * item.quantity | currency }}</td>
+        <td>{{ item.price }}đ</td>
+        <td>{{ item.price * item.quantity }}đ</td>
         <td>
           <button class="remove-btn" (click)="removeFromCart(item.productId)">Remove</button>
         </td>
@@ -39,7 +39,7 @@
 
   <!-- Cart Total -->
   <div class="cart-total">
-    <p><strong>Total: {{ totalPrice | currency }}</strong></p>
+    <p><strong>Total: {{ totalPrice }}đ</strong></p>
   </div>
 
   <!-- Checkout Button -->
