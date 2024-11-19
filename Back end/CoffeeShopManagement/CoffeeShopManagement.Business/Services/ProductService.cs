@@ -195,14 +195,14 @@ namespace CoffeeShopManagement.Business.Services
             };
         }
         public async Task<IEnumerable<ProductDTO>> GetAllProductsAsync(
-           string search,
-           string category,
-           decimal? minPrice,
-           decimal? maxPrice,
-           int page,
-           int pageSize,
-           SortBy sortBy,
-           bool isDescending)
+        string search,
+        string category,
+        decimal? minPrice,
+        decimal? maxPrice,
+        int page,
+        int pageSize,
+        SortBy sortBy,
+        bool isDescending)
         {
             var products = await _unitOfWork.ProductRepository.GetAllProductsAsync(
                 search, category, minPrice, maxPrice, page, pageSize, sortBy, isDescending);
@@ -232,6 +232,7 @@ namespace CoffeeShopManagement.Business.Services
             }
             return productDTOs;
         }
+
         public async Task<IEnumerable<ProductDTO>> GetProductsByCategoryAsync(Guid categoryId)
         {
             var products = await _unitOfWork.ProductRepository.GetProductsByCategoryId(categoryId);
@@ -292,7 +293,10 @@ namespace CoffeeShopManagement.Business.Services
 
             return productDTOs; 
         }
-
+        public async Task<int> GetTotalRecords(string search, string category, decimal? minPrice, decimal? maxPrice)
+        {
+            return await _unitOfWork.ProductRepository.GetTotalRecords(search,category,minPrice,maxPrice);
+        }
         public async Task<bool> CheckProductNameExist(string productName)
         {
             var temp = await _unitOfWork.ProductRepository.GetQuery().FirstOrDefaultAsync(x => x.ProductName.Equals(productName));

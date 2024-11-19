@@ -1,0 +1,73 @@
+<!-- product-list.component.html -->
+<div class="coffee-shop-container">
+    <!-- Filters Section (Left Panel) -->
+    <div class="filters-container">
+      <div class="filters">
+        <h3>Filter Products</h3>
+        <!-- Search Input -->
+        <input 
+          [(ngModel)]="search" 
+          (ngModelChange)="onSearchChange()" 
+          placeholder="Search products..." 
+          class="search-input"
+        />
+    
+        <!-- Category Filter -->
+        <select [(ngModel)]="categoryFilter" (ngModelChange)="onCategoryChange()" class="filter-select">
+          <option value="">All Categories</option>
+          <option *ngFor="let category of categories" [value]="category">{{ category }}</option>
+        </select>
+    
+        <!-- Price Range Filter -->
+        <div class="price-filter">
+          <input 
+            [(ngModel)]="minPrice" 
+            type="number" 
+            placeholder="Min Price" 
+            (ngModelChange)="onSearchChange()" 
+            class="price-input"
+          />
+          <input 
+            [(ngModel)]="maxPrice" 
+            type="number" 
+            placeholder="Max Price" 
+            (ngModelChange)="onSearchChange()" 
+            class="price-input"
+          />
+        </div>
+      </div>
+    </div>
+  
+    <!-- Products Grid Section -->
+    <div class="product-grid">
+      <div *ngFor="let product of products" class="product-card" (click)="viewProductDetail(product.id)">
+        <img [src]="getImage(product.thumbnail)" alt="Product Image" class="product-image"/>
+        <div class="product-info">
+          <h3>{{ product.productName }}</h3>
+          <p>{{ product.categoryName }}</p>
+          <p>{{ product.price | currency }}</p>
+
+          <!-- Quantity controls -->
+          <div class="quantity-controls">
+            <button (click)="decreaseQuantity(product)">-</button>
+            <input type="number" [(ngModel)]="product.quantity" [min]="1" class="quantity-input"/>
+            <button (click)="increaseQuantity(product)">+</button>
+          </div>
+
+          <!-- Add to Cart button -->
+          <button class="btn btn-primary" (click)="addToCart(product)">Add to Cart</button>
+        </div>
+      </div>
+    </div>
+  
+    <!-- Pagination Section -->
+    <div class="pagination-container">
+      <mat-paginator 
+        [length]="totalRecords"
+        [pageSize]="pageSize"
+        [pageIndex]="currentPage - 1"
+        (page)="onPageChange($event.pageIndex + 1)"
+        class="mat-paginator">
+      </mat-paginator>
+    </div>
+  </div>

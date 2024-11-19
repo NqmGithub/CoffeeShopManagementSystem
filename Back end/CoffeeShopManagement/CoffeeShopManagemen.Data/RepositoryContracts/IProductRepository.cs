@@ -19,6 +19,7 @@ namespace CoffeeShopManagement.Data.RepositoryContracts
            bool isDescending);
         Task<IEnumerable<Product>> GetProductsByCategoryId(Guid categoryId);
         Task<IEnumerable<Product>> GetTopBestsellersAsync(int top);
+        Task<int> GetTotalRecords(string search, string category, decimal? minPrice, decimal? maxPrice);
     }
 }
 

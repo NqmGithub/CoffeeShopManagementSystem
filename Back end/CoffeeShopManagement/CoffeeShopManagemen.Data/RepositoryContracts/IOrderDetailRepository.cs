@@ -9,5 +9,7 @@ namespace CoffeeShopManagement.Data.RepositoryContracts
 {
     public interface IOrderDetailRepository: IGenericRepository<OrderDetail>
     {
+        Task<List<OrderDetail>> GetOrderDetailsByOrderId(Guid orderId);
+        Task<bool> UpdateOrderDetails(Guid orderId, List<OrderDetail> orderDetails);
     }
 }

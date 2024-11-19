@@ -51,19 +51,32 @@ namespace CoffeeShopManagement.WebAPI.Controllers
 
         [HttpGet]
         public async Task<IActionResult> GetAllProducts(
-            [FromQuery] string search = "",
-            [FromQuery] string category = "",
-            [FromQuery] decimal? minPrice = null,
-            [FromQuery] decimal? maxPrice = null,
-            [FromQuery] int page = 1,
-            [FromQuery] int pageSize = 10,
-            [FromQuery] SortBy sortBy = SortBy.Id,
-            [FromQuery] bool isDescending = false)
+       [FromQuery] string search = "",
+       [FromQuery] string category = "",
+       [FromQuery] decimal? minPrice = null,
+       [FromQuery] decimal? maxPrice = null,
+       [FromQuery] int page = 1,
+       [FromQuery] int pageSize = 10,
+       [FromQuery] SortBy sortBy = SortBy.Id,
+       [FromQuery] bool isDescending = false)
         {
+            // Kiểm tra các tham số đầu vào
             ValidateProductParameters(ref search, ref category, ref minPrice, ref maxPrice, ref sortBy, ref isDescending, ref page, ref pageSize);
 
-            var products = await productService.GetAllProductsAsync(search, category, minPrice, maxPrice, page, pageSize, sortBy, isDescending);
-            return Ok(products);
+            // Lấy danh sách sản phẩm
+            var products = await productService.GetAllProductsAsync(
+                search, category, minPrice, maxPrice, page, pageSize, sortBy, isDescending);
+
+            // Lấy tổng số bản ghi
+            var totalRecords = await productService.GetTotalRecords(search, category, minPrice, maxPrice);
+
+            // Trả về kết quả
+            return Ok(new
+            {
+                total = totalRecords, // Tổng số bản ghi
+                list = products // Danh sách sản phẩm
+            });
         }
+
     }
 }

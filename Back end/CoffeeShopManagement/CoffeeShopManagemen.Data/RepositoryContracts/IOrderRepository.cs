@@ -9,5 +9,15 @@ namespace CoffeeShopManagement.Data.RepositoryContracts
 {
     public interface IOrderRepository:IGenericRepository<Order>
     {
+        Task<(List<Order>, int TotalCount)> GetOrders(
+         string search,
+         int? status,
+         string sortColumn,
+         bool isDescending,
+         int pageNumber,
+         int pageSize);
+
+        Task<Order?> GetOrderById(Guid id);
+        Task UpdateOrder(Order order);
     }
 }

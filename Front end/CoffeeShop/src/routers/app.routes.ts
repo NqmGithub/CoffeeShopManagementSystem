@@ -5,7 +5,6 @@ import { UnauthorizedComponent } from '../views/unauthorized/unauthorized.compon
 import { AdminComponent } from '../views/admin/admin.component';
 import { ProductManagerComponent } from '../views/admin/product-manager/product-manager.component';
 import { RegisterComponent } from '../views/register/register.component';
-// import { ProfileComponent } from '../views/profile/profile.component';
 import { AuthGuard } from '../service/auth.guard';
 import { RoleGuardService } from '../service/role.guard';
 import { UserManagerComponent } from '../views/admin/user-manager/user-manager.component';
@@ -18,7 +17,10 @@ import { HistoryComponent } from '../views/history/history.component';
 import { ResetPasswordComponent } from '../views/login/reset-password/reset-password.component';
 import { VerifyEmailComponent } from '../views/register/verify-email/verify-email.component';
 import { CategoryManagerComponent } from '../views/admin/category-manager/category-manager.component';
-
+import { OrderManagerComponent } from '../views/admin/order-manager/order-dialog/order-manager.component';
+import { ProductListComponent } from '../views/product list/product-list.component';
+import { ProductDetailComponent } from '../views/productdetail/product-detail.component';
+import { CartComponent } from '../views/cart/cart.component';
 export const routes: Routes = [
     {
         path:'home',
@@ -71,6 +73,18 @@ export const routes: Routes = [
     {path:'resetPassword', component:ResetPasswordComponent},
     {path:'verifyEmail', component: VerifyEmailComponent},
     {path:'profile', component:ProfileComponent, canActivate: [AuthGuard]},
-    {path:'unauthorized', component:UnauthorizedComponent}
+    {path:'unauthorized', component:UnauthorizedComponent},
+    {
+        path: 'orders',
+        component: OrderManagerComponent
+      },
+      {
+        path: 'productlists',
+        component: ProductListComponent
+      },
+      {
+        path: 'productdetail/:id',  // Đường dẫn sản phẩm chi tiết
+        component: ProductDetailComponent
+      },
+      { path: 'cart', component: CartComponent }
 ];
-

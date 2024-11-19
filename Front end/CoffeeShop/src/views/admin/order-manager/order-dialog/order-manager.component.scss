@@ -1,0 +1,30 @@
+.active-status {
+    color: green;
+    font-weight: 500;
+  }
+  
+  .inactive-status {
+    color: red;
+    font-weight: 500;
+  }
+  
+  .demo-table {
+    width: 100%;
+  }
+  
+  .actions {
+    display: flex;
+    gap: 10px;
+  }
+  
+  .addButton {
+    height: 55px;
+    border-radius: 5px;
+    background-color: #4caf50 !important;
+    color: #ffffff !important;
+  }
+  
+  .mat-column-actions {
+    width: 120px;
+  }
+  

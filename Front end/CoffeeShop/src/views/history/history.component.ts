@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { MatExpansionModule } from '@angular/material/expansion';
-import { Order } from '../../Interfaces/order';
+import { Order, OrderDTO } from '../../Interfaces/order';
 import { ApiService } from '../../Api/api.service';
 import { AuthService } from '../../service/auth.service';
 import { User } from '../../Interfaces/user';
@@ -20,7 +20,7 @@ import { MatIconModule } from '@angular/material/icon';
 })
 export class HistoryComponent {
   stars = [1, 2, 3, 4, 5];
-  orders: Order[] = [];
+  orders: OrderDTO[] = [];
   orderDetails: UserOrderDetails[]=[];
   user:User|null = null
   constructor(private authService: AuthService,private apiService: ApiService) {

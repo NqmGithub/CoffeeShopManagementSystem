@@ -1,4 +1,5 @@
 ﻿using CoffeeShopManagement.Business.DTO;
+using CoffeeShopManagement.Models.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,17 @@ namespace CoffeeShopManagement.Business.ServiceContracts
 {
     public interface IOrderService
     {
-        Task<IEnumerable<OrderDTO>> GetOrdersByUserId(Guid id);
+        Task<(List<OrderDTO> Orders, int TotalCount)> GetOrdersWithCount(
+         string search,
+         int? status,
+         string sortColumn,
+         bool isDescending,
+         int pageNumber,
+         int pageSize);
+
+        Task<OrderDTO?> GetOrderById(Guid id);
+        Task<(bool IsSuccess, string Message, int NewStatus)> ToggleOrderStatus(Guid id);
+       
+        Task<IEnumerable<UserOrderDTO>> GetOrdersByUserId(Guid id);
     }
 }

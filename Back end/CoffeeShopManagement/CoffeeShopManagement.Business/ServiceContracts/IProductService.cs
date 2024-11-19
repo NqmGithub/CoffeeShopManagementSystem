@@ -32,6 +32,7 @@ namespace CoffeeShopManagement.Business.ServiceContracts
              bool isDescending);
         Task<IEnumerable<ProductDTO>> GetProductsByCategoryAsync(Guid categoryId);
         Task<IEnumerable<ProductDTO>> GetTopBestsellerProductsAsync(int top);
+        Task<int> GetTotalRecords(string search, string category, decimal? minPrice, decimal? maxPrice);
         Task<ProductListResponse> GetProductWithCondition
             (ProductQueryRequest productQueryRequest);
 
