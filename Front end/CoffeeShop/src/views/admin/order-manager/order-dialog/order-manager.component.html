@@ -1,72 +1,99 @@
-<h2 style="color:#6b4f34; font-weight: bolder;">Order List</h2>
-<div style="display: flex; justify-content: space-between;">
-  <form class="example-form" (ngSubmit)="onChange()">
-    <!-- Search Field -->
-    <mat-form-field class="example-full-width" appearance="outline">
-      <input matInput [(ngModel)]="search" name="search" (keyup.enter)="onChange()" placeholder="Search Orders">
-      <mat-icon matSuffix (click)="onChange()">search</mat-icon>
-    </mat-form-field>
-  </form>
+<div class="order-management-container">
+  <!-- Title -->
+  <h2 class="order-management-title">Order Management</h2>
 
-  <!-- Pagination Controls -->
-  <mat-paginator [length]="totalOrders" [pageSize]="pageSize" (page)="onPageChange($event)">
-  </mat-paginator>
+  <!-- Search -->
+  <div class="order-management-header">
+    <form class="search-form" (ngSubmit)="onChange()">
+      <mat-form-field class="search-field" appearance="outline">
+        <mat-label>Search Orders</mat-label>
+        <input 
+          matInput 
+          [(ngModel)]="search" 
+          name="search" 
+          (keyup.enter)="onChange()" 
+          placeholder="Search by Customer or Order ID" />
+        <button mat-icon-button matSuffix (click)="onChange()">
+          <mat-icon>search</mat-icon>
+        </button>
+      </mat-form-field>
+    </form>
+  </div>
+
+  <!-- Order Table -->
+  <div class="table-container">
+    <table mat-table [dataSource]="ordersData" matSort (matSortChange)="onSortChange()" class="order-table mat-elevation-z8">
+      <!-- Order ID Column -->
+      <ng-container matColumnDef="OrderId">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Order ID</th>
+        <td mat-cell *matCellDef="let order">{{ order.id }}</td>
+      </ng-container>
+
+      <!-- Order Date Column -->
+      <ng-container matColumnDef="OrderDate">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Date</th>
+        <td mat-cell *matCellDef="let order">{{ order.orderDate | date: 'short' }}</td>
+      </ng-container>
+
+      <!-- Customer Name Column -->
+      <ng-container matColumnDef="CustomerName">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Customer</th>
+        <td mat-cell *matCellDef="let order">{{ order.userName }}</td>
+      </ng-container>
+
+      <!-- Status Column -->
+      <ng-container matColumnDef="Status">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Status</th>
+        <td mat-cell *matCellDef="let order">
+          <span
+            [ngClass]="{
+              'status-completed': order.status === 1,
+              'status-pending': order.status === 0,
+              'status-cancelled': order.status === 2
+            }">
+            {{ order.status === 1 ? 'Completed' : order.status === 0 ? 'Pending' : 'Cancelled' }}
+          </span>
+          <button 
+            mat-button 
+            color="primary" 
+            (click)="openChangeStatusDialog(order)">
+            Change Status
+          </button>
+        </td>
+      </ng-container>
+      
+
+      <!-- Total Price Column -->
+      <ng-container matColumnDef="TotalPrice">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Total</th>
+        <td mat-cell *matCellDef="let order">{{ order.totalPrice | currency }}</td>
+      </ng-container>
+
+      <!-- Actions Column -->
+      <ng-container matColumnDef="Actions">
+        <th mat-header-cell *matHeaderCellDef>Actions</th>
+        <td mat-cell *matCellDef="let order">
+          <button mat-button (click)="viewDetail(order)" class="action-button">
+            View Details
+          </button>
+          <button mat-button (click)=" openChangeStatusDialog(order)" class="status-button">
+            Toggle Status
+          </button>
+        </td>
+      </ng-container>
+
+      <!-- Table Header and Row Definition -->
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+  </div>
+
+  <!-- Pagination at the bottom -->
+  <div class="pagination-container">
+    <mat-paginator 
+      [length]="totalOrders" 
+      [pageSize]="pageSize" 
+      (page)="onPageChange($event)">
+    </mat-paginator>
+  </div>
 </div>
-
-<!-- Order Table -->
-<table mat-table [dataSource]="ordersData" matSort (matSortChange)="onSortChange()" class="mat-elevation-z8 demo-table">
-  
-  <!-- Order ID Column -->
-  <ng-container matColumnDef="OrderId">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header> Order ID </th>
-    <td mat-cell *matCellDef="let order"> {{order.id}} </td>
-  </ng-container>
-
-  <!-- Order Date Column -->
-  <ng-container matColumnDef="OrderDate">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header> Order Date </th>
-    <td mat-cell *matCellDef="let order"> {{order.orderDate | date}} </td>
-  </ng-container>
-
-  <!-- Customer Name Column -->
-  <ng-container matColumnDef="CustomerName">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header> Customer </th>
-    <td mat-cell *matCellDef="let order"> {{order.userName}} </td>
-  </ng-container>
-
-  <!-- Status Column -->
-  <ng-container matColumnDef="Status">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header> Status </th>
-    <td mat-cell *matCellDef="let order">
-      <span [ngStyle]="{'color': order.status === 1 ? 'green' : (order.status === 0 ? 'red' : 'orange')}">
-        {{order.status === 1 ? 'Completed' : (order.status === 0 ? 'Pending' :  'Pending')}}
-      </span>
-    </td>
-  </ng-container>
-
-  <!-- Total Price Column -->
-  <ng-container matColumnDef="TotalPrice">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header> Total Price </th>
-    <td mat-cell *matCellDef="let order"> {{order.totalPrice | currency}} </td>
-  </ng-container>
-
-  <!-- Total Quantity Column -->
-  <ng-container matColumnDef="TotalQuantity">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header> Total Quantity </th>
-    <td mat-cell *matCellDef="let order"> {{order.totalQuantity}} </td>
-  </ng-container>
-
-  <!-- Actions Column -->
-  <ng-container matColumnDef="Actions">
-    <th mat-header-cell *matHeaderCellDef> Actions </th>
-    <td mat-cell *matCellDef="let order">
-      <button mat-icon-button class="view-button" (click)="viewDetail(order)">
-      </button>
-      <button mat-button (click)="changeStatus(order)" style="background-color: #fad1d1; color: red; border-radius: 10%;">Toggle Status</button>    </td>
-  </ng-container>
-
-  <!-- Table Header and Row Definition -->
-  <tr mat-header-row *matHeaderRowDef="['OrderId', 'OrderDate', 'CustomerName', 'Status', 'TotalPrice', 'TotalQuantity', 'Actions']"></tr>
-  <tr mat-row *matRowDef="let row; columns: ['OrderId', 'OrderDate', 'CustomerName', 'Status', 'TotalPrice', 'TotalQuantity', 'Actions']"></tr>
-</table>
-
