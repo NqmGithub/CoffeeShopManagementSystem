@@ -427,7 +427,7 @@ export class ContactComponent {
 		  };
 		  
 		this.apiService.postContact(contact).subscribe( res =>{
-
+			alert('Contact sent');
 		});
 	}
 

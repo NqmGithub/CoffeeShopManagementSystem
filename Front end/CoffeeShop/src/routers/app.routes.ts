@@ -37,45 +37,51 @@ export const routes: Routes = [
               path: 'products',
               title: 'Product Manager',
               component: ProductManagerComponent,
-              outlet: 'mainContent'       
+              outlet: 'mainContent'  ,
+              canActivate: [RoleGuardService, AuthGuard]     
             },
             {
                 path: 'users',
                 title: 'User Manager',
                 component: UserManagerComponent,
-                outlet: 'mainContent'
+                outlet: 'mainContent',
+                canActivate: [RoleGuardService, AuthGuard]
             },
             {
                 path: 'contacts',
                 title: 'Contact Manager',
                 component: ContactManagerComponent,
-                outlet: 'mainContent'
+                outlet: 'mainContent',
+                canActivate: [RoleGuardService, AuthGuard]
             },
             {
                 path: 'contact-detail/:id',
                 title: 'Contact Detail',
                 component: ContactDetailComponent,
-                outlet: 'mainContent'
+                outlet: 'mainContent',
+                canActivate: [RoleGuardService, AuthGuard]
             },
             {
                 path: 'categories',
                 title: 'Category Manager',
                 component: CategoryManagerComponent,
-                outlet: 'mainContent'
+                outlet: 'mainContent',
+                canActivate: [RoleGuardService, AuthGuard]
             },
             {
                 path: 'orders',
                 title: 'Order Manager',
                 component: OrderManagerComponent,
-                outlet: 'mainContent'
+                outlet: 'mainContent',
+                canActivate: [RoleGuardService, AuthGuard]
             }
         ],
-        // canActivate: [RoleGuardService]
+        canActivate: [RoleGuardService, AuthGuard]
     },
-    {path:'contact', component:ContactComponent},
-    {path:'notification', component:NotificationComponent},
-    {path:'history', component:HistoryComponent},
-    {path:'checkout', component:CheckoutComponent},
+    {path:'contact', component:ContactComponent, canActivate: [AuthGuard]},
+    {path:'notification', component:NotificationComponent, canActivate: [AuthGuard]},
+    {path:'history', component:HistoryComponent, canActivate: [AuthGuard]},
+    {path:'checkout', component:CheckoutComponent, canActivate: [AuthGuard]},
     {path:'register', component:RegisterComponent},
     {path:'login', component:LoginComponent},
     {path:'resetPassword', component:ResetPasswordComponent},
@@ -87,5 +93,5 @@ export const routes: Routes = [
         component: ProductListComponent
       },
       { path: 'productdetail/:productId', component: ProductDetailComponent },
-      { path: 'cart', component: CartComponent }
+      { path: 'cart', component: CartComponent, canActivate: [AuthGuard] }
 ];

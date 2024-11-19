@@ -101,5 +101,6 @@ export class HistoryComponent {
 
     this.apiService.rating(ratedProducts).subscribe();
     this.loadOrders(this.user?.id!);
+    // window.location.reload()
   }
 }

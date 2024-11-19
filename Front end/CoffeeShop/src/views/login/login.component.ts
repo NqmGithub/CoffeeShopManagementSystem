@@ -32,6 +32,7 @@ export class LoginComponent {
     const password = this.loginForm.value.password ?? '';
     this.auth.login(email, password).subscribe({
       next:() => {
+        localStorage.setItem("email", email)
         this.isLoading = false
       },    
       error:(e) => {
