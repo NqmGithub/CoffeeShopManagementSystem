@@ -27,18 +27,16 @@ export class CheckoutComponent{
     this.authService.getCurrentUser().subscribe(
       res => {
         this.user = res;
+        this.loadCart(this.user?.id!)
       }
     )
-    this.loadCart();
-
   }
 
   getImage(name: string) {
     return `https://localhost:44344/wwwroot/Images/${name}`;
   }
   // Load cart items from ApiService
-  loadCart(): void {
-    const userId = this.user?.id!; // Sử dụng userId mặc định khi test
+  loadCart(userId:string): void {
 
     this.cart = this.apiService.getCartItems(userId);
     this.calculateTotal();

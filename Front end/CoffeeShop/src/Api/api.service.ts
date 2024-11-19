@@ -348,7 +348,7 @@ addOrder(orderCreateDTO: any): Observable<any> {
   return this.http.post(`${this.baseurl}/Order`, orderCreateDTO,this.headerCustom);
 }
 getCartItems(userId: string): any[] {
-  const cartKey = `cart_${userId || 'testUser'}`; // Sử dụng userId mặc định khi test
+  const cartKey = `cart_${userId }`; // Sử dụng userId mặc định khi test
   const cart = JSON.parse(localStorage.getItem(cartKey) || '[]');
   return cart;
 }
