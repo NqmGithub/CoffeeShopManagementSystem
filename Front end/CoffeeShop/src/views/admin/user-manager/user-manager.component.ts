@@ -94,6 +94,9 @@ export class UserManagerComponent implements OnInit{
   }
 
   getImage(path: string){
+    if(path === null){
+      return `https://localhost:44344/wwwroot/Avatars/avatar.jpg`;
+    }
     return `https://localhost:44344/wwwroot/Avatars/${path}`;
   }
 
