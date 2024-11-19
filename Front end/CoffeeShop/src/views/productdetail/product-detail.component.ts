@@ -6,6 +6,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { NavbarComponent } from '../../layout/navbar/navbar.component';
 import { AuthService } from '../../service/auth.service';
+
 @Component({
   selector: 'app-product-detail',
   standalone: true,
@@ -18,14 +19,14 @@ import { AuthService } from '../../service/auth.service';
   styleUrls: ['./product-detail.component.css']
 })
 export class ProductDetailComponent implements OnInit {
-  productId: string = '';  // ID của sản phẩm hiện tại
-  product: Product | null = null;  // Chi tiết sản phẩm
-  relatedProducts: Product[] = [];  // Danh sách sản phẩm liên quan
-  quantity: number = 1;  // Số lượng sản phẩm người dùng chọn
+  productId: string = '';  // ID of the current product
+  product: Product | null = null;  // Product details
+  relatedProducts: Product[] = [];  // Related products list
+  tempQuantity: number = 1;  // Temporary quantity of the product
 
   constructor(
     private route: ActivatedRoute,
-    private apiService: ApiService,  // Dịch vụ API
+    private apiService: ApiService,  // API service
     private router: Router,
     private authService: AuthService
   ) {}
@@ -48,6 +49,7 @@ export class ProductDetailComponent implements OnInit {
     this.apiService.getProductById(productId).subscribe({
       next: (product) => {
         this.product = product;
+        this.tempQuantity = 1; // Initialize temporary quantity to 1
       },
       error: (err) => {
         console.error('Error fetching product details:', err);
@@ -74,40 +76,59 @@ export class ProductDetailComponent implements OnInit {
     this.router.navigate(['/productdetail', productId]);
   }
 
+  // Increase quantity
   increaseQuantity(): void {
-    this.quantity++;
+    this.tempQuantity++;
   }
 
+  // Decrease quantity
   decreaseQuantity(): void {
-    if (this.quantity > 1) {
-      this.quantity--;
+    if (this.tempQuantity > 1) {
+      this.tempQuantity--;
     }
   }
 
-  // Thêm sản phẩm vào giỏ hàng
-  addToCart(product: any): void {
-    const userId = 'testUser'; // Sử dụng userId mặc định khi test
-  
+  // Ensure that quantity cannot be less than 1
+  onQuantityChange(): void {
+    if (this.tempQuantity < 1) {
+      this.tempQuantity = 1;
+    }
+  }
+
+  addToCart(): void {
+    if (!this.product) {
+      console.error('No product to add to the cart!');
+      return;
+    }
+
+    const userId = 'testUser'; // Default userId for testing
     let cart = this.apiService.getCartItems(userId);
-    
-    // Kiểm tra nếu sản phẩm đã tồn tại trong giỏ hàng
-    const existingProduct = cart.find((item: any) => item.productId === product.productId);
-  
+
+    // Check if product already exists in the cart
+    const existingProduct = cart.find((item: any) => item.productId === this.product?.id);
+
+    // Use tempQuantity to determine the quantity of product being added to cart
+    const quantityToAdd = this.tempQuantity;
+
     if (existingProduct) {
-      existingProduct.quantity += product.quantity || 1;
+      // If product exists in cart, increase quantity
+      existingProduct.quantity += quantityToAdd;
     } else {
+      // If product does not exist, add new product to the cart
       cart.push({
-        productId: product.productId,
-        productName: product.productName,
-        quantity: product.quantity || 1,
-        price: product.price,
-        thumbnail: product.thumbnail
+        productId: this.product.id,
+        productName: this.product.productName,
+        quantity: quantityToAdd,
+        price: this.product.price,
+        thumbnail: this.product.thumbnail,
       });
     }
-  
+
+    // Save updated cart
     this.apiService.saveCartItems(userId, cart);
     alert('Product added to cart');
+    // Reset tempQuantity after adding to cart
+    this.tempQuantity = 1;
   }
-  
-  
 }
+

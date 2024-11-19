@@ -54,28 +54,7 @@ namespace CoffeeShopManagement.WebAPI.Controllers
 
             return Ok(relatedProducts);
         }
-        [HttpPost()]
-        public async Task<IActionResult> AddOrder([FromBody] OrderCreateDTO orderCreateDTO)
-        {
-            try
-            {
-                // Kiểm tra dữ liệu đầu vào
-                if (orderCreateDTO == null || orderCreateDTO.Details == null || !orderCreateDTO.Details.Any())
-                {
-                    return BadRequest("Invalid order data. Please provide valid order items.");
-                }
+       
 
-                // Gọi service để thêm đơn hàng
-                var result = await orderService.AddOrderAsync(orderCreateDTO);
-
-                // Trả về kết quả thành công
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                // Trả về lỗi server
-                return StatusCode(500, new { message = $"An error occurred while creating the order: {ex.Message}" });
-            }
-        }
     }
 }

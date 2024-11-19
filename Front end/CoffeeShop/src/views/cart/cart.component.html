@@ -1,5 +1,7 @@
+<app-navbar></app-navbar>
+
 <div class="cart-container" *ngIf="cart.length > 0">
-  <h2>Your Cart</h2>
+  <h2 class="cart-title">Your Cart</h2>
 
   <!-- Cart Table -->
   <table class="cart-table">
@@ -29,7 +31,7 @@
         <td>{{ item.price | currency }}</td>
         <td>{{ item.price * item.quantity | currency }}</td>
         <td>
-          <button (click)="removeFromCart(item.productId)">Remove</button>
+          <button class="remove-btn" (click)="removeFromCart(item.productId)">Remove</button>
         </td>
       </tr>
     </tbody>
@@ -46,5 +48,5 @@
 
 <!-- Empty Cart Message -->
 <div *ngIf="cart.length === 0">
-  <h2>Your cart is empty</h2>
+  <h2 class="empty-cart-message">Your cart is empty</h2>
 </div>

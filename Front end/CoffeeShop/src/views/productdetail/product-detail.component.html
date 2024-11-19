@@ -3,51 +3,54 @@
   <div *ngIf="product" class="product-detail">
     <!-- Product Image Section -->
     <div class="product-image-container">
-      <img [src]="getImage(product.thumbnail)" alt="Product Image" class="product-image"/>
+      <img [src]="getImage(product.thumbnail)" alt="Product Image" class="product-image" />
     </div>
 
     <!-- Product Info Section -->
     <div class="product-info-container">
-      <!-- Product Name -->
       <h2 class="product-name">{{ product.productName }}</h2>
-
-      <!-- Product Category -->
       <p class="product-category">{{ product.categoryName }}</p>
-
-      <!-- Product Price -->
       <p class="product-price">{{ product.price | currency }}</p>
-
-      <!-- Quantity Selector -->
-      <div class="quantity-selector">
-        <label for="quantity">Quantity:</label>
-        <button (click)="decreaseQuantity()">-</button>
-        <input type="number" id="quantity" [(ngModel)]="quantity" min="1" step="1" />
-        <button (click)="increaseQuantity()">+</button>
+    
+      <!-- Quantity Controls -->
+      <div class="quantity-controls">
+        <!-- Decrease Quantity -->
+        <button class="quantity-button" (click)="decreaseQuantity()">-</button>
+    
+        <!-- Quantity Input -->
+        <input 
+          type="number" 
+          [(ngModel)]="tempQuantity" 
+          [min]="1" 
+          class="quantity-input" 
+          (click)="$event.stopPropagation()"
+          (change)="onQuantityChange()" 
+        />
+    
+        <!-- Increase Quantity -->
+        <button class="quantity-button" (click)="increaseQuantity()">+</button>
       </div>
-
+    
       <!-- Add to Cart Button -->
-      <button class="add-to-cart-btn" (click)="addToCart(product)">Add to Cart</button>
-
-      <!-- Product Description Section -->
+      <button class="add-to-cart-btn" (click)="addToCart()">Add to Cart</button>
+    
+      <!-- Product Description -->
       <div class="product-description">
         <h3>Description</h3>
         <p>{{ product.description }}</p>
       </div>
     </div>
   </div>
-
-  <!-- Related Products Section -->
-  <div *ngIf="relatedProducts && relatedProducts.length > 0" class="related-products">
-    <h3 class="related-products-title">Recommended for You</h3>
-    <div class="related-products-list">
-      <div *ngFor="let relatedProduct of relatedProducts" class="related-product-card">
-        <div class="related-product-card-detail" (click)="viewProductDetail(relatedProduct.id)">
-          <img [src]="getImage(relatedProduct.thumbnail)" alt="Product Image" class="related-product-image"/>
-          <div class="related-product-info">
-            <h4 class="related-product-name">{{ relatedProduct.productName }}</h4>
-            <p class="related-product-price">{{ relatedProduct.price | currency }}</p>
-          </div>
-        </div>
+</div>
+<!-- Related Products Section -->
+<div *ngIf="relatedProducts.length > 0" class="related-products">
+  <h3 class="related-products-title">Recommended for You</h3>
+  <div class="related-products-list">
+    <div *ngFor="let relatedProduct of relatedProducts" class="related-product-card" (click)="viewProductDetail(relatedProduct.id)">
+      <img [src]="getImage(relatedProduct.thumbnail)" alt="Product Image" class="related-product-image"/>
+      <div class="related-product-info">
+        <h4>{{ relatedProduct.productName }}</h4>
+        <p>{{ relatedProduct.price | currency }}</p>
       </div>
     </div>
   </div>

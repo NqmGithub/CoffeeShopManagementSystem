@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../service/auth.service';
+import { NavbarComponent } from "../../layout/navbar/navbar.component";
 
 @Component({
   selector: 'app-cart',
@@ -11,7 +12,8 @@ import { AuthService } from '../../service/auth.service';
   imports: [
     CommonModule,
     FormsModule,
-  ],
+    NavbarComponent
+],
   templateUrl: './cart.component.html',
   styleUrls: ['./cart.component.css']
 })
