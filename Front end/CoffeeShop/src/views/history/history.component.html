@@ -7,7 +7,11 @@
                   <mat-panel-title> Date: {{ order.orderDate| date: 'dd/MM/yyyy HH:mm:ss' }}
                 </mat-panel-title>
                   <mat-panel-description>
-                    Total : {{order.totalPrice}}$
+                    <div style="display: flex; justify-content: space-between; width: 80%;">
+                      <p>Total : {{order.totalPrice}}$</p>
+                      <p>Status: {{order.status}}</p>
+                    </div>
+                    
                   </mat-panel-description>
                 </mat-expansion-panel-header>
                 <mat-card appearance="outlined" style="border: 0px;">
@@ -29,13 +33,15 @@
 
                       <div class="stars" style="display: flex; gap: 5px;">
                         @for (star of stars; track $index; let j = $index) {
-                          <mat-icon style="cursor: pointer;color: #FFD700;" [class.filled]="k < product.rating"(click)="setRating(i, k, j + 1)"> {{  j < product.rating ? 'star' : 'star_border' }}</mat-icon>
+                          <mat-icon style="cursor: pointer;color: #FFD700;"(click)="setRating(i, k, j + 1)"> {{  j < product.rating ? 'star' : 'star_border' }}</mat-icon>
                         }                         
                       </div>
                     </mat-card-content>
                   </mat-card>
                 }
-                <button mat-flat-button style="float: right; margin-top: 10px;" (click)="submitRatings(i)">Submit</button>
+                @if (!order.isRated) {
+                  <button mat-flat-button style="float: right; margin-top: 10px;" (click)="submitRatings(i)">Submit</button>
+                }                
               </mat-expansion-panel>               
               
            

@@ -148,7 +148,9 @@ export class ProductDialogComponent implements OnInit {
     quantity: this.createProduct.quantity,
     thumbnail: this.createProduct.productName+'.'+ this.fileExtension,
     description:this.createProduct.description,
-    status: this.createProduct.status
+    status: this.createProduct.status,
+    numberReviews:0,
+    rate:0
     }
     this.dialogRef.close(product); 
     if(this.fileToUpload == null){

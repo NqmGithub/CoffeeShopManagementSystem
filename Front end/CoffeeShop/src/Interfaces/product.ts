@@ -6,5 +6,7 @@ export interface Product {
     quantity: number,
     thumbnail: string,
     description:string,
-    status: string
+    status: string,
+    numberReviews: number,
+    rate: number
 }

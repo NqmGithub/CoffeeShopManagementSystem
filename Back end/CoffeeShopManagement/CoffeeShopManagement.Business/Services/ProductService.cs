@@ -58,7 +58,19 @@ namespace CoffeeShopManagement.Business.Services
 
         public ICollection<ProductDTO> GetListProduct()
         {
-            return _unitOfWork.ProductRepository.GetQuery().Include(x => x.Categoty.Status == 1).Select(x => x.ToProductDTO(_unitOfWork)).ToList();
+            var x = _unitOfWork.ProductRepository.GetQuery().Include(x => x.Categoty.Status == 1).Select(x => x.ToProductDTO(_unitOfWork)).ToList();
+            foreach (var product in x)
+            {
+                var temp = _unitOfWork.OrderDetailRepository.GetQuery()
+                    .Where(x => x.Rating > 0 && x.ProductId == product.Id);
+                product.numberReviews = temp.Count();
+                product.Rate = temp
+                    .Select(x => x.Rating)
+                    .DefaultIfEmpty(0)
+                    .Average();
+
+            }
+            return x;
         }
 
         public async Task<ProductDTO> GetProductById(Guid id)
@@ -68,7 +80,16 @@ namespace CoffeeShopManagement.Business.Services
             {
                 throw new ArgumentNullException(nameof(product));
             }
-            return product.ToProductDTO(_unitOfWork);
+            var productDTO =  product.ToProductDTO(_unitOfWork);
+                var temp = _unitOfWork.OrderDetailRepository.GetQuery()
+                    .Where(x => x.Rating.HasValue && x.Rating > 0 && x.ProductId == product.Id).ToList();
+
+                productDTO.numberReviews = temp.Count();
+                productDTO.Rate = temp
+                    .Select(x => x.Rating)
+                    .DefaultIfEmpty(0)
+                    .Average();
+            return productDTO;
         }
 
         public async Task<bool> UpdateProduct(ProductUpdateDTO productUpdateDTO)
@@ -142,7 +163,7 @@ namespace CoffeeShopManagement.Business.Services
 
             // Apply pagination
             var totalProducts = query.Count();
-            var products = query.Skip(productQueryRequest.Page * productQueryRequest.PageSize).Take(productQueryRequest.PageSize)
+            var productDTOs = query.Skip(productQueryRequest.Page * productQueryRequest.PageSize).Take(productQueryRequest.PageSize)
                 .Select(p => new ProductDTO()
                 {
                     Id = p.Id,
@@ -153,11 +174,23 @@ namespace CoffeeShopManagement.Business.Services
                     Thumbnail = p.Thumbnail,
                     Description = p.Description,
                     Status = ProductHelper.ConvertToStatusString(p.Status),
-                }).ToListAsync();
+                }).ToList();
+            for (int i = 0; i < productDTOs.Count; i++)
+            {
+                var product = productDTOs[i];
+                var temp = _unitOfWork.OrderDetailRepository.GetQuery()
+                    .Where(x => x.Rating.HasValue && x.Rating > 0 && x.ProductId == product.Id).ToList();
+
+                product.numberReviews = temp.Count();
+                product.Rate = temp
+                    .Select(x => x.Rating)
+                    .DefaultIfEmpty(0)
+                    .Average();
+            }
 
             return new ProductListResponse()
             {
-                List = await products,
+                List =  productDTOs,
                 Total = totalProducts,
             };
         }
@@ -174,7 +207,7 @@ namespace CoffeeShopManagement.Business.Services
             var products = await _unitOfWork.ProductRepository.GetAllProductsAsync(
                 search, category, minPrice, maxPrice, page, pageSize, sortBy, isDescending);
 
-            return products.Select(p => new ProductDTO
+            var productDTOs = products.Select(p => new ProductDTO
             {
                 Id = p.Id,
                 ProductName = p.ProductName,
@@ -184,13 +217,26 @@ namespace CoffeeShopManagement.Business.Services
                 Status = ProductHelper.ConvertToStatusString(p.Status),
                 Description = p.Description,
                 CategoryName = p.Categoty?.CategoryName ?? "Unknown"
-            });
+            }).ToList();
+            for (int i = 0; i < productDTOs.Count; i++)
+            {
+                var product = productDTOs[i];
+                var temp = _unitOfWork.OrderDetailRepository.GetQuery()
+                    .Where(x => x.Rating.HasValue && x.Rating > 0 && x.ProductId == product.Id).ToList();
+
+                product.numberReviews = temp.Count();
+                product.Rate = temp
+                    .Select(x => x.Rating)
+                    .DefaultIfEmpty(0)
+                    .Average();
+            }
+            return productDTOs;
         }
         public async Task<IEnumerable<ProductDTO>> GetProductsByCategoryAsync(Guid categoryId)
         {
             var products = await _unitOfWork.ProductRepository.GetProductsByCategoryId(categoryId);
 
-            return products.Select(p => new ProductDTO
+            var productDTOs = products.Select(p => new ProductDTO
             {
                 Id = p.Id,
                 ProductName = p.ProductName,
@@ -199,14 +245,28 @@ namespace CoffeeShopManagement.Business.Services
                 Thumbnail = p.Thumbnail,
                 Status = ProductHelper.ConvertToStatusString(p.Status),
                 Description = p.Description
-            });
+            }).ToList();
+            for (int i = 0; i < productDTOs.Count; i++)
+            {
+                var product = productDTOs[i];
+                var temp = _unitOfWork.OrderDetailRepository.GetQuery()
+                    .Where(x => x.Rating.HasValue && x.Rating > 0 && x.ProductId == product.Id).ToList();
+
+                product.numberReviews = temp.Count();
+                product.Rate = temp
+                    .Select(x => x.Rating)
+                    .DefaultIfEmpty(0)
+                    .Average();
+            }
+            return productDTOs;
         }
 
         public async Task<IEnumerable<ProductDTO>> GetTopBestsellerProductsAsync(int top)
         {
             var products = await _unitOfWork.ProductRepository.GetTopBestsellersAsync(top);
 
-            return products.Select(p => new ProductDTO
+            // Chuyển sang List để thay đổi giá trị trong danh sách
+            var productDTOs = products.Select(p => new ProductDTO
             {
                 Id = p.Id,
                 ProductName = p.ProductName,
@@ -215,8 +275,24 @@ namespace CoffeeShopManagement.Business.Services
                 Thumbnail = p.Thumbnail,
                 Status = ProductHelper.ConvertToStatusString(p.Status),
                 Description = p.Description
-            });
+            }).ToList(); 
+
+            for (int i = 0; i < productDTOs.Count; i++)
+            {
+                var product = productDTOs[i];
+                var temp = _unitOfWork.OrderDetailRepository.GetQuery()
+                    .Where(x => x.Rating.HasValue && x.Rating > 0 && x.ProductId == product.Id).ToList();
+
+                product.numberReviews = temp.Count();
+                product.Rate = temp
+                    .Select(x => x.Rating)
+                    .DefaultIfEmpty(0)
+                    .Average();
+            }
+
+            return productDTOs; 
         }
+
         public async Task<bool> CheckProductNameExist(string productName)
         {
             var temp = await _unitOfWork.ProductRepository.GetQuery().FirstOrDefaultAsync(x => x.ProductName.Equals(productName));

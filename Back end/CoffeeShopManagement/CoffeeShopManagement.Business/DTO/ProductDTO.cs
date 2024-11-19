@@ -24,8 +24,10 @@ namespace CoffeeShopManagement.Business.DTO
 
         public string Description { get; set; }
         public string? Thumbnail { get; set; }
-
         public string Status { get; set; }
+
+        public int? numberReviews { get; set; }
+        public double? Rate { get; set; }
     }
 
     public static class ProductExtensions

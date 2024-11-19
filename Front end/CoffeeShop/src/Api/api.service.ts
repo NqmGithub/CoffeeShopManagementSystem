@@ -20,6 +20,7 @@ import { ProblemType } from '../Interfaces/problemType';
 import { CreateCategory } from '../Interfaces/createCategory';
 import { UpdateProfile } from '../Interfaces/updateProfile';
 import { ChangePassword } from '../Interfaces/changePassword';
+import { RatingProduct } from '../Interfaces/ratingProduct';
 @Injectable({
   providedIn: 'root'
 })
@@ -278,6 +279,10 @@ export class ApiService {
 
   getOrderDetailsByOrderId(id:string): Observable<UserOrderDetails[]>{
     return this.http.get<UserOrderDetails[]>(this.baseurl + '/OrderDetail/'+id)
+  }
+
+  rating(ratingProducts:RatingProduct[]): Observable<boolean>{
+    return this.http.put<boolean>(this.baseurl+'/OrderDetail/rating',ratingProducts);
   }
   //category
   

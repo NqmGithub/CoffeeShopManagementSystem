@@ -20,5 +20,7 @@ namespace CoffeeShopManagement.Business.DTO
         public string Img { get; set; }
 
         public decimal OrderPrice { get; set; }
+
+        public int Rating { get; set; } = 0;
     }
 }

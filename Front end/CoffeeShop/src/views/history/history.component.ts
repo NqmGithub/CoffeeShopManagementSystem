@@ -42,7 +42,13 @@ export class HistoryComponent {
           this.apiService.getOrderDetailsByOrderId(this.orders[i].id).subscribe(
             res =>{
               this.orders[i].product = res;
-              console.log(res)
+              for (const element of this.orders[i].product) {
+                if (element.rating > 0) {
+                    this.orders[i].isRated = true;
+                    break; 
+                }
+            }
+            console.log(this.orders[i]);
             }
           )
           
@@ -61,8 +67,10 @@ export class HistoryComponent {
 
   submitRatings(orderIndex: number): void {
     const ratedProducts = this.orders[orderIndex].product.map(product => ({
-      productName: product.productName,
+      id: product.id,
       rating: product.rating
     }));
+
+    this.apiService.rating(ratedProducts).subscribe();
   }
 }

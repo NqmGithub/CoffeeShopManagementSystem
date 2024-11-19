@@ -10,5 +10,7 @@ namespace CoffeeShopManagement.Business.ServiceContracts
     public interface IOrderDetailService
     {
         Task<ICollection<OrderDetailDTO>> GetListOrderDetailsByOrderId(Guid id);
+
+        Task<bool> RatingProducts(RatingProductDTO[] list);
     }
 }
