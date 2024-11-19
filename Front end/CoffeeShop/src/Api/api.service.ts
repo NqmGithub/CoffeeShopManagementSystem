@@ -454,4 +454,13 @@ getRelatedProducts(productId: string): Observable<Product[]> {
     return this.http.put<boolean>(`${this.baseurl}/Category/update/`+id,updateCategory,this.headerCustom);
   }
 
+  //Payment
+  createPaymentUrl(model: any): Observable<any> {
+    return this.http.post(`${this.baseurl}/Payment`, model, { responseType: 'text' });
+  }
+
+  paymentCallback(queryParams: any): Observable<any> {
+    return this.http.get(`${this.baseurl}/Payment`, { params: queryParams });
+  }
+
 }

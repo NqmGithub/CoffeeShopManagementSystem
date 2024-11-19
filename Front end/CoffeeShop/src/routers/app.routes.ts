@@ -21,6 +21,7 @@ import { OrderManagerComponent } from '../views/admin/order-manager/order-dialog
 import { ProductListComponent } from '../views/product list/product-list.component';
 import { ProductDetailComponent } from '../views/productdetail/product-detail.component';
 import { CartComponent } from '../views/cart/cart.component';
+import { CheckoutComponent } from '../views/checkout/checkout.component';
 export const routes: Routes = [
     {
         path:'home',
@@ -68,6 +69,7 @@ export const routes: Routes = [
     {path:'contact', component:ContactComponent},
     {path:'notification', component:NotificationComponent},
     {path:'history', component:HistoryComponent},
+    {path:'checkout', component:CheckoutComponent},
     {path:'register', component:RegisterComponent},
     {path:'login', component:LoginComponent},
     {path:'resetPassword', component:ResetPasswordComponent},

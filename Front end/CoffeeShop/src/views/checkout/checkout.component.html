@@ -1,0 +1,55 @@
+<app-navbar></app-navbar>
+<div class="checkout-container" style="margin: 30px;">
+    <mat-card class="shipping-section">
+      <h2 style="color: #6b4f34; font-weight: bold;">Checkout</h2>
+      <form >
+        <mat-form-field class="example-full-width" appearance="outline">
+          <mat-label>Name</mat-label>
+          <input matInput [value]="user?.userName"   />
+        </mat-form-field>
+        <mat-form-field class="example-full-width" appearance="outline">
+          <mat-label>Email address</mat-label>
+          <input matInput  [value]="user?.email"   />
+        </mat-form-field>
+          <mat-form-field class="example-full-width" appearance="outline">
+            <mat-label>Phone number</mat-label>
+            <input matInput  [value]="user?.phoneNumber"   />
+          </mat-form-field>
+          
+        <mat-form-field class="example-full-width" appearance="outline">
+          <mat-label>Street address</mat-label>
+          <input matInput [value]="user?.address"    />
+        </mat-form-field>
+      </form>
+    </mat-card>
+  
+    <mat-card class="order-summary">
+      <h3 style="color: #6b4f34; font-weight: bold;">Order Summary</h3>
+      <div class="order-container">
+          @for (item of cart; track $index) {
+            <mat-card appearance="outlined">
+              <mat-card-content>
+                <div class="order-item">
+                  <div class="item-info">
+                    <img [src]="getImage(item.thumbnail)" alt="Product image" />
+                    <div>
+                      <p>{{ item.productName }}</p>
+                      <p>Quantity: {{ item.quantity }}</p>
+                    </div>
+                  </div>
+                  <p class="price" style="color: red;">{{ item.price}}đ</p>
+                </div>
+              </mat-card-content>
+            </mat-card>            
+          }
+          
+      </div>
+      
+      <div class="totals" style="margin-top: 10px;">
+        <p>Total:<span style="color: red;">{{ totalPrice}}đ</span> </p>
+      </div>
+      <button mat-raised-button color="primary" style="border-radius: 0px;font-size: larger; padding: 10px; background-color: #6b4f34; color: white;" (click)="createPayment()">Confirm</button>
+
+    </mat-card>
+  </div>
+  

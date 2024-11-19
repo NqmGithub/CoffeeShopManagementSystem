@@ -26,14 +26,14 @@
                 <p class="coffee-price" style="margin-left: 15px;">Price: <span style="color: red;">{{ product.price
                         }}$</span></p>
                 <mat-card-actions>
-                    <button mat-raised-button color="primary">Buy Now</button>
+                    <button mat-raised-button color="primary" (click)="addToCart(product)" >Buy Now</button>
                 </mat-card-actions>
             </div>
         </mat-card>
         }       
     </div>
     <div style="display: flex;justify-content: center; ">
-        <a style="color: rgb(60, 122, 231);" [routerLink]="['user']">View more >>></a>
+        <a style="color: rgb(60, 122, 231);" routerLink="/productlists">View more >>></a>
     </div>
 </div>
 
