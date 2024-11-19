@@ -165,9 +165,9 @@ export class ApiService {
   }
 
   getAllCateogryNames(): Observable<string[]> {
-    return this.http.get<string[]>(this.baseurl + '/Category/name',this.headerCustom);
+    return this.http.get<any[]>(this.baseurl + '/Category/name', this.headerCustom)
   }
-
+  
   uploadImage(name:string,file: File,folder:string): Observable<HttpEvent<any>>{
     const formData: FormData = new FormData();
     formData.append('file', file);
@@ -324,16 +324,8 @@ getProductLists(
   return this.http.get<any>(`${this.baseurl}/Order`, { params, ...this.headerCustom });
 }
 
-
-updateOrderStatus(orderId: string): Observable<any> {
-  if (!orderId) {
-    console.error('Invalid orderId');
-    return throwError('Invalid orderId');
-  }
-
-  const url = `${this.baseurl}/api/Order/${orderId}/toggle-status`;
-
-  return this.http.put<any>(url, null, this.headerCustom);
+updateOrderStatus(orderId: string, order:Order): Observable<Order> {
+  return this.http.put<Order>(`${this.baseurl}/Order/${orderId}/toggle-status`, order, this.headerCustom);
 }
 
 

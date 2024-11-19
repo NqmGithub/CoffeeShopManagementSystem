@@ -12,7 +12,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { ChangeStatusDialogComponent } from '../change-status-dialog/change-status-dialog,component';
 import { ApiService } from '../../../../Api/api.service';
-
+import { MatIconModule } from '@angular/material/icon';
 @Component({
   selector: 'app-order-manager',
   standalone: true,
@@ -26,12 +26,14 @@ import { ApiService } from '../../../../Api/api.service';
     MatSelectModule,
     MatSortModule,
     MatPaginator,
+    MatIconModule
   ],
   
   templateUrl: './order-manager.component.html',
   styleUrls: ['./order-manager.component.scss']
 })
 export class OrderManagerComponent implements OnInit {
+  displayedColumns: string[] = ['OrderId', 'OrderDate', 'CustomerName', 'Status', 'TotalPrice', 'Actions'];
   orders: Order[] = []; 
   ordersData = new MatTableDataSource<Order>();  
   totalOrders: number = 0; 
@@ -106,30 +108,28 @@ export class OrderManagerComponent implements OnInit {
   }
   
 
+  openChangeStatusDialog(order: any): void {
+    // Logic để xác định newStatus
+    let newStatus: number;
+    if (order.status === 0) {
+      newStatus = 1;  // Chuyển từ "Pending" (0) sang "Completed" (1)
+    } else if (order.status === 1) {
+      newStatus = 2;  // Chuyển từ "Completed" (1) sang "Cancelled" (2)
+    } else {
+      newStatus = 0;  // Nếu đã bị "Cancelled", có thể quay lại "Pending"
+    }
   
-  changeStatus(order: Order) {
     const dialogRef = this.dialog.open(ChangeStatusDialogComponent, {
       data: order
     });
   
-    dialogRef.afterClosed().subscribe((newStatus: string) => {
-      if (newStatus) {
-        // Call API to update the status of the order
-        this.apiService.updateOrderStatus(order.id).subscribe(
-          async (response) => {
-            if (response) {
-              console.log('Order status updated successfully:', response);
-              // Reload the orders to reflect the changes
-              this.loadOrders();
-            }
-          },
-          (error) => {
-            console.error('Error updating order status:', error);
-          }
-        );
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.loadOrders(); // Reload orders if status changed successfully
       }
     });
   }
+  
   
   viewDetail(order: Order) {
   }

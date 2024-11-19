@@ -39,7 +39,7 @@ export class HistoryComponent {
         next: (response) => {
           console.log(response)
           if (response.vnPayResponseCode === '00') {
-            alert('Payment successful: ' + response);
+            alert('Payment successful: ');
             // Call the API to add product to the database (e.g., this.apiService.addProductToDatabase(productDetails))
           } else {
             // If response does not have vnp_ResponseCode=00, show a failure alert

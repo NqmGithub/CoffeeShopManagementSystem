@@ -90,6 +90,7 @@ namespace CoffeeShopManagement.Data.Repositories
         {
             var query = _context.Products.AsQueryable();
 
+            // Filter by search term, category, and price range
             if (!string.IsNullOrEmpty(search))
             {
                 query = query.Where(p => p.ProductName.Contains(search));
@@ -97,20 +98,25 @@ namespace CoffeeShopManagement.Data.Repositories
 
             if (!string.IsNullOrEmpty(category))
             {
-                query = query.Where(p => p.Categoty.CategoryName == category);
+                query = query.Where(p => p.Categoty.CategoryName.Contains(category));
             }
 
             if (minPrice.HasValue)
             {
                 query = query.Where(p => p.Price >= minPrice.Value);
             }
+
             if (maxPrice.HasValue)
             {
                 query = query.Where(p => p.Price <= maxPrice.Value);
             }
 
+            // Only count products with status = 1 (active products)
+            query = query.Where(p => p.Status == 1);
+
             return await query.CountAsync();
         }
+
     }
 }
 
