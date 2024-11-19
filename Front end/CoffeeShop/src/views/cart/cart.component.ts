@@ -28,7 +28,6 @@ export class CartComponent implements OnInit {
     private router: Router,
     private authService: AuthService,
   ) { 
-    this.loadCart();  // Load cart when component initializes
     this.authService.getCurrentUser().subscribe(
       res =>{
         if(res){
@@ -36,6 +35,7 @@ export class CartComponent implements OnInit {
         }
       }
     )
+    this.loadCart();  // Load cart when component initializes
   }
 
   ngOnInit(): void {

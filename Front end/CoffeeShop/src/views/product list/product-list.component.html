@@ -48,6 +48,15 @@
             <h3>{{ product.productName }}</h3>
             <p>{{ product.categoryName }}</p>
             <p>{{ product.price | currency }}</p>
+            <div style="height: 120px;">
+              @if (product.rate) {
+                  @for (star of stars; track $index; let j = $index) {
+                      <mat-icon style="cursor: pointer;color: #FFD700;"> {{  (j+1) <= product.rate ? 'star' : 'star_border' }}</mat-icon>
+                    }
+                  <p>{{product.rate.toFixed(1)}}</p>
+                  <p>({{product.numberReviews}} reviews)</p>
+              }                    
+          </div>
           </div>
         </div>
 

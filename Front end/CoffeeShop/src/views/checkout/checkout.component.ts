@@ -11,6 +11,7 @@ import { AuthService } from '../../service/auth.service';
 import { User } from '../../Interfaces/user';
 import { ApiService } from '../../Api/api.service';
 import { PaymentInfor } from '../../Interfaces/paymentInfor';
+import { delay } from 'rxjs';
 @Component({
   selector: 'app-checkout',
   standalone: true,
@@ -23,13 +24,13 @@ export class CheckoutComponent{
   totalPrice: number = 0;  // Total price of the cart items
   user:User|null = null;
   constructor(private authService:AuthService, private apiService:ApiService) {
-    this.loadCart();
     this.authService.getCurrentUser().subscribe(
       res => {
         this.user = res;
       }
     )
-    
+    this.loadCart();
+
   }
 
   getImage(name: string) {
@@ -107,7 +108,8 @@ export class CheckoutComponent{
     // Gọi API thêm đơn hàng qua ApiService
     this.apiService.addOrder(orderCreateDTO).subscribe({
       next: (response) => {
-        alert('Order placed successfully!');
+        console.log('Order placed successfully!');
+        sessionStorage.setItem("orderId",response.id);
         // this.apiService.clearCart(userId!); // Xóa giỏ hàng sau khi đặt hàng thành công
       },
       error: (error) => {

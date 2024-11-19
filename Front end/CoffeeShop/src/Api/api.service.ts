@@ -324,8 +324,8 @@ getProductLists(
   return this.http.get<any>(`${this.baseurl}/Order`, { params, ...this.headerCustom });
 }
 
-updateOrderStatus(orderId: string, order:Order): Observable<Order> {
-  return this.http.put<Order>(`${this.baseurl}/Order/${orderId}/toggle-status`, order, this.headerCustom);
+updateOrderStatus(orderId: string): Observable<Order> {
+  return this.http.put<Order>(`${this.baseurl}/Order/${orderId}/toggle-status`, {}, this.headerCustom);
 }
 
 
@@ -355,13 +355,13 @@ getCartItems(userId: string): any[] {
 
 // Lưu giỏ hàng vào localStorage
 saveCartItems(userId: string, cartItems: any[]): void {
-  const cartKey = `cart_${userId || 'testUser'}`; // Sử dụng userId mặc định khi test
+  const cartKey = `cart_${userId}`; // Sử dụng userId mặc định khi test
   localStorage.setItem(cartKey, JSON.stringify(cartItems));
 }
 
 // Xóa giỏ hàng trong localStorage
 clearCart(userId: string): void {
-  const cartKey = `cart_${userId || 'testUser'}`; // Sử dụng userId mặc định khi test
+  const cartKey = `cart_${userId }`; // Sử dụng userId mặc định khi test
   localStorage.removeItem(cartKey);
 }
 

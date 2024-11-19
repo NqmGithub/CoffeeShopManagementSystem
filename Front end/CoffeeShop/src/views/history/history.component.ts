@@ -34,11 +34,21 @@ export class HistoryComponent {
       }
     );
     this.activatedRoute.queryParams.subscribe((params) => {
+      if (!params || Object.keys(params).length === 0) {
+        console.warn('No query parameters provided.');
+        return; // Không thực hiện nếu không có params
+      }
       // Call paymentCallback API with query parameters
       this.apiService.paymentCallback(params).subscribe({
         next: (response) => {
           console.log(response)
           if (response.vnPayResponseCode === '00') {
+            this.apiService.updateOrderStatus(sessionStorage.getItem('orderId')!).subscribe(
+              res => {
+                sessionStorage.removeItem('orderId');
+                this.apiService.clearCart(this.user?.id!);
+              }
+            );
             alert('Payment successful: ');
             // Call the API to add product to the database (e.g., this.apiService.addProductToDatabase(productDetails))
           } else {
@@ -90,5 +100,6 @@ export class HistoryComponent {
     }));
 
     this.apiService.rating(ratedProducts).subscribe();
+    this.loadOrders(this.user?.id!);
   }
 }

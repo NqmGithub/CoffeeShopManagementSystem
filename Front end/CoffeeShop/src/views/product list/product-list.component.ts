@@ -9,6 +9,7 @@ import { NavbarComponent } from '../../layout/navbar/navbar.component';
 import { AuthService } from '../../service/auth.service';
 import { Category } from '../../Interfaces/category';
 import { MatIconModule } from '@angular/material/icon';
+import { User } from '../../Interfaces/user';
 @Component({
   selector: 'app-product-list',
   standalone: true,
@@ -23,6 +24,7 @@ import { MatIconModule } from '@angular/material/icon';
   styleUrls: ['./product-list.component.css']
 })
 export class ProductListComponent implements OnInit {
+  stars = [1, 2, 3, 4, 5];
   products: Product[] = [];
   listCategoryName: string[] = [];
   tempQuantity: { [key: string]: number } = {};
@@ -42,7 +44,14 @@ export class ProductListComponent implements OnInit {
   sortColumn: string = '';
   sortDirection: boolean = false;
   Math: any;
-  constructor(private router: Router, private apiService: ApiService, private authService: AuthService ) {}
+  user:User|null = null;
+  constructor(private router: Router, private apiService: ApiService, private authService: AuthService ) {
+    this.authService.getCurrentUser().subscribe(
+      res =>{
+        this.user = res;
+      }
+    )
+  }
 
   ngOnInit(): void {
     this.loadCategories();
@@ -107,8 +116,8 @@ export class ProductListComponent implements OnInit {
   }
 
   addToCart(product: any): void {
-    const userId = 'testUser'; // Sử dụng userId mặc định khi test
-    let cart = this.apiService.getCartItems(userId);
+    const userId = this.user?.id; // Sử dụng userId mặc định khi test
+    let cart = this.apiService.getCartItems(userId!);
 
     const existingProduct = cart.find((item: any) => item.productId === product.id);
     const quantityToAdd = this.tempQuantity[product.id] || 1;
@@ -125,7 +134,7 @@ export class ProductListComponent implements OnInit {
       });
     }
 
-    this.apiService.saveCartItems(userId, cart);
+    this.apiService.saveCartItems(userId!, cart);
     alert('Product added to cart');
     this.tempQuantity[product.id] = 1;
   }
