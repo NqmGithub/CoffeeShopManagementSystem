@@ -20,6 +20,7 @@ import { ProblemType } from '../Interfaces/problemType';
 import { CreateCategory } from '../Interfaces/createCategory';
 import { UpdateProfile } from '../Interfaces/updateProfile';
 import { ChangePassword } from '../Interfaces/changePassword';
+import { RatingProduct } from '../Interfaces/ratingProduct';
 @Injectable({
   providedIn: 'root'
 })
@@ -352,7 +353,7 @@ deleteOrder(orderId: string): Observable<boolean> {
   return this.http.delete<boolean>(`${this.baseurl}/Order/${orderId}`, this.headerCustom);
 }
 addOrder(orderCreateDTO: any): Observable<any> {
-  return this.http.post(`${this.baseurl}/add-order`, orderCreateDTO,this.headerCustom);
+  return this.http.post(`${this.baseurl}/Order`, orderCreateDTO,this.headerCustom);
 }
 getCartItems(userId: string): any[] {
   const cartKey = `cart_${userId || 'testUser'}`; // Sử dụng userId mặc định khi test
@@ -401,6 +402,10 @@ getRelatedProducts(productId: string): Observable<Product[]> {
 
   getOrderDetailsByOrderId(id:string): Observable<UserOrderDetails[]>{
     return this.http.get<UserOrderDetails[]>(this.baseurl + '/OrderDetail/'+id)
+  }
+
+  rating(ratingProducts:RatingProduct[]): Observable<boolean>{
+    return this.http.put<boolean>(this.baseurl+'/OrderDetail/rating',ratingProducts);
   }
   //category
   

@@ -20,5 +20,6 @@ export interface OrderDTO{
     status: number,
     orderDate: string,
     totalPrice: number,
-    product:UserOrderDetails[]
+    product:UserOrderDetails[],
+    isRated: boolean
 }

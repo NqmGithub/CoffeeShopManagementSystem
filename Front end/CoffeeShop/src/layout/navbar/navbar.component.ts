@@ -74,4 +74,9 @@ export class NavbarComponent implements OnInit {
   toDashBoard(){
     this.router.navigate(['admin'])
   }
+
+  getImage(path: any){
+    return `https://localhost:44344/wwwroot/Avatars/${path}`;
+  }
+
 }

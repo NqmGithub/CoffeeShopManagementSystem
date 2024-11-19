@@ -14,11 +14,13 @@ namespace CoffeeShopManagement.Business.Services
 {
     public class OrderDetailService : IOrderDetailService
     {
+        private readonly IUnitOfWork _unitOfWork;
         private readonly IOrderDetailRepository _repository;
 
-        public OrderDetailService(IOrderDetailRepository repository)
+        public OrderDetailService(IOrderDetailRepository repository, IUnitOfWork unitOfWork)
         {
             _repository = repository;
+            _unitOfWork = unitOfWork;
         }
 
        public async Task<List<OrderDetailDTO>> GetOrderDetails(Guid orderId)
@@ -45,18 +47,14 @@ namespace CoffeeShopManagement.Business.Services
 
             return await _repository.UpdateOrderDetails(orderId, updatedDetails);
         }
-       
-        private readonly IUnitOfWork _unitOfWork;
-        public OrderDetailService(IUnitOfWork unitOfWork)
-        {
-            _unitOfWork = unitOfWork;
-        }
+              
         public async Task<ICollection<OrderDetailDTO>> GetListOrderDetailsByOrderId(Guid id)
         {
+            var x = _unitOfWork.OrderDetailRepository.GetQuery().Where(x => x.OrderId == id);
             var list = _unitOfWork.OrderDetailRepository.GetQuery().Where(x => x.OrderId == id).ToList();
 
             var result = new List<OrderDetailDTO>();
-            foreach (var item in list) 
+            foreach (var item in list)
             {
                 var product = _unitOfWork.ProductRepository.GetQuery().First(x => x.Id == item.ProductId);
                 result.Add(new OrderDetailDTO()
@@ -67,9 +65,26 @@ namespace CoffeeShopManagement.Business.Services
                     Img = product.Thumbnail,
                     OrderPrice = item.OrderPrice,
                     Quantity = item.Quantity,
+                    Rating = item.Rating.Value
                 });
             }
             return result;
+        }
+
+        public async Task<bool> RatingProducts(RatingProductDTO[] list)
+        {
+            foreach (RatingProductDTO ratingProduct in list) 
+            {
+                var orderDetail = _unitOfWork.OrderDetailRepository.GetById(ratingProduct.Id);
+                if(orderDetail == null)
+                {
+                    throw new ArgumentNullException();
+                }
+                orderDetail.Rating = ratingProduct.Rating;
+                
+            }
+            var result = await _unitOfWork.SaveChangesAsync();
+            return result > 0;
         }
     }
 }

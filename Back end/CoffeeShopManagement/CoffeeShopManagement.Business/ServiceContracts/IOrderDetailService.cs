@@ -13,5 +13,7 @@ namespace CoffeeShopManagement.Business.ServiceContracts
         Task<List<OrderDetailDTO>> GetOrderDetails(Guid orderId);
         Task<bool> SaveOrderDetails(Guid orderId, List<OrderDetailDTO> orderDetails);
         Task<ICollection<OrderDetailDTO>> GetListOrderDetailsByOrderId(Guid id);
+
+        Task<bool> RatingProducts(RatingProductDTO[] list);
     }
 }

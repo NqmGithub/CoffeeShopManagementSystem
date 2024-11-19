@@ -102,7 +102,7 @@ export class UserDialogComponent {
       password: password,
       avatar: this.addUserForm.value.email + '.' + this.fileExtension,
       status: this.status == 'active' ? 1 : 2,
-      role: 1
+      role: this.role === 'user' ? 1 : 2
     }
     this.dialogRef.close(user);
     if(this.fileToUpload == null){

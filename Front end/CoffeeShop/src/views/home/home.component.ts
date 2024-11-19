@@ -6,6 +6,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { RouterModule } from '@angular/router';
 import { Product } from '../../Interfaces/product';
 import { ApiService } from '../../Api/api.service';
+import { MatIconModule } from '@angular/material/icon';
 @Component({
   selector: 'app-home',
   standalone: true,
@@ -14,13 +15,14 @@ import { ApiService } from '../../Api/api.service';
     SliderComponent,
     MatCardModule,
     MatButtonModule,
-    RouterModule
+    RouterModule,
+    MatIconModule
   ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss'
 })
 export class HomeComponent  {
-
+  stars = [1, 2, 3, 4, 5];
   listBestSellerProducts: Product[] =[];
 
   constructor(private apiService: ApiService) {

@@ -60,7 +60,7 @@ namespace CoffeeShopManagement.WebAPI.Controllers
             try
             {
                 // Kiểm tra dữ liệu đầu vào
-                if (orderCreateDTO == null || orderCreateDTO.OrderDetails == null || !orderCreateDTO.OrderDetails.Any())
+                if (orderCreateDTO == null || orderCreateDTO.Details == null || !orderCreateDTO.Details.Any())
                 {
                     return BadRequest("Invalid order data. Please provide valid order items.");
                 }

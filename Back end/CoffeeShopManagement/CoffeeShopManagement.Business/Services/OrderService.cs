@@ -15,9 +15,12 @@ namespace CoffeeShopManagement.Business.Services
     {
         private readonly IUnitOfWork _unitOfWork;
 
-        public OrderService(IUnitOfWork unitOfWork)
+        private readonly IOrderRepository _orderRepository;
+        public OrderService(IOrderRepository orderRepository, IUnitOfWork unitOfWork)
         {
+            _orderRepository = orderRepository;
             _unitOfWork = unitOfWork;
+
         }
 
         // Get Orders with count and pagination
@@ -127,14 +130,14 @@ namespace CoffeeShopManagement.Business.Services
             var orderDetails = new List<OrderDetail>();
 
             // Validate and Create OrderDetails
-            foreach (var item in orderCreateDTO.OrderDetails)
+            foreach (var item in orderCreateDTO.Details)
             {
                 var product = await _unitOfWork.ProductRepository.GetQuery()
                     .FirstOrDefaultAsync(p => p.Id == item.ProductId);
 
                 if (product == null)
                 {
-                    throw new Exception($"Product {item.ProductName} not found");
+                    throw new Exception($"Product {product.ProductName} not found");
                 }
 
                 var orderDetail = new OrderDetail
@@ -142,7 +145,7 @@ namespace CoffeeShopManagement.Business.Services
                     Id = Guid.NewGuid(),
                     OrderId = order.Id,
                     ProductId = item.ProductId,
-                    OrderPrice = item.OrderPrice,
+                    OrderPrice = product.Price,
                     Quantity = item.Quantity,
                     Rating = 0  // Default value, can be updated later
                 };
@@ -183,34 +186,23 @@ namespace CoffeeShopManagement.Business.Services
         }
 
 
-        public async Task<List<OrderDTO>> GetOrdersByUserId(Guid id)
+
+        public async Task<IEnumerable<UserOrderDTO>> GetOrdersByUserId(Guid id)
         {
-            var orders = await _unitOfWork.OrderRepository.GetQuery()
-                .Where(x => x.UserId == id)
-                .OrderByDescending(x => x.OrderDate)
-                .ToListAsync();
+            var orders = _unitOfWork.OrderRepository.GetQuery()
+    .Where(x => x.UserId == id)
+    .OrderByDescending(x => x.OrderDate)
+    .ToList();
 
-            // Convert IEnumerable<Order> to List<OrderDTO>
-            return orders.Select(order => new OrderDTO
+            return orders.Select(x =>
             {
-                Id = order.Id,
-                UserId = order.UserId,
-                UserName = order.User?.UserName ?? "N/A", // Default to "N/A" if UserName is null
-                Status = order.Status, // Convert Status to string if it's an enum
-                OrderDate = order.OrderDate,
-                TotalPrice = order.OrderDetails.Sum(d => d.OrderPrice * d.Quantity),  // Calculate total price
-                TotalQuantity = order.OrderDetails.Sum(d => d.Quantity),  // Calculate total quantity
-                OrderDetails = order.OrderDetails.Select(d => new OrderDetailDTO
-                {
-                    ProductId = d.ProductId,
-                    ProductName = d.Product?.ProductName ?? "Unknown",  // Default to "Unknown" if ProductName is null
-                    OrderPrice = d.OrderPrice,
-                    Quantity = d.Quantity,
-                    Img = d.Product?.Thumbnail ?? "N/A"  // Default to "N/A" if Thumbnail is null
-                }).ToList()  // Convert IEnumerable<OrderDetailDTO> to List<OrderDetailDTO>
-            }).ToList();  // Convert IEnumerable<OrderDTO> to List<OrderDTO>
+                var totalPrice = _unitOfWork.OrderDetailRepository.GetQuery()
+                    .Where(d => d.OrderId == x.Id)
+                    .Sum(d => d.OrderPrice * d.Quantity);
+
+                return x.ToOrderDTO(totalPrice);
+            });
+
         }
-
-
-    }
+        }
 }

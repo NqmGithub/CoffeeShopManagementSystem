@@ -1,5 +1,6 @@
 ﻿using CoffeeShopManagement.Business.DTO;
 using CoffeeShopManagement.Business.ServiceContracts;
+using Microsoft.AspNetCore.Http;
 using CoffeeShopManagement.Business.Services;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -23,14 +24,14 @@ namespace CoffeeShopManagement.WebAPI.Controllers
             _cartService = cartService;
         }
 
-        // Lấy chi tiết đơn hàng
+       /* // Lấy chi tiết đơn hàng
         [HttpGet("{orderId}")]
         public async Task<IActionResult> GetOrderDetails(Guid orderId)
         {
             var details = await _orderDetailService.GetOrderDetails(orderId);
             return Ok(details);
         }
-
+       */
         // Lưu thay đổi và xóa cookie
         [HttpPost("save/{orderId}")]
         public async Task<IActionResult> SaveOrderDetails(Guid orderId)
@@ -55,15 +56,18 @@ namespace CoffeeShopManagement.WebAPI.Controllers
 
             return StatusCode(500, "Failed to update order details");
         }
-        public OrderDetailController(IOrderDetailService orderDetailService)
-        {
-            _orderDetailService = orderDetailService;
-        }
         [HttpGet("{id}")]
         public async Task<IActionResult> GetListContactByUserId(Guid id)
         {
             var list = await _orderDetailService.GetListOrderDetailsByOrderId(id);
             return Ok(list);
+        }
+
+        [HttpPut("rating")]
+        public async Task<IActionResult> Rating(RatingProductDTO[] list)
+        {
+            var result = await _orderDetailService.RatingProducts(list);
+            return Ok(result);
         }
     }
 }

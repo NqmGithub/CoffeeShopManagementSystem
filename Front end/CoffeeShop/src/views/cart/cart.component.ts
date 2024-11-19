@@ -97,10 +97,9 @@ export class CartComponent implements OnInit {
 
     // Tạo OrderCreateDTO để gửi lên API
     const orderCreateDTO = {
-      orderItems: this.cart.map(item => ({
+      userID: 'FB9DEC4B-9224-483D-92DB-2E643012386A',
+      details: this.cart.map(item => ({
         productId: item.productId,
-        productName: item.productName,
-        price: item.price,
         quantity: item.quantity
       }))
     };

@@ -10,7 +10,7 @@ namespace CoffeeShopManagement.Business.DTO
     public class OrderCreateDTO
     {
         public Guid UserID { get; set; }
-        public List<OrderDetailDTO> OrderDetails { get; set; }  // List of products in the order
+        public List<UserOrderDetailDTO> Details { get; set; }  // List of products in the order
     }
 
 
