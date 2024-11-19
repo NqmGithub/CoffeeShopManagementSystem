@@ -15,10 +15,14 @@ namespace CoffeeShopManagement.Business.Services
     public class OrderService : IOrderService
 
     {
+        private readonly IUnitOfWork _unitOfWork;
+
         private readonly IOrderRepository _orderRepository;
-        public OrderService(IOrderRepository orderRepository)
+        public OrderService(IOrderRepository orderRepository, IUnitOfWork unitOfWork)
         {
             _orderRepository = orderRepository;
+            _unitOfWork = unitOfWork;
+
         }
 
         public async Task<(List<OrderDTO> Orders, int TotalCount)> GetOrdersWithCount(
@@ -107,12 +111,6 @@ namespace CoffeeShopManagement.Business.Services
             await _orderRepository.UpdateOrder(order);
             return (true, "Status updated successfully", order.Status);
         } 
-        private readonly IUnitOfWork _unitOfWork;
-
-        public OrderService(IUnitOfWork unitOfWork)
-        {
-            _unitOfWork = unitOfWork;
-        }
         public async Task<IEnumerable<UserOrderDTO>> GetOrdersByUserId(Guid id)
         {
             var orders = _unitOfWork.OrderRepository.GetQuery()

@@ -14,11 +14,13 @@ namespace CoffeeShopManagement.Business.Services
 {
     public class OrderDetailService : IOrderDetailService
     {
+        private readonly IUnitOfWork _unitOfWork;
         private readonly IOrderDetailRepository _repository;
 
-        public OrderDetailService(IOrderDetailRepository repository)
+        public OrderDetailService(IOrderDetailRepository repository, IUnitOfWork unitOfWork)
         {
             _repository = repository;
+            _unitOfWork = unitOfWork;
         }
 
        public async Task<List<AdminOrderDetailDTO>> GetOrderDetails(Guid orderId)
@@ -45,12 +47,7 @@ namespace CoffeeShopManagement.Business.Services
 
             return await _repository.UpdateOrderDetails(orderId, updatedDetails);
         }
-       
-        private readonly IUnitOfWork _unitOfWork;
-        public OrderDetailService(IUnitOfWork unitOfWork)
-        {
-            _unitOfWork = unitOfWork;
-        }
+              
         public async Task<ICollection<OrderDetailDTO>> GetListOrderDetailsByOrderId(Guid id)
         {
             var x = _unitOfWork.OrderDetailRepository.GetQuery().Where(x => x.OrderId == id);
