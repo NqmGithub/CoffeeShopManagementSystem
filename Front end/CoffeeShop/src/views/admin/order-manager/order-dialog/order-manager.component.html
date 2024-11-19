@@ -53,12 +53,12 @@
             }">
             {{ order.status === 1 ? 'Processing' : order.status === 0 ? 'Pending' : 'Completed' }}
           </span>
-          <button 
+          <!-- <button 
             mat-button 
             color="primary" 
             (click)="openChangeStatusDialog(order)">
             Change Status
-          </button>
+          </button> -->
         </td>
       </ng-container>
       
@@ -73,9 +73,9 @@
       <ng-container matColumnDef="Actions">
         <th mat-header-cell *matHeaderCellDef>Actions</th>
         <td mat-cell *matCellDef="let order">
-          <button mat-button (click)="viewDetail(order)" class="action-button">
+          <!-- <button mat-button (click)="viewDetail(order)" class="action-button">
             View Details
-          </button>
+          </button> -->
           <button mat-button (click)=" openChangeStatusDialog(order)" class="status-button">
             Toggle Status
           </button>
