@@ -33,7 +33,7 @@
         </mat-list-item>
         <mat-list-item>
           <mat-icon>money</mat-icon>
-          <span><a class="custom-link" [routerLink]="['/orders']">Order</a></span>
+          <span><a class="custom-link" [routerLink]="['/admin',{ outlets: { mainContent: ['orders'] } }]">Order</a></span>
         </mat-list-item>
       </mat-nav-list>
       </mat-sidenav>

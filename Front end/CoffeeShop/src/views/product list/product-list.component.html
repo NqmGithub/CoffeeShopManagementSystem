@@ -47,7 +47,7 @@
           <div class="product-info">
             <h3>{{ product.productName }}</h3>
             <p>{{ product.categoryName }}</p>
-            <p>{{ product.price | currency }}</p>
+            <p>{{ product.price  }}đ</p>
             <div style="height: 120px;">
               @if (product.rate) {
                   @for (star of stars; track $index; let j = $index) {

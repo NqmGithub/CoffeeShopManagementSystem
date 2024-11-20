@@ -11,7 +11,7 @@ import { AuthService } from '../../service/auth.service';
 import { User } from '../../Interfaces/user';
 import { ApiService } from '../../Api/api.service';
 import { PaymentInfor } from '../../Interfaces/paymentInfor';
-import { delay } from 'rxjs';
+import { catchError, delay, Observable, switchMap, tap, throwError } from 'rxjs';
 @Component({
   selector: 'app-checkout',
   standalone: true,
@@ -50,17 +50,19 @@ export class CheckoutComponent{
   }
 
   createPayment(): void {
-    
     const paymentModel: PaymentInfor = {
       orderType: 'other',
       amount: this.totalPrice,
       orderDescription: 'Thanh toan den CoffeeShop',
-      name: this. user == null ?"":this.user?.userName
-    }
-    this.apiService.createPaymentUrl(paymentModel).subscribe({
+      name: this.user == null ? "" : this.user?.userName
+    };
+  
+    // Ensure addOrder completes before creating the payment URL
+    this.addOrderObservable().pipe(
+      switchMap(() => this.apiService.createPaymentUrl(paymentModel)) // Wait for addOrder to complete before creating payment URL
+    ).subscribe({
       next: (url) => {
-        this.addOrder();
-        // Chuyển hướng đến VNPay để thanh toán
+        // Redirect to VNPay after successful URL creation
         window.location.href = url;
       },
       error: (err) => {
@@ -69,18 +71,14 @@ export class CheckoutComponent{
     });
   }
 
-  addOrder(): void {
-    // const userId = this.authService.getId(); // Lấy userId từ AuthService (bỏ qua khi test)
-    const userId = this.user?.id; // Sử dụng userId mặc định khi test
-
-
-    // Kiểm tra nếu giỏ hàng trống
+  addOrderObservable(): Observable<any> {
+    // Check if the cart is empty
     if (this.cart.length === 0) {
       alert('Your cart is empty.');
-      return;
+      return throwError(() => new Error('Cart is empty.'));
     }
-
-    // Tạo OrderCreateDTO để gửi lên API
+  
+    // Create OrderCreateDTO
     const orderCreateDTO = {
       userID: this.user?.id,
       details: this.cart.map(item => ({
@@ -88,18 +86,20 @@ export class CheckoutComponent{
         quantity: item.quantity
       }))
     };
-
-    // Gọi API thêm đơn hàng qua ApiService
-    this.apiService.addOrder(orderCreateDTO).subscribe({
-      next: (response) => {
+  
+    // Return the API call observable
+    return this.apiService.addOrder(orderCreateDTO).pipe(
+      tap((response) => {
         console.log('Order placed successfully!');
-        sessionStorage.setItem("orderId",response.id);
-        // this.apiService.clearCart(userId!); // Xóa giỏ hàng sau khi đặt hàng thành công
-      },
-      error: (error) => {
+        sessionStorage.setItem("orderId", response.id);
+        // Optionally, clear the cart here if needed
+        // this.apiService.clearCart(this.user?.id!);
+      }),
+      catchError((error) => {
         console.error('Error placing order:', error);
         alert(`Failed to place order: ${error.message}`);
-      }
-    });
+        return throwError(() => error); // Rethrow the error so the outer observable knows
+      })
+    );
   }
 }
