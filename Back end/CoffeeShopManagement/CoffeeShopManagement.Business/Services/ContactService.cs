@@ -70,7 +70,7 @@ namespace CoffeeShopManagement.Business.Services
                     var scheme = _httpContextAccessor.HttpContext.Request.Scheme;
                     var host = _httpContextAccessor.HttpContext.Request.Host;
 
-                    var imageUrl = $"{scheme}://{host}/Resources/Contacts/{fileName}";
+                    var imageUrl = $"{scheme}://{host}/wwwroot/Contacts/{fileName}";
 
                     content = content.Replace(match.Value, imageUrl);
 

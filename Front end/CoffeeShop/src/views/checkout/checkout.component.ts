@@ -48,26 +48,12 @@ export class CheckoutComponent{
       (total, item) => total + item.price * item.quantity, 0
     );
   }
-  cartItems = [
-    {
-      name: 'Product title name goes here',
-      quantity: 1,
-      price: 100.0,
-      image: 'https://via.placeholder.com/50',
-    },
-    {
-      name: 'Product title name goes here',
-      quantity: 1,
-      price: 100.0,
-      image: 'https://via.placeholder.com/50',
-    },
-  ];
 
   createPayment(): void {
     
     const paymentModel: PaymentInfor = {
       orderType: 'other',
-      amount: this.totalPrice*10000,
+      amount: this.totalPrice,
       orderDescription: 'Thanh toan den CoffeeShop',
       name: this. user == null ?"":this.user?.userName
     }

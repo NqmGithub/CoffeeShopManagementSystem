@@ -37,12 +37,17 @@ export class NotificationComponent {
 	public editorControl = new FormControl('');
 
 	constructor(private apiService:ApiService, private auth:AuthService, private router: Router) {
-		this.loadContacts();
+		this.auth.getCurrentUser().subscribe(
+			res =>{
+				this.loadContacts(res?.id!);
+			}
+		)
+		
 	}
 	
 
-	loadContacts() {
-		this.apiService.getAllContacts().subscribe(
+	loadContacts(id:string) {
+		this.apiService.getListContactsByUserId(id).subscribe(
 		  (response: Contact[]) => {
 			this.contacts = response;
       this.selectedContact = this.contacts[0];
