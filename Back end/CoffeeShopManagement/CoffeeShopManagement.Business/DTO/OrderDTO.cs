@@ -30,7 +30,7 @@ namespace CoffeeShopManagement.Business.DTO
     }
 
 
-    public class OrderUpdateDto
+    public class OrderUpdateDTO
     {
         public Guid Id { get; set; }
         public int Status { get; set; }
