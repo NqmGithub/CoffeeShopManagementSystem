@@ -128,17 +128,17 @@ export class UserDialogComponent {
       phoneNumber: phoneNumber,
       userName: userName,
       password: password,
-      avatar: this.addUserForm.value.email + '.' + this.fileExtension,
+      avatar: (!this.fileToUpload) ? 'avatar.jpg' : this.addUserForm.value.email + '.' + this.fileExtension,
       status: this.status === 'active' ? 1 : 2,
       role: this.role === 'user' ? 1 : 2
     }
-    this.dialogRef.close(userAdd); 
-
+  
     if (!this.fileToUpload) {
       return;
     }else{
       this.uploadImage();
     }
+    this.dialogRef.close(userAdd); 
   }
 
   handleFileInput(event: Event){

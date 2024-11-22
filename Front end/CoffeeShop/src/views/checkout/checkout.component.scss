@@ -1,0 +1,64 @@
+.checkout-container {
+    display: flex;
+    gap: 2rem;
+    padding: 2rem;
+  }
+  
+  .shipping-section {
+    flex: 3;
+    padding: 2rem;
+  }
+  
+  .order-summary {
+    flex: 2;
+    padding: 2rem;
+    background-color: #f9f9f9;
+  }
+  .example-full-width {
+    width: 100%;
+  }
+  .full-width {
+    flex: 1;
+  }
+  .order-container {
+    height: 2â0px; /* Chiều cao cố định */
+    overflow-y: auto; /* Thêm scroll nếu nội dung dài */
+    border: 1px solid #ddd; /* Tùy chọn: thêm viền để dễ nhìn */
+    padding: 10px;
+    box-sizing: border-box; /* Đảm bảo padding không làm tăng kích thước */
+  }
+  
+  .order-item {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px; /* Khoảng cách giữa các item */
+  }
+  
+  .item-info {
+    display: flex;
+    gap: 10px;
+  }
+  
+  .item-info img {
+    width: 50px;
+    height: 50px;
+    object-fit: cover; /* Đảm bảo ảnh không bị méo */
+  }
+  
+  .order-item {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+  }
+  
+  .item-info {
+    display: flex;
+    gap: 1rem;
+  }
+  
+  .item-info img {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+  }
+  

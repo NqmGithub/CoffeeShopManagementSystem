@@ -39,4 +39,33 @@ export class HomeComponent  {
   getImage(name: string){
     return `https://localhost:44344/wwwroot/Images/${name}`;
   }
+
+  addToCart(product: any): void {
+    const userId = 'testUser'; // Sử dụng userId mặc định khi test
+    let cart = this.apiService.getCartItems(userId);
+  
+    // Tìm kiếm sản phẩm trong giỏ hàng
+    const existingProduct = cart.find((item: any) => item.productId === product.id);
+  
+    // Sử dụng `tempQuantity` làm số lượng sản phẩm thêm vào giỏ hàng
+    const quantityToAdd = 1;
+  
+    if (existingProduct) {
+      // Nếu sản phẩm đã tồn tại trong giỏ hàng, tăng số lượng
+      existingProduct.quantity += quantityToAdd;
+    } else {
+      // Nếu sản phẩm chưa tồn tại, thêm sản phẩm mới
+      cart.push({
+        productId: product.id,
+        productName: product.productName,
+        quantity: quantityToAdd,
+        price: product.price,
+        thumbnail: product.thumbnail,
+      });
+    }
+  
+    // Lưu giỏ hàng đã cập nhật vào ApiService
+    this.apiService.saveCartItems(userId, cart);
+    alert('Product added to cart');
+  }
 }

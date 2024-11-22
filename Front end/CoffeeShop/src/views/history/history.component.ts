@@ -10,6 +10,7 @@ import { UserOrderDetails } from '../../Interfaces/userOrderDetails';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-history',
@@ -23,7 +24,7 @@ export class HistoryComponent {
   orders: OrderDTO[] = [];
   orderDetails: UserOrderDetails[]=[];
   user:User|null = null
-  constructor(private authService: AuthService,private apiService: ApiService) {
+  constructor(private authService: AuthService,private apiService: ApiService,private activatedRoute: ActivatedRoute) {
     authService.getCurrentUser().subscribe(
       res =>{
         this.user = res;
@@ -32,6 +33,34 @@ export class HistoryComponent {
         }
       }
     );
+    this.activatedRoute.queryParams.subscribe((params) => {
+      if (!params || Object.keys(params).length === 0) {
+        console.warn('No query parameters provided.');
+        return; // Không thực hiện nếu không có params
+      }
+      // Call paymentCallback API with query parameters
+      this.apiService.paymentCallback(params).subscribe({
+        next: (response) => {
+          console.log(response)
+          if (response.vnPayResponseCode === '00') {
+            this.apiService.updateOrderStatus(sessionStorage.getItem('orderId')!).subscribe(
+              res => {
+                sessionStorage.removeItem('orderId');
+                this.apiService.clearCart(this.user?.id!);
+              }
+            );
+            alert('Payment successful: ');
+            // Call the API to add product to the database (e.g., this.apiService.addProductToDatabase(productDetails))
+          } else {
+            // If response does not have vnp_ResponseCode=00, show a failure alert
+            alert('Payment failed: ' + response.vnp_ResponseCode);
+          }
+        },
+        error: (err) => {
+          console.error('Error handling payment callback:', err);
+        },
+      });
+    });
   }
 
   loadOrders(id:string){
@@ -48,7 +77,6 @@ export class HistoryComponent {
                     break; 
                 }
             }
-            console.log(this.orders[i]);
             }
           )
           
@@ -72,5 +100,7 @@ export class HistoryComponent {
     }));
 
     this.apiService.rating(ratedProducts).subscribe();
+    this.loadOrders(this.user?.id!);
+    // window.location.reload()
   }
 }

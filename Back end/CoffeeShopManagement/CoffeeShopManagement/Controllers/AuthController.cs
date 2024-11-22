@@ -97,7 +97,7 @@ namespace CoffeeShopManagement.WebAPI.Controllers
                 Role = 1,
                 PhoneNumber = signupRequest.PhoneNumber,
                 Address = signupRequest.Address,
-                Avatar = "wwwroot/Avatars/avatar.jpg",
+                Avatar = "avatar.jpg",
                 Status = 1
             };
 

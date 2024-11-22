@@ -118,7 +118,7 @@ namespace CoffeeShopManagement.Business.Services
             {
                 Id = Guid.NewGuid(),
                 UserId = user.Id,
-                Status = 1,  // Default status 'Pending'
+                Status = 0,  // Default status 'Pending'
                 OrderDate = DateTime.UtcNow,
                 User = user
             };

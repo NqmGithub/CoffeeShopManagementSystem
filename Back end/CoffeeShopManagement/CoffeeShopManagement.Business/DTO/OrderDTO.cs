@@ -1,4 +1,5 @@
-﻿using CoffeeShopManagement.Models.Models;
+﻿using CoffeeShopManagement.Business.Helpers;
+using CoffeeShopManagement.Models.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -45,7 +46,7 @@ namespace CoffeeShopManagement.Business.DTO
             {
                 Id = order.Id,
                 UserId = order.UserId,
-                Status = order.Status.ToString(),  // Convert status to string (e.g., "1", "2", etc.)
+                Status = ContactHelper.ConvertToStatusString(order.Status),  
                 OrderDate = order.OrderDate,
                 TotalPrice = price
             };

@@ -6,6 +6,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { NavbarComponent } from '../../layout/navbar/navbar.component';
 import { AuthService } from '../../service/auth.service';
+import { User } from '../../Interfaces/user';
 
 @Component({
   selector: 'app-product-detail',
@@ -23,13 +24,19 @@ export class ProductDetailComponent implements OnInit {
   product: Product | null = null;  // Product details
   relatedProducts: Product[] = [];  // Related products list
   tempQuantity: number = 1;  // Temporary quantity of the product
-
+  user:User|null = null;
   constructor(
     private route: ActivatedRoute,
     private apiService: ApiService,  // API service
     private router: Router,
     private authService: AuthService
-  ) {}
+  ) {
+    this.authService.getCurrentUser().subscribe(
+      res =>{
+        this.user = res;
+      }
+    )
+  }
 
   ngOnInit(): void {
     this.route.paramMap.subscribe(params => {
@@ -101,8 +108,8 @@ export class ProductDetailComponent implements OnInit {
       return;
     }
 
-    const userId = 'testUser'; // Default userId for testing
-    let cart = this.apiService.getCartItems(userId);
+    const userId = this.user?.id; // Default userId for testing
+    let cart = this.apiService.getCartItems(userId!);
 
     // Check if product already exists in the cart
     const existingProduct = cart.find((item: any) => item.productId === this.product?.id);
@@ -125,7 +132,7 @@ export class ProductDetailComponent implements OnInit {
     }
 
     // Save updated cart
-    this.apiService.saveCartItems(userId, cart);
+    this.apiService.saveCartItems(userId!, cart);
     alert('Product added to cart');
     // Reset tempQuantity after adding to cart
     this.tempQuantity = 1;

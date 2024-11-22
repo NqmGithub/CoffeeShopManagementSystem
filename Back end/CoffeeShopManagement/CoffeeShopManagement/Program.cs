@@ -11,6 +11,7 @@ using CoffeeShopManagement.Business.Services;
 using CoffeeShopManagement.Data.UnitOfWork;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.Extensions.FileProviders;
+using CoffeeShopManagement.Business.VNPay.Service;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -91,6 +92,8 @@ builder.Services.AddSwaggerGen(c =>
         }
     });
 });
+//VNPay
+builder.Services.AddScoped<IVnPayService, VnPayService>();
 
 //CORS
 builder.Services.AddCors(options =>
@@ -111,6 +114,8 @@ builder.Services.Configure<FormOptions>(o =>
     o.MemoryBufferThreshold = int.MaxValue;
 });
 
+
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -130,6 +135,7 @@ app.UseStaticFiles(new StaticFileOptions()
  RequestPath = new PathString("/wwwroot")
 });app.UseHttpsRedirection();
 
+app.UseRouting();
 app.UseCors("AllowSpecificOrigin");
 
 app.UseAuthentication();

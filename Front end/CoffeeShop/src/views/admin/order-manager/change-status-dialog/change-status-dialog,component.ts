@@ -27,7 +27,7 @@ export class ChangeStatusDialogComponent {
   // Cập nhật trạng thái đơn hàng
   changeStatus(): void {
     // Gọi API để cập nhật trạng thái đơn hàng
-    this.apiService.updateOrderStatus(this.order.id, this.order).subscribe({
+    this.apiService.updateOrderStatus(this.order.id).subscribe({
       next: (response) => {
         console.log('Status updated successfully:', response);
         this.dialogRef.close(true); // Đóng dialog và thông báo thành công

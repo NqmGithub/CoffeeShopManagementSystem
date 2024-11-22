@@ -17,6 +17,7 @@ import { Router, RouterModule, RouterOutlet } from '@angular/router';
     MatIconModule,
     RouterOutlet,
     RouterModule,
+    MatDividerModule
   ],
   templateUrl: './sidebar.component.html',
   styleUrl: './sidebar.component.scss'

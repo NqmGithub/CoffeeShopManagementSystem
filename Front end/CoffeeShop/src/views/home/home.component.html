@@ -14,7 +14,7 @@
                 <div style="display: flex; height: 20px;">
                     @if (product.rate) {
                         @for (star of stars; track $index; let j = $index) {
-                            <mat-icon style="cursor: pointer;color: #FFD700;"> {{  j < product.rate ? 'star' : 'star_border' }}</mat-icon>
+                            <mat-icon style="cursor: pointer;color: #FFD700;"> {{  (j+1) <= product.rate ? 'star' : 'star_border' }}</mat-icon>
                           }
                         <p>{{product.rate.toFixed(1)}}</p>
                         <p>({{product.numberReviews}} reviews)</p>
@@ -24,16 +24,16 @@
             </mat-card-content>
             <div style="display: flex; justify-content: space-between; align-items: center;">
                 <p class="coffee-price" style="margin-left: 15px;">Price: <span style="color: red;">{{ product.price
-                        }}$</span></p>
+                        }}đ</span></p>
                 <mat-card-actions>
-                    <button mat-raised-button color="primary">Buy Now</button>
+                    <button mat-raised-button color="primary" (click)="addToCart(product)" >Buy Now</button>
                 </mat-card-actions>
             </div>
         </mat-card>
         }       
     </div>
     <div style="display: flex;justify-content: center; ">
-        <a style="color: rgb(60, 122, 231);" [routerLink]="['user']">View more >>></a>
+        <a style="color: rgb(60, 122, 231);" routerLink="/productlists">View more >>></a>
     </div>
 </div>
 

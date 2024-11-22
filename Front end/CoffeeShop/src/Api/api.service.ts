@@ -324,8 +324,8 @@ getProductLists(
   return this.http.get<any>(`${this.baseurl}/Order`, { params, ...this.headerCustom });
 }
 
-updateOrderStatus(orderId: string, order:Order): Observable<Order> {
-  return this.http.put<Order>(`${this.baseurl}/Order/${orderId}/toggle-status`, order, this.headerCustom);
+updateOrderStatus(orderId: string): Observable<Order> {
+  return this.http.put<Order>(`${this.baseurl}/Order/${orderId}/toggle-status`, {}, this.headerCustom);
 }
 
 
@@ -348,20 +348,20 @@ addOrder(orderCreateDTO: any): Observable<any> {
   return this.http.post(`${this.baseurl}/Order`, orderCreateDTO,this.headerCustom);
 }
 getCartItems(userId: string): any[] {
-  const cartKey = `cart_${userId || 'testUser'}`; // Sử dụng userId mặc định khi test
+  const cartKey = `cart_${userId }`; // Sử dụng userId mặc định khi test
   const cart = JSON.parse(localStorage.getItem(cartKey) || '[]');
   return cart;
 }
 
 // Lưu giỏ hàng vào localStorage
 saveCartItems(userId: string, cartItems: any[]): void {
-  const cartKey = `cart_${userId || 'testUser'}`; // Sử dụng userId mặc định khi test
+  const cartKey = `cart_${userId}`; // Sử dụng userId mặc định khi test
   localStorage.setItem(cartKey, JSON.stringify(cartItems));
 }
 
 // Xóa giỏ hàng trong localStorage
 clearCart(userId: string): void {
-  const cartKey = `cart_${userId || 'testUser'}`; // Sử dụng userId mặc định khi test
+  const cartKey = `cart_${userId }`; // Sử dụng userId mặc định khi test
   localStorage.removeItem(cartKey);
 }
 
@@ -444,6 +444,15 @@ getRelatedProducts(productId: string): Observable<Product[]> {
 
   putCategory(id:string, updateCategory:Category):Observable<boolean>{
     return this.http.put<boolean>(`${this.baseurl}/Category/update/`+id,updateCategory,this.headerCustom);
+  }
+
+  //Payment
+  createPaymentUrl(model: any): Observable<any> {
+    return this.http.post(`${this.baseurl}/Payment`, model, { responseType: 'text' });
+  }
+
+  paymentCallback(queryParams: any): Observable<any> {
+    return this.http.get(`${this.baseurl}/Payment`, { params: queryParams });
   }
 
 }
