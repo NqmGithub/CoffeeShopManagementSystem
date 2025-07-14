@@ -64,7 +64,6 @@ namespace CoffeeShopManagement.WebAPI.Controllers
 
         /// <summary>
         /// Toggle the status of an order between Pending and Completed/Cancelled.
-        /// </summary>
         [HttpPut("{id}/toggle-status")]
         public async Task<IActionResult> ToggleOrderStatus(Guid id)
         {
@@ -84,6 +83,7 @@ namespace CoffeeShopManagement.WebAPI.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, new { Message = "An error occurred while updating the order status.", Error = ex.Message });
             }
         }
+
 
         /// <summary>
         /// Get a list of orders placed by a specific customer.

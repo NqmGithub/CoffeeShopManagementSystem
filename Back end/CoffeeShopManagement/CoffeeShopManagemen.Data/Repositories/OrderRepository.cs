@@ -92,9 +92,15 @@ namespace CoffeeShopManagement.Data.Repositories
         // Update an existing order
         public async Task UpdateOrder(Order order)
         {
-            _context.Orders.Update(order);
-            await _context.SaveChangesAsync();
+            var existingOrder = await _context.Orders.FindAsync(order.Id);
+            if (existingOrder != null)
+            {
+                existingOrder.Status = order.Status;
+                _context.Orders.Update(existingOrder);
+                await _context.SaveChangesAsync();
+            }
         }
+
         public async Task AddAsync(Order order)
         {
             await _context.Orders.AddAsync(order);
