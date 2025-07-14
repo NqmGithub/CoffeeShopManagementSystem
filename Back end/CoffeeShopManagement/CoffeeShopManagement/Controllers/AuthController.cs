@@ -9,6 +9,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using System.Text.RegularExpressions;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace CoffeeShopManagement.WebAPI.Controllers
 {
@@ -159,8 +160,12 @@ namespace CoffeeShopManagement.WebAPI.Controllers
             }
             catch (Exception ex)
             {
+                Console.WriteLine("[LỖI] Exception khi gửi OTP:");
+                Console.WriteLine("Message: " + ex.Message);
+                Console.WriteLine("StackTrace: " + ex.StackTrace);
                 return StatusCode(500, new { success = false, message = ex.Message });
             }
+
         }
 
         public class ValidateOTPRequest

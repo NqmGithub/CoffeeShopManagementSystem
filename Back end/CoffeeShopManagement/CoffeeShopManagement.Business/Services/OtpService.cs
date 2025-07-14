@@ -36,13 +36,25 @@ namespace CoffeeShopManagement.Business.Services
                 ExpirationTime = DateTime.UtcNow.AddMinutes(5),
                 Status = 0
             };
-            
+
             await _unitOfWork.OtpRepository.Add(otpRecord);
+
+            Console.WriteLine($"[DEBUG] Đang gửi OTP {otp} đến email: {email}");
 
             bool result = SendEmailHelper.SendEmailOTP(email, otp);
 
+            if (!result)
+            {
+                Console.WriteLine($"[LỖI] Gửi email OTP đến {email} thất bại.");
+            }
+            else
+            {
+                Console.WriteLine($"[OK] Gửi email OTP thành công.");
+            }
+
             return result;
         }
+
 
         public async Task<bool> ValidateOtp(string email, string otpcode)
         {
