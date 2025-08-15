@@ -50,6 +50,20 @@
   gap: 20px;
   width: 100%;
 }
+.product-grid-header .product-column {
+  cursor: pointer;
+  display: inline-block;
+  padding: 10px;
+  text-align: left;
+}
+
+.product-grid-header .product-column span {
+  margin-left: 5px;
+}
+
+.product-grid-header .product-column mat-icon {
+  font-size: 16px;
+}
 
 /* Product Card Styling */
 .product-card {
