@@ -1,6 +1,18 @@
 <app-navbar></app-navbar>
-<div style="margin-top: 50px;">
-  @for (order of orders; track $index;let i = $index) {
+
+<div style="margin-top: 20px;">
+  <h2 style="color:#6b4f34; font-weight: bolder;display: flex; justify-content: center;">Order History</h2>
+  <div style=" margin-bottom: 0px; margin-left: 10px;">
+    <mat-form-field>
+    <mat-select [(ngModel)]="filterStatus" (selectionChange)="onChange()" name="categoryStatus" >
+      <mat-option value="All">All</mat-option>
+      <mat-option value="Pending">Pending</mat-option>
+      <mat-option value="In Processing">In Processing</mat-option>
+      <mat-option value="Done">Done</mat-option>
+    </mat-select>
+    </mat-form-field>
+  </div>
+  @for (order of filteredOrders; track $index;let i = $index) {
     <mat-accordion >      
             <mat-expansion-panel [expanded]="true">
                 <mat-expansion-panel-header>

@@ -52,7 +52,7 @@ export class CheckoutComponent{
   createPayment(): void {
     const paymentModel: PaymentInfor = {
       orderType: 'other',
-      amount: this.totalPrice,
+      amount: this.totalPrice*10000,
       orderDescription: 'Thanh toan den CoffeeShop',
       name: this.user == null ? "" : this.user?.userName
     };

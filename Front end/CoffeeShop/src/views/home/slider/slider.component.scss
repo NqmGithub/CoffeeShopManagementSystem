@@ -9,7 +9,6 @@
 .slider-image {
   width: 100%;
   height: 100%;
-  object-fit: cover;  // Đảm bảo hình ảnh không bị méo và lấp đầy container
   transition: opacity 0.5s ease-in-out;
 }
 

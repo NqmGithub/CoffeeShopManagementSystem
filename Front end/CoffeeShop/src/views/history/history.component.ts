@@ -11,15 +11,20 @@ import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { ActivatedRoute } from '@angular/router';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-history',
   standalone: true,
-  imports: [MatExpansionModule, CommonModule, NavbarComponent,MatCardModule, MatButtonModule,MatIconModule],
+  imports: [MatExpansionModule, CommonModule, NavbarComponent,MatCardModule, MatButtonModule,MatIconModule, MatFormFieldModule,MatSelectModule,FormsModule],
   templateUrl: './history.component.html',
   styleUrl: './history.component.scss'
 })
 export class HistoryComponent {
+  filterStatus:string = "All";
+  filteredOrders:OrderDTO[] = [];
   stars = [1, 2, 3, 4, 5];
   orders: OrderDTO[] = [];
   orderDetails: UserOrderDetails[]=[];
@@ -29,7 +34,7 @@ export class HistoryComponent {
       res =>{
         this.user = res;
         if(this.user){
-          this.loadOrders(this.user.id);          
+          this.loadOrders(this.user.id);  
         }
       }
     );
@@ -49,7 +54,10 @@ export class HistoryComponent {
                 this.apiService.clearCart(this.user?.id!);
               }
             );
-            alert('Payment successful: ');
+            // Xóa các tham số trên URL
+          const url = new URL(window.location.href);
+          url.search = ''; // Xóa toàn bộ query params
+          window.history.replaceState({}, document.title, url.toString());
             // Call the API to add product to the database (e.g., this.apiService.addProductToDatabase(productDetails))
           } else {
             // If response does not have vnp_ResponseCode=00, show a failure alert
@@ -81,6 +89,7 @@ export class HistoryComponent {
           )
           
         }
+        this.onChange();        
       }
     );
   }
@@ -102,5 +111,13 @@ export class HistoryComponent {
     this.apiService.rating(ratedProducts).subscribe();
     this.loadOrders(this.user?.id!);
     // window.location.reload()
+  }
+
+  onChange(){
+    if (this.filterStatus === 'All') {
+      this.filteredOrders = [...this.orders];
+    } else {
+      this.filteredOrders = this.orders.filter(order => order.status === this.filterStatus);
+    }
   }
 }

@@ -17,7 +17,7 @@ export interface OrdersResponse {
 export interface OrderDTO{
     id: string,
     userId: string,
-    status: number,
+    status: string,
     orderDate: string,
     totalPrice: number,
     product:UserOrderDetails[],
